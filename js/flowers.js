@@ -1,0 +1,50 @@
+import {store} from './store.js';
+import {flowerSVG,bouquetMarkup,downloadBouquet} from './botanical.js';
+import {soundEffect} from './audio.js';
+import {move,delay} from './animation.js';
+const esc=x=>String(x).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+export function mountFlowers(root,flowers,onDone){
+ let chosen=[],complete=false,disposed=false;
+ root.innerHTML=`<section class="scene flowers-scene" aria-label="Choose seven flowers">
+   <div class="flower-intro"><span class="eyebrow">02 / THIS ONE'S FOR YOU</span><h1>Seven flowers.<br><em>Your rules.</em></h1><p>I brought thirteen. Pick the seven you want to keep.</p></div>
+   <div class="flower-counter" id="flower-counter" aria-live="polite"><strong>0 <span>of 7</span></strong><span class="counter-caption">picked by Maha</span></div>
+   <div class="bouquet-display" id="bouquet-display"><span class="bouquet-hint" id="bouquet-hint">Your little bunch begins here <span aria-hidden="true">↘</span></span><div class="bouquet-growing" id="bouquet-growing"></div><div class="petals" aria-hidden="true"><i>✿</i><i>✿</i><i>✿</i><i>✿</i><i>✿</i></div></div>
+   <div class="flower-bottom" id="flower-bottom"><div class="shelf-heading"><span id="flower-instruction">Choose your flowers</span><span class="shelf-hint">SWIPE TO EXPLORE →</span></div><div id="flower-rail" class="flower-rail" role="group" aria-label="Thirteen flower choices"></div><div class="meaning-line" id="meaning-line" aria-live="polite">Thirteen little personalities. Like a very polite flower shop.</div><div class="flower-controls"><button class="text-button" id="undo-flower" disabled>↶ Undo</button><button class="text-button" id="reset-flowers" disabled>Reset ↺</button></div></div>
+   <div class="bouquet-final" id="bouquet-final" hidden><span class="eyebrow">HAND-PICKED. VERY OFFICIAL.</span><h2>For Maha. <span aria-hidden="true">♡</span></h2><p>Seven chosen by you. Which makes them the right seven.</p><div class="final-controls"><button class="button button-outline" id="save-bouquet">Save as picture ↓</button><button class="button button-primary" id="carry-bouquet">Take them inside →</button></div><p class="export-hint" id="export-hint"></p></div>
+ </section>`;
+ const rail=root.querySelector('#flower-rail'),renderPlace=root.querySelector('#bouquet-growing'),display=root.querySelector('#bouquet-display');
+ for(const f of flowers){const btn=document.createElement('button');btn.type='button';btn.className='flower-option';btn.dataset.flower=f.id;btn.setAttribute('aria-pressed','false');btn.setAttribute('aria-label',`${f.name}: ${f.meaning}`);btn.innerHTML=`<span class="option-art">${flowerSVG(f.id)}</span><span class="option-label">${esc(f.name)}</span><span class="picked-check" aria-hidden="true">✓</span>`;btn.addEventListener('click',()=>pick(f));rail.append(btn);}
+ function update(){
+  root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="counter-caption">picked by Maha</span>`;
+  renderPlace.innerHTML=chosen.length?bouquetMarkup(chosen):'';
+  const list=new Set(chosen);rail.querySelectorAll('button').forEach(b=>{const picked=list.has(b.dataset.flower);b.setAttribute('aria-pressed',String(picked));b.disabled=complete||picked;});
+  root.querySelector('#undo-flower').disabled=!chosen.length||complete;root.querySelector('#reset-flowers').disabled=!chosen.length||complete;
+  root.querySelector('#bouquet-hint').hidden=chosen.length>0;
+ }
+ function pick(f){if(complete||chosen.includes(f.id)||chosen.length>=7)return; chosen.push(f.id); soundEffect('pick'); update();root.querySelector('#meaning-line').textContent=f.meaning;
+   if(chosen.length===7)finish(); else root.querySelector('#flower-instruction').textContent=`${7-chosen.length} more to go`;
+ }
+ root.querySelector('#undo-flower').addEventListener('click',()=>{if(complete||!chosen.length)return;chosen.pop();soundEffect('undo');update();root.querySelector('#meaning-line').textContent='Changed your mind? Excellent flower-shop behaviour.';});
+ root.querySelector('#reset-flowers').addEventListener('click',()=>{if(complete)return;chosen=[];soundEffect('undo');update();root.querySelector('#meaning-line').textContent='Fresh start. Take your time.';root.querySelector('#flower-instruction').textContent='Choose your flowers';});
+ async function finish(){complete=true;store.set('flowers',chosen);soundEffect('complete');root.querySelector('#flower-rail').classList.add('shelf-out');
+  root.querySelector('.flower-intro').classList.add('flower-intro-fade');root.querySelector('#flower-bottom').classList.add('flower-bottom-exit');
+  await delay(380);if(disposed)return;
+  renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:true});display.classList.add('bouquet-wrapping');
+  await delay(2300);if(disposed)return;
+  root.querySelector('#flower-bottom').hidden=true;root.querySelector('#bouquet-final').hidden=false;display.classList.add('bouquet-done');
+  await move(root.querySelector('#bouquet-final'),{opacity:0,transform:'translateY(15px)'},{opacity:1,transform:'translateY(0)'},500);
+ }
+ root.querySelector('#save-bouquet').addEventListener('click',async(e)=>{
+  const button=e.currentTarget; button.disabled=true;button.textContent='Making your picture…';
+  try {await downloadBouquet(chosen);root.querySelector('#export-hint').textContent='Saved! On iPhone, if the picture opens instead, touch and hold it to save.';}
+  catch {root.querySelector('#export-hint').textContent='PNG export was blocked by this browser. Try Safari or Chrome.';}
+  finally{if(!disposed){button.disabled=false;button.textContent='Save as picture ↓';}}
+ });
+ root.querySelector('#carry-bouquet').addEventListener('click',async()=>{
+  if(disposed)return; const b=root.querySelector('.bouquet-growing');
+  await move(b,{transform:'translate3d(0,0,0) scale(1)',opacity:1},{transform:'translate3d(37%, -30%, 0) scale(.28)',opacity:.25},740);
+  if(!disposed){disposed=true;onDone(chosen);}
+ });
+ update();
+ return ()=>{disposed=true;};
+}

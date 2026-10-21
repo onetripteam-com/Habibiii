@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e8deca">
+  <meta name="color-scheme" content="light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Maha's Little Escape">
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+  <meta name="description" content="A little escape, just for Maha.">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="./css/style.css">
+  <title>MAHA — A Little Escape</title>
+</head>
+<body>
+  <div class="desktop-backdrop" aria-hidden="true"><span class="bg-flower f-one">✳</span><span class="bg-flower f-two">✳</span><span class="bg-caption">a little place, just for her.</span></div>
+  <div id="app" class="app-frame">
+    <div class="grain" aria-hidden="true"></div>
+    <header class="app-header">
+      <div class="identity"><span class="identity-emblem" aria-hidden="true">✿</span><span>MAHA <i>·</i> A LITTLE ESCAPE</span></div>
+      <button class="sound-toggle icon-button" id="sound-toggle" type="button" aria-label="Mute sound" aria-pressed="false" title="Sound toggle"><span aria-hidden="true">♫</span></button>
+    </header>
+    <main id="scene-root" class="scene-root" aria-live="off"><div class="loading"><span class="loading-flower">✿</span><p>Getting your little place ready…</p></div></main>
+    <div id="live-region" class="sr-only" role="status" aria-live="polite"></div>
+  </div>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous"></script>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

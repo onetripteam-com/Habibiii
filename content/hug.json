@@ -1,0 +1,37 @@
+{
+  "opening": [
+    "Hey Maha. It's been almost 3 years.",
+    "I can't hug you from here.",
+    "So... virtual hug? Do you want it?"
+  ],
+  "yes": "Wait, you said yes? Receiving... received. Handle with care.",
+  "no": [
+    "Okay. A perfectly respectable decision from the Department of No.",
+    "That was quick. Did you even read the offer?",
+    "It's virtual, Maha. Your personal space is completely safe.",
+    "Fine. I'll put it in the pending requests folder.",
+    "Doctor, this is a hug. Not a 14-page consent form.",
+    "I knew you'd say no. I've still made absolutely no backup plan.",
+    "At this rate the hug will qualify for a Kuwait residency permit.",
+    "Would it help if I called it a limited-edition emotional parcel?",
+    "Even my imaginary delivery person has started judging me.",
+    "Update: the hug has applied for early retirement. I said no.",
+    "We're now in round eleven of a negotiation about two imaginary arms.",
+    "Congratulations. You have defeated the world's most patient hug button."
+  ],
+  "closing": "Fine. Hug sent anyway. No refunds.",
+  "next": "Okay, wait. Take these flowers first.",
+  "yesButton": "Yes, okay",
+  "noButton": "No ✋",
+  "flowerButton": "Show me the flowers",
+  "hugPrompt": "Still asking. Still completely optional.",
+  "eyebrow": "01 / A VERY SERIOUS QUESTION",
+  "heroFirst": "Some distances",
+  "heroSecond": "are just ",
+  "heroEmphasis": "rude.",
+  "illustrationCaption": "a small delivery across the miles",
+  "actionQuestion": "Well? A decision from the committee?",
+  "footnote": "* No actual hugging required. Obviously.",
+  "finalQuestion": "Final answer? This is becoming a documentary.",
+  "lastNoButton": "Still no"
+}
