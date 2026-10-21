@@ -1,101 +1,230 @@
-// Hand-shaped vector botanicals. Every species has its own petal structure.
-// Pure SVG: works in the interface and in a downloadable image without remote assets.
 const PALETTE={
- rose:['#cb6961','#efafa0','#aa4e4e','#d9a95b'], daisy:['#f7ecd5','#fffaf0','#d9be88','#e9bb58'],
- sunflower:['#edae48','#f7d879','#d98c2f','#644a32'], tulip:['#d9796e','#f2b1a0','#b85253','#dcb767'],
- peony:['#d99ba0','#f1c7ba','#bb747f','#edc772'], lily:['#f5e2b7','#fff5da','#d9b992','#b67a3d'],
- orchid:['#c7a1c5','#ebcadc','#986f9f','#c47870'], lavender:['#9c8bbd','#bfb0d2','#736999','#e5c6a4'],
- jasmine:['#fff4d6','#fffdf4','#dbcfa7','#ebc977'], marigold:['#eab047','#ffce66','#c78730','#e7a43b'],
- hibiscus:['#cf615c','#ef9f8c','#a4404c','#d7a34b'], iris:['#8c83b1','#b9abd2','#645a92','#e3b96d'],
- lotus:['#d59ba1','#f4c8c6','#b57482','#edcd7d']
+ rose:{outer:'#cb6961',inner:'#efafa0',shadow:'#a34f50',accent:'#d9a95b'},
+ daisy:{outer:'#f7ecd5',inner:'#fffaf0',shadow:'#d8bd87',accent:'#e9bb58'},
+ sunflower:{outer:'#edae48',inner:'#f7d879',shadow:'#d98c2f',accent:'#644a32'},
+ tulip:{outer:'#d9796e',inner:'#f2b1a0',shadow:'#b85253',accent:'#dcb767'},
+ peony:{outer:'#d99ba0',inner:'#f1c7ba',shadow:'#bb747f',accent:'#edc772'},
+ lily:{outer:'#f5e2b7',inner:'#fff5da',shadow:'#d9b992',accent:'#b67a3d'},
+ orchid:{outer:'#c7a1c5',inner:'#ebcadc',shadow:'#986f9f',accent:'#c47870'},
+ lavender:{outer:'#9c8bbd',inner:'#bfb0d2',shadow:'#736999',accent:'#e5c6a4'},
+ jasmine:{outer:'#fff4d6',inner:'#fffdf4',shadow:'#dbcfa7',accent:'#ebc977'},
+ marigold:{outer:'#eab047',inner:'#ffce66',shadow:'#c78730',accent:'#e7a43b'},
+ hibiscus:{outer:'#cf615c',inner:'#ef9f8c',shadow:'#a4404c',accent:'#f0c54e'},
+ iris:{outer:'#8c83b1',inner:'#b9abd2',shadow:'#645a92',accent:'#e3b96d'},
+ lotus:{outer:'#d59ba1',inner:'#f4c8c6',shadow:'#b57482',accent:'#edcd7d'}
 };
+const STEM='#5c855d', STEM_DARK='#4b7050';
 let seq=0;
-const safeId=id=>String(id).replace(/[^a-z0-9-]/g,'');
-function petal(cx,cy,angle,rx,ry,fill,extra=''){
- return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="${fill}" transform="rotate(${angle} 100 81)" ${extra}/>`;
+const safeId=id=>String(id).replace(/[^a-z0-9-]/gi,'');
+const esc=x=>String(x).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+function hashCode(str){let h=0;for(let i=0;i<str.length;i++)h=((h<<5)-h)+str.charCodeAt(i)|0;return Math.abs(h);}
+function rng(seed){let x=(hashCode(seed)%2147483646)+1;return ()=>{x=(x*48271)%2147483647;return (x-1)/2147483646;};}
+function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
+function paintDefs(uid,p){
+ return `
+ <defs>
+  <linearGradient id="petal-${uid}" x1="0" y1="0" x2="0" y2="1">
+   <stop offset="0" stop-color="${p.inner}"/>
+   <stop offset=".57" stop-color="${p.outer}"/>
+   <stop offset="1" stop-color="${p.shadow}"/>
+  </linearGradient>
+  <radialGradient id="petal-wash-${uid}" cx=".45" cy=".24" r=".9">
+   <stop offset="0" stop-color="${p.inner}" stop-opacity=".95"/>
+   <stop offset=".65" stop-color="${p.outer}" stop-opacity=".88"/>
+   <stop offset="1" stop-color="${p.shadow}" stop-opacity=".96"/>
+  </radialGradient>
+  <linearGradient id="leaf-${uid}" x1="0" y1="0" x2="1" y2="1">
+   <stop offset="0" stop-color="#9cb281"/>
+   <stop offset="1" stop-color="#4f7454"/>
+  </linearGradient>
+  <radialGradient id="center-${uid}" cx=".5" cy=".45" r=".8">
+   <stop offset="0" stop-color="${p.accent}"/>
+   <stop offset="1" stop-color="${p.shadow}"/>
+  </radialGradient>
+  <filter id="soft-${uid}" x="-25%" y="-25%" width="150%" height="150%">
+   <feGaussianBlur stdDeviation=".7" result="b"/>
+   <feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 .22 0" result="soft"/>
+   <feBlend in="SourceGraphic" in2="soft" mode="multiply"/>
+  </filter>
+  <filter id="shadow-${uid}" x="-30%" y="-30%" width="160%" height="160%">
+   <feDropShadow dx="0" dy="2.2" stdDeviation="2.3" flood-color="#705241" flood-opacity=".14"/>
+  </filter>
+  <filter id="grain-${uid}" x="-20%" y="-20%" width="140%" height="140%">
+   <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${hashCode(uid)%97}" result="noise"/>
+   <feColorMatrix in="noise" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 .12 0"/>
+   <feBlend in="SourceGraphic" mode="soft-light"/>
+  </filter>
+ </defs>`;
 }
-function radialPetals(n,outerRx,outerRy,innerRx,innerRy,fillA,fillB,offset=0,spread=27){
- let s='';for(let i=0;i<n;i++){const a=i*360/n+offset;const rad=a*Math.PI/180;const x=100+Math.sin(rad)*spread,y=81-Math.cos(rad)*spread;
- s+=`<ellipse cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" rx="${i%2?outerRx:innerRx}" ry="${i%2?outerRy:innerRy}" fill="${i%2?fillA:fillB}" stroke="#765542" stroke-opacity=".12" stroke-width="1.15" transform="rotate(${a} ${x.toFixed(2)} ${y.toFixed(2)})"/>`;
- }return s;
+function paintedPetal(cx,cy,angle,length,width,fill,stroke,seed,highlight=true){
+ const rand=rng(seed); const lean=(rand()-.5)*6, pinch=.32+rand()*.1, belly=.4+rand()*.12, tip=length*(.96+rand()*.1);
+ const p1x=cx-width*(.55+rand()*.15), p1y=cy-length*pinch;
+ const p2x=cx-width*(.95+rand()*.2), p2y=cy-length*belly;
+ const tx=cx+(rand()-.5)*3, ty=cy-tip;
+ const p3x=cx+width*(.95+rand()*.2), p3y=cy-length*belly;
+ const p4x=cx+width*(.55+rand()*.15), p4y=cy-length*pinch;
+ const highlightPath=`M ${cx.toFixed(2)} ${cy.toFixed(2)} C ${(cx-width*.24).toFixed(2)} ${(cy-length*.2).toFixed(2)} ${(cx-width*.2).toFixed(2)} ${(cy-length*.56).toFixed(2)} ${(cx-width*.05).toFixed(2)} ${(cy-length*.84).toFixed(2)}`;
+ return `<g transform="rotate(${angle+lean} ${cx} ${cy})"><path d="M ${cx} ${cy} C ${p1x.toFixed(2)} ${p1y.toFixed(2)} ${p2x.toFixed(2)} ${p2y.toFixed(2)} ${tx.toFixed(2)} ${ty.toFixed(2)} C ${p3x.toFixed(2)} ${p3y.toFixed(2)} ${p4x.toFixed(2)} ${p4y.toFixed(2)} ${cx} ${cy} Z" fill="${fill}" stroke="${stroke}" stroke-opacity=".22" stroke-width="1.25"/><path d="${highlightPath}" fill="none" stroke="#fffdf9" stroke-opacity="${highlight?'.26':'.14'}" stroke-width="1.2" stroke-linecap="round"/></g>`;
 }
-function shape(id,g,h,p){
+function petalRing({uid,count=8,cx=100,cy=88,length=48,width=18,radius=22,offset=0,fill,stroke,seed='x'}){
  let s='';
- if(id==='rose'){
-  s=radialPetals(11,18,35,16,31,g,h,10,19)+radialPetals(7,14,26,15,25,h,g,15,12);
-  s+=`<path d="M87 82c4-24 37-24 28 1-6 15-24 13-24 0 0-8 14-14 18-3" fill="none" stroke="${p}" stroke-width="5" stroke-linecap="round"/>`;
- } else if(id==='sunflower'){
-  s=radialPetals(19,11,40,12,35,g,h,0,34)+radialPetals(18,7,30,8,28,h,g,10,22);
-  s+=`<circle cx="100" cy="81" r="28" fill="${p}" stroke="#9a6339" stroke-width="4"/>`;
-  for(let a=0;a<5;a++)for(let b=0;b<5;b++){const x=86+a*7,y=67+b*7;if((x-100)**2+(y-81)**2<520)s+=`<circle cx="${x}" cy="${y}" r="2.1" fill="#e1a457" opacity=".78"/>`;}
- } else if(id==='daisy' || id==='jasmine'){
-  s=radialPetals(id==='daisy'?17:7,id==='daisy'?9:15,id==='daisy'?31:28,id==='daisy'?10:17,id==='daisy'?29:25,g,h,0,id==='daisy'?24:21);
-  s+=`<circle cx="100" cy="81" r="${id==='daisy'?16:12}" fill="${p}"/><circle cx="97" cy="77" r="5" fill="#fff5cc" opacity=".65"/>`;
- } else if(id==='tulip'){
-  s=`<path d="M72 75L76 29 97 52 119 24 126 75Q118 126 100 124Q81 126 72 75Z" fill="${g}" stroke="#974e4c" stroke-opacity=".3" stroke-width="2"/><path d="M78 39Q86 75 100 119Q111 71 118 33Q119 95 100 121Q82 101 78 39Z" fill="${h}" opacity=".8"/><path d="M96 54 100 120" stroke="${p}" stroke-width="2" opacity=".28"/>`;
- } else if(id==='peony'){
-  s=radialPetals(16,20,30,17,30,g,h,0,18)+radialPetals(13,15,24,15,27,h,g,8,10)+radialPetals(8,13,17,12,19,g,h,14,3);
-  s+=`<circle cx="100" cy="81" r="7" fill="${p}" opacity=".8"/>`;
- } else if(id==='lily'){
-  for(let a=0;a<6;a++){s+=`<path d="M100 85 Q72 44 100 9 Q126 49 100 85Z" fill="${a%2?g:h}" stroke="${p}" stroke-opacity=".25" stroke-width="2" transform="rotate(${a*60} 100 85)"/><path d="M100 83 100 26" stroke="${p}" stroke-opacity=".28" stroke-width="2" transform="rotate(${a*60} 100 85)"/>`;}
-  s+=`<circle cx="100" cy="85" r="8" fill="#f6d9a2"/>`;
-  for(let a=0;a<5;a++){const x=100+Math.cos(a*1.26)*17,y=84+Math.sin(a*1.26)*17;s+=`<path d="M100 85 ${x.toFixed(1)} ${y.toFixed(1)}" stroke="#a36e3a" stroke-width="2"/><ellipse cx="${x}" cy="${y}" rx="3" ry="6" fill="#a36e3a"/>`;}
- } else if(id==='orchid'){
-  s=`<ellipse cx="73" cy="59" rx="27" ry="33" fill="${h}" transform="rotate(-36 73 59)"/><ellipse cx="127" cy="59" rx="27" ry="33" fill="${h}" transform="rotate(36 127 59)"/><ellipse cx="63" cy="98" rx="24" ry="37" fill="${g}" transform="rotate(-56 63 98)"/><ellipse cx="137" cy="98" rx="24" ry="37" fill="${g}" transform="rotate(56 137 98)"/><path d="M86 79Q100 57 114 79L124 104Q101 137 76 104Z" fill="${h}" stroke="${p}" stroke-opacity=".36" stroke-width="2"/><path d="M93 95Q100 80 107 95Q110 109 100 113Q90 107 93 95Z" fill="${p}"/>`;
- } else if(id==='lavender'){
-  s=`<path d="M100 126Q92 70 100 21" stroke="#779169" stroke-width="4" fill="none"/>`;
-  for(let j=0;j<9;j++){const y=35+j*10;const w=(10-j*.55);s+=`<ellipse cx="${91-w/2}" cy="${y}" rx="${w}" ry="${7+j*.25}" transform="rotate(-37 ${91-w/2} ${y})" fill="${j%2?h:g}"/><ellipse cx="${109+w/2}" cy="${y-3}" rx="${w}" ry="${7+j*.25}" transform="rotate(37 ${109+w/2} ${y-3})" fill="${j%2?g:h}"/>`;}
- } else if(id==='marigold'){
-  s=radialPetals(28,10,25,10,25,g,h,0,19)+radialPetals(23,8,19,9,17,h,g,6,11)+radialPetals(17,7,12,6,15,g,h,8,2);
-  s+=`<circle cx="100" cy="81" r="6" fill="${p}"/>`;
- } else if(id==='hibiscus'){
-  s=radialPetals(5,33,40,31,36,g,h,0,29);
-  s+=`<path d="M100 86Q125 88 140 59" stroke="${p}" stroke-width="5" fill="none"/><circle cx="141" cy="58" r="5" fill="#f7d279"/><circle cx="145" cy="51" r="3" fill="#f7d279"/><circle cx="136" cy="53" r="3" fill="#f7d279"/>`;
- } else if(id==='iris'){
-  s=`<path d="M100 87Q64 53 87 10Q105 32 100 87Z" fill="${h}"/><path d="M100 87Q135 41 119 11Q95 35 100 87Z" fill="${g}"/><path d="M95 88Q42 53 39 100Q46 129 80 126Q102 111 95 88Z" fill="${g}"/><path d="M104 88Q159 53 161 100Q154 129 120 126Q97 111 104 88Z" fill="${h}"/><path d="M88 95Q100 115 112 95L102 150Q96 154 88 95Z" fill="${g}"/><path d="M100 91 100 126" stroke="${p}" stroke-width="7" stroke-linecap="round"/>`;
- } else if(id==='lotus'){
-  for(let i=0;i<9;i++){const a=(i-4)*24;s+=`<path d="M100 109Q73 75 100 23Q125 73 100 109Z" fill="${i%2?g:h}" stroke="${p}" stroke-opacity=".24" stroke-width="1.6" transform="rotate(${a} 100 106)"/>`;}
-  s+=`<ellipse cx="100" cy="108" rx="15" ry="6" fill="${p}"/>`;
+ for(let i=0;i<count;i++){
+  const a=offset+(360/count)*i; const rad=a*Math.PI/180;
+  const px=cx+Math.sin(rad)*radius, py=cy-Math.cos(rad)*radius;
+  s+=paintedPetal(px,py,a,length,width,fill,stroke,`${seed}-${i}`);
  }
  return s;
 }
-export function flowerCore(id,uid){
- const [a,b,c,d]=PALETTE[id]||PALETTE.rose;
- return `<defs><radialGradient id="f-${uid}" cx=".37" cy=".24" r=".82"><stop stop-color="${b}"/><stop offset=".75" stop-color="${a}"/><stop offset="1" stop-color="${c}"/></radialGradient><linearGradient id="leaf-${uid}" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#9aaf79"/><stop offset="1" stop-color="#4e7253"/></linearGradient></defs>
- <path d="M101 103Q88 163 103 216" stroke="#5d835b" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M98 163Q73 132 43 146Q52 174 98 166" fill="url(#leaf-${uid})" stroke="#547550" stroke-width="2"/><path d="M99 185Q137 151 157 161Q145 191 100 191" fill="url(#leaf-${uid})" stroke="#547550" stroke-width="2"/><path d="M65 150 96 165M133 169 104 185" stroke="#c6c99c" stroke-opacity=".7" stroke-width="1.6" fill="none"/>
- <g class="petal-group">${shape(id,`url(#f-${uid})`,b,d)}</g>`;
+function dottedCenter(cx,cy,r,fill,n=26){
+ let s=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}"/>`;
+ for(let i=0;i<n;i++){
+  const a=(Math.PI*2/n)*i, rr=r*(.2+.72*((i*7)%n)/n);
+  const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;s+=`<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${(i%3?1.3:1.7)}" fill="#e9c06c" opacity=".68"/>`;
+ }
+ return s;
+}
+function flowerHead(id,uid){
+ const p=PALETTE[id]||PALETTE.rose; const petalFill=`url(#petal-${uid})`, washFill=`url(#petal-wash-${uid})`, centerFill=`url(#center-${uid})`;
+ let s='';
+ if(id==='rose'){
+  s+=petalRing({uid,count:6,cx:100,cy:87,length:44,width:18,radius:18,offset:10,fill:petalFill,stroke:p.shadow,seed:`${uid}-r1`});
+  s+=petalRing({uid,count:5,cx:100,cy:87,length:36,width:16,radius:10,offset:18,fill:washFill,stroke:p.shadow,seed:`${uid}-r2`});
+  s+=`<path d="M88 95c4-23 31-25 27-2-4 18-22 17-22 4 0-8 8-13 17-8 4 2 6 7 4 12" fill="none" stroke="${p.shadow}" stroke-width="4.5" stroke-linecap="round"/><path d="M96 92c5-10 12-11 15-2" fill="none" stroke="#fff7f0" stroke-opacity=".28" stroke-width="2" stroke-linecap="round"/>`;
+ } else if(id==='peony'){
+  s+=petalRing({uid,count:10,cx:100,cy:90,length:42,width:21,radius:22,offset:2,fill:petalFill,stroke:p.shadow,seed:`${uid}-p1`});
+  s+=petalRing({uid,count:8,cx:100,cy:90,length:34,width:19,radius:12,offset:14,fill:washFill,stroke:p.shadow,seed:`${uid}-p2`});
+  s+=petalRing({uid,count:6,cx:100,cy:92,length:25,width:13,radius:3,offset:6,fill:petalFill,stroke:p.shadow,seed:`${uid}-p3`});
+  s+=`<circle cx="100" cy="93" r="5.8" fill="${p.accent}" opacity=".75"/>`;
+ } else if(id==='sunflower'){
+  s+=petalRing({uid,count:18,cx:100,cy:88,length:44,width:12,radius:28,offset:0,fill:petalFill,stroke:p.shadow,seed:`${uid}-s1`});
+  s+=petalRing({uid,count:18,cx:100,cy:88,length:32,width:10,radius:18,offset:10,fill:washFill,stroke:p.shadow,seed:`${uid}-s2`});
+  s+=dottedCenter(100,88,24,centerFill,38);
+ } else if(id==='tulip'){
+  s+=paintedPetal(84,110,-12,58,20,petalFill,p.shadow,`${uid}-t1`);
+  s+=paintedPetal(100,118,0,74,23,washFill,p.shadow,`${uid}-t2`);
+  s+=paintedPetal(116,110,12,58,20,petalFill,p.shadow,`${uid}-t3`);
+  s+=`<path d="M79 118Q100 133 121 118L116 129Q100 136 84 129Z" fill="#74a06c" opacity=".42"/><path d="M84 84q8 15 16 31 11-16 18-32" fill="none" stroke="#fffaf4" stroke-opacity=".28" stroke-width="2.4" stroke-linecap="round"/>`;
+ } else if(id==='lily'){
+  for(let i=0;i<6;i++) s+=paintedPetal(100,93,i*60,59,17,i%2?petalFill:washFill,p.shadow,`${uid}-l${i}`);
+  s+=`<circle cx="100" cy="92" r="7" fill="#f8dfb2"/>`;
+  for(let i=0;i<6;i++){const a=i*Math.PI/3;const x=100+Math.cos(a)*18,y=92+Math.sin(a)*18;s+=`<path d="M100 93 ${x.toFixed(1)} ${y.toFixed(1)}" stroke="#a36e3a" stroke-width="1.7"/><ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="2.3" ry="5.4" fill="#a36e3a" transform="rotate(${(i*60)-10} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;}
+  for(let i=0;i<7;i++){const x=84+i*4.7,y=78+(i%2?7:0);s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.6" fill="#c38b55" opacity=".55"/>`;}
+ } else if(id==='orchid'){
+  s+=paintedPetal(78,84,-34,48,25,washFill,p.shadow,`${uid}-o1`);
+  s+=paintedPetal(122,84,34,48,25,washFill,p.shadow,`${uid}-o2`);
+  s+=paintedPetal(67,112,-65,44,21,petalFill,p.shadow,`${uid}-o3`);
+  s+=paintedPetal(133,112,65,44,21,petalFill,p.shadow,`${uid}-o4`);
+  s+=`<path d="M87 88Q100 65 113 88L122 110Q101 140 77 110Z" fill="${washFill}" stroke="${p.shadow}" stroke-opacity=".28" stroke-width="1.4"/><path d="M92 104Q100 84 108 104Q111 118 100 122Q89 117 92 104Z" fill="${centerFill}"/><path d="M95 106q6 3 10 0" fill="none" stroke="#fffaf4" stroke-opacity=".28" stroke-width="1.5"/>`;
+ } else if(id==='hibiscus'){
+  s+=petalRing({uid,count:5,cx:100,cy:92,length:50,width:25,radius:26,offset:0,fill:petalFill,stroke:p.shadow,seed:`${uid}-h1`});
+  s+=`<path d="M100 94Q118 97 138 67" stroke="${p.shadow}" stroke-width="5" fill="none" stroke-linecap="round"/><g fill="#f8d775"><circle cx="140" cy="66" r="4.8"/><circle cx="145" cy="58" r="2.8"/><circle cx="137" cy="56" r="2.5"/><circle cx="146" cy="67" r="2.2"/></g>`;
+ } else if(id==='lotus'){
+  s+=petalRing({uid,count:7,cx:100,cy:103,length:51,width:21,radius:10,offset:0,fill:petalFill,stroke:p.shadow,seed:`${uid}-lo1`});
+  s+=petalRing({uid,count:6,cx:100,cy:108,length:36,width:16,radius:3,offset:18,fill:washFill,stroke:p.shadow,seed:`${uid}-lo2`});
+  s+=`<ellipse cx="100" cy="108" rx="15" ry="6" fill="${centerFill}"/>`;
+ } else if(id==='daisy'){
+  s+=petalRing({uid,count:16,cx:100,cy:90,length:41,width:10,radius:22,offset:2,fill:washFill,stroke:p.shadow,seed:`${uid}-d1`});
+  s+=dottedCenter(100,90,13,centerFill,18);
+ } else if(id==='jasmine'){
+  s+=petalRing({uid,count:6,cx:100,cy:90,length:31,width:15,radius:10,offset:4,fill:washFill,stroke:p.shadow,seed:`${uid}-j1`});
+  s+=`<circle cx="100" cy="90" r="8" fill="#f0d486" opacity=".66"/>`;
+ } else if(id==='lavender'){
+  for(let j=0;j<8;j++){
+   const y=122-j*11, w=11-j*.5;
+   s+=`<ellipse cx="${94-w/2}" cy="${y}" rx="${w}" ry="${6+j*.15}" transform="rotate(-34 ${94-w/2} ${y})" fill="${j%2?washFill:petalFill}" stroke="${p.shadow}" stroke-opacity=".18" stroke-width="1"/><ellipse cx="${106+w/2}" cy="${y-2}" rx="${w}" ry="${6+j*.15}" transform="rotate(34 ${106+w/2} ${y-2})" fill="${j%2?petalFill:washFill}" stroke="${p.shadow}" stroke-opacity=".18" stroke-width="1"/>`;
+  }
+ } else if(id==='marigold'){
+  s+=petalRing({uid,count:22,cx:100,cy:90,length:24,width:14,radius:14,offset:2,fill:petalFill,stroke:p.shadow,seed:`${uid}-m1`});
+  s+=petalRing({uid,count:16,cx:100,cy:90,length:17,width:11,radius:6,offset:11,fill:washFill,stroke:p.shadow,seed:`${uid}-m2`});
+  s+=`<circle cx="100" cy="90" r="5" fill="${centerFill}"/>`;
+ } else if(id==='iris'){
+  s+=paintedPetal(100,92,0,54,20,washFill,p.shadow,`${uid}-i0`);
+  s+=paintedPetal(78,98,-65,46,20,petalFill,p.shadow,`${uid}-i1`);
+  s+=paintedPetal(122,98,65,46,20,petalFill,p.shadow,`${uid}-i2`);
+  s+=paintedPetal(89,110,-18,36,14,washFill,p.shadow,`${uid}-i3`);
+  s+=paintedPetal(111,110,18,36,14,washFill,p.shadow,`${uid}-i4`);
+  s+=`<path d="M92 106q8 10 16 0" fill="none" stroke="${p.accent}" stroke-width="5" stroke-linecap="round"/>`;
+ }
+ return `<g class="head-art" filter="url(#shadow-${uid})">${s}</g>`;
+}
+function singleStem(uid,{y1=121,y2=223,curve=0}={}){
+ return `<g class="stem-cluster">
+   <path class="stem-main" d="M100 ${y1} C ${100-curve} ${(y1+40).toFixed(1)} ${100+curve*.4} ${(y2-44).toFixed(1)} 100 ${y2}" stroke="${STEM}" stroke-width="5" fill="none" stroke-linecap="round"/>
+   <path d="M95 160Q69 133 42 147Q53 175 96 167" fill="url(#leaf-${uid})" stroke="#56744f" stroke-width="1.7"/>
+   <path d="M104 184Q139 154 157 164Q145 191 104 191" fill="url(#leaf-${uid})" stroke="#56744f" stroke-width="1.7"/>
+   <path d="M66 152 95 166M133 171 107 185" stroke="#dfe6c4" stroke-opacity=".65" stroke-width="1.3" fill="none"/>
+  </g>`;
+}
+function singleFlowerMarkup(id,uid){
+ const p=PALETTE[id]||PALETTE.rose;
+ return `${paintDefs(uid,p)}${singleStem(uid,{curve:id==='orchid'?9:id==='lavender'?-4:4})}<g class="head-group" transform="translate(0 0)">${flowerHead(id,uid)}</g>`;
 }
 export function flowerSVG(id,klass=''){
  const uid=`${safeId(id)}-${++seq}`;
- return `<svg class="botanical ${klass}" viewBox="0 0 200 235" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${flowerCore(id,uid)}</svg>`;
+ const sway=4.8+(seq%4)*.45, amp=(seq%2?1.4:-1.2);
+ return `<svg class="botanical ${klass}" style="--sway:${sway}s;--sway-amp:${amp}deg" viewBox="0 0 200 235" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${singleFlowerMarkup(id,uid)}</svg>`;
 }
-const SLOTS=[[12,84,-18],[81,44,-9],[149,82,14],[221,52,19],[36,149,-13],[174,146,12],[106,124,1]];
-export function bouquetMarkup(ids,{wrapped=false,forExport=false}={}){
-  const flowers=ids.map((id,i)=>{
-    const [x,y,r]=SLOTS[i];return `<g class="bunch-flower" transform="translate(${x} ${y}) rotate(${r} 100 180) scale(.68)"><g class="flower-arrive" style="--flower-index:${i}">${flowerCore(id,`${safeId(id)}-b-${i}`)}</g></g>`;
-  }).join('');
-  // Mark-up is re-created on every selection; never reorders the user's own bouquet.
-  return `<svg class="bouquet-svg ${wrapped?'is-wrapped':''}" viewBox="0 0 400 410" xmlns="http://www.w3.org/2000/svg" aria-label="Bouquet of ${ids.length} selected flowers" role="img">
-    <defs><linearGradient id="paperColor" x1="0" x2="1"><stop stop-color="#eadbc5"/><stop offset=".5" stop-color="#f8ead6"/><stop offset="1" stop-color="#d7bea4"/></linearGradient><linearGradient id="ribbonColor" x1="0" x2="1"><stop stop-color="#bf6760"/><stop offset="1" stop-color="#db8e76"/></linearGradient></defs>
-    <g>${flowers}</g>
-    ${wrapped?`<g class="paper-fold"><path d="M97 235L202 388 308 235 268 248 199 298 130 245Z" fill="url(#paperColor)" stroke="#bd977b" stroke-width="3"/><path d="M97 235 204 300 196 388Z" fill="#d9c5ad" opacity=".82"/><path d="M308 235 197 301 202 388Z" fill="#f7e7d3" opacity=".85"/><path d="M105 235 200 297 299 235" fill="none" stroke="#b58e74" stroke-width="2" stroke-dasharray="5 5"/></g><g class="ribbon-tie"><path d="M154 315Q198 333 246 315L241 330Q196 344 158 331Z" fill="url(#ribbonColor)"/><path d="M199 326Q151 285 146 311Q145 332 199 326Q244 287 252 311Q250 331 199 326Z" fill="#ca7667" stroke="#b76059" stroke-width="2"/><circle cx="199" cy="326" r="8" fill="#b85c59"/><path d="M195 331 175 375 189 366 198 382 207 334M202 331 227 375 215 367 210 381 201 335" fill="#ce8170" stroke="#b76059" stroke-width="2"/></g><g class="tag-write"><path d="M243 334 301 339 297 379 243 375Z" fill="#fff7e8" stroke="#ae9986" stroke-width="2"/><path d="M241 340 211 330" stroke="#9c866e" fill="none" stroke-width="2"/><text x="270" y="359" fill="#6d5a4e" font-family="cursive" font-style="italic" font-size="11" font-weight="bold" text-anchor="middle">For Maha</text><path d="M259 366q10 5 23 0" fill="none" stroke="#c58069" stroke-width="1.5"/></g>`:''}
-  </svg>`;
+const SLOTS=[
+ {x:14,y:86,r:-18,scale:.66,fx:-40,fy:44,fr:-18},
+ {x:77,y:38,r:-6,scale:.72,fx:-8,fy:-24,fr:-10},
+ {x:154,y:81,r:15,scale:.67,fx:24,fy:26,fr:13},
+ {x:224,y:45,r:22,scale:.66,fx:56,fy:-14,fr:16},
+ {x:30,y:157,r:-10,scale:.64,fx:-44,fy:76,fr:-18},
+ {x:171,y:160,r:12,scale:.64,fx:46,fy:70,fr:16},
+ {x:96,y:121,r:2,scale:.7,fx:0,fy:30,fr:0}
+];
+function bouquetStem(slot,index){
+ const baseX=199,baseY=363;
+ const anchorX=slot.x+100*slot.scale, anchorY=slot.y+128*slot.scale;
+ const pull=((anchorX-baseX)*.28).toFixed(1);
+ const midY=(anchorY+baseY)*.56;
+ return `<path class="bouquet-stem stem-${index}" d="M ${anchorX.toFixed(1)} ${anchorY.toFixed(1)} C ${(anchorX-pull).toFixed(1)} ${midY.toFixed(1)} ${(baseX+pull*0.28).toFixed(1)} ${(baseY-58+index*2).toFixed(1)} ${baseX} ${baseY}" fill="none" stroke="#5c845c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>`;
 }
-export function exportBouquetSVG(ids) {
- const svg=bouquetMarkup(ids,{wrapped:true,forExport:true});
+function bouquetLeaf(x,y,flip=1){
+ return `<path d="M ${x} ${y} Q ${x+18*flip} ${y-13} ${x+33*flip} ${y+6} Q ${x+14*flip} ${y+17} ${x} ${y}" fill="#8aa070" stroke="#607f58" stroke-width="1.4" opacity=".86"/>`;
+}
+function bouquetFlower(id,slot,i){
+ const uid=`${safeId(id)}-b-${i}-${++seq}`; const p=PALETTE[id]||PALETTE.rose;
+ return `<g class="bunch-flower slot-${i}" transform="translate(${slot.x} ${slot.y}) rotate(${slot.r} 100 112) scale(${slot.scale})" style="--from-x:${slot.fx}px;--from-y:${slot.fy}px;--from-r:${slot.fr}deg;--delay:${i*110}ms"><g class="gather-layer">${paintDefs(uid,p)}${flowerHead(id,uid)}</g></g>`;
+}
+export function bouquetMarkup(ids,{wrapped=false,forExport=false,stage='preview'}={}){
+ const slots=SLOTS.slice(0,ids.length);
+ const stems=slots.map((slot,i)=>bouquetStem(slot,i)).join('');
+ const leaves=`${bouquetLeaf(154,288,-1)}${bouquetLeaf(228,297,1)}${bouquetLeaf(181,319,-1)}`;
+ const flowers=ids.map((id,i)=>bouquetFlower(id,slots[i],i)).join('');
+ const wrap=`<g class="paper-fold"><path class="paper-back" d="M96 233L202 386 306 233 262 247 199 296 136 247Z" fill="url(#paperColor)" stroke="#bc987d" stroke-width="2.3"/><path class="paper-left" d="M96 233 204 299 195 386Z" fill="#d8c3ab" opacity=".95"/><path class="paper-right" d="M306 233 197 299 201 386Z" fill="#f6e7d5" opacity=".97"/><path class="paper-seam" d="M104 235 199 296 298 235" fill="none" stroke="#b58d73" stroke-width="1.9" stroke-dasharray="5 4"/></g><g class="ribbon-tie"><path d="M156 316Q198 332 244 316L241 331Q197 344 160 332Z" fill="url(#ribbonColor)"/><path d="M199 326Q152 286 147 311Q145 332 199 326Q243 287 251 310Q249 331 199 326Z" fill="#ca7667" stroke="#b76059" stroke-width="1.6"/><circle cx="199" cy="326" r="8" fill="#b85c59"/><path d="M195 332 175 374 189 365 198 381 207 334M202 332 227 374 215 366 210 380 201 335" fill="#cf816f" stroke="#b76059" stroke-width="1.6"/></g><g class="tag-write"><path d="M242 336 301 340 297 380 243 376Z" fill="#fff7e8" stroke="#ae9986" stroke-width="1.8"/><path d="M240 342 211 330" stroke="#9c866e" fill="none" stroke-width="2"/><text x="271" y="360" fill="#6d5a4e" font-family="cursive" font-style="italic" font-size="11" font-weight="bold" text-anchor="middle">For Maha</text><path d="M259 367q10 4 23 0" fill="none" stroke="#c58069" stroke-width="1.3"/></g>`;
+ return `<svg class="bouquet-svg ${wrapped?'is-wrapped':''} ${stage==='gather'?'is-gathering':''}" viewBox="0 0 400 418" xmlns="http://www.w3.org/2000/svg" aria-label="Bouquet of ${ids.length} selected flowers" role="img">
+  <defs>
+   <linearGradient id="paperColor" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#eadbc5"/><stop offset=".52" stop-color="#f8ead6"/><stop offset="1" stop-color="#d7bea4"/></linearGradient>
+   <linearGradient id="ribbonColor" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#bf6760"/><stop offset="1" stop-color="#db8e76"/></linearGradient>
+   <filter id="bouquetShadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#6b5342" flood-opacity=".16"/></filter>
+  </defs>
+  <g filter="url(#bouquetShadow)">
+   <g class="stem-fan">${stems}${leaves}</g>
+   <g class="flower-fan">${flowers}</g>
+   ${wrapped?wrap:''}
+  </g>
+ </svg>`;
+}
+function exportCardBackground(){
+ return `<defs><filter id="exportNoise"><feTurbulence type="fractalNoise" baseFrequency=".86" numOctaves="2" seed="5"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .08 0"/></filter></defs>
+ <rect width="960" height="1200" fill="#f8f0e3"/>
+ <g opacity=".55"><circle cx="170" cy="206" r="140" fill="#f3d2bf"/><circle cx="758" cy="236" r="160" fill="#dde5ca"/><circle cx="812" cy="808" r="125" fill="#f4debc"/></g>
+ <g opacity=".18"><path d="M94 212q212-178 445-18" fill="none" stroke="#dfbda3" stroke-width="44" stroke-linecap="round"/><path d="M542 116q159-59 274 77" fill="none" stroke="#e6dcbf" stroke-width="31" stroke-linecap="round"/></g>
+ <rect width="960" height="1200" fill="#ead8c5" opacity=".12" filter="url(#exportNoise)"/>`;
+}
+export function exportBouquetSVG(ids){
+ const svg=bouquetMarkup(ids,{wrapped:true,forExport:true,stage:'final'});
  const inner=svg.replace(/^<svg[^>]*>/,'').replace(/<\/svg>\s*$/,'');
- return `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1200" viewBox="0 0 960 1200"><rect width="960" height="1200" fill="#f8f0e3"/><rect x="50" y="52" width="860" height="1092" rx="30" fill="#f5e9d7" stroke="#d5b99b" stroke-width="3"/><g opacity=".65" fill="none" stroke="#caad91" stroke-width="3"><path d="M115 125Q145 95 178 130M755 105q48 34 75 4M120 995q45 24 74-2"/></g><text x="480" y="165" fill="#77614f" font-family="Georgia,serif" font-size="25" letter-spacing="8" text-anchor="middle">A LITTLE SOMETHING</text><g transform="translate(80 130) scale(2)">${inner}</g><text x="480" y="1052" fill="#905e55" font-family="Georgia,serif" font-size="47" font-style="italic" text-anchor="middle">For Maha, always.</text><text x="480" y="1091" fill="#907d69" font-family="Arial,sans-serif" font-size="17" letter-spacing="3" text-anchor="middle">YOUR SEVEN FLOWERS</text></svg>`;
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1200" viewBox="0 0 960 1200">${exportCardBackground()}<rect x="50" y="52" width="860" height="1092" rx="30" fill="#f5e9d7" stroke="#d5b99b" stroke-width="3"/><g opacity=".65" fill="none" stroke="#caad91" stroke-width="3"><path d="M115 125Q145 95 178 130M755 105q48 34 75 4M120 995q45 24 74-2"/></g><text x="480" y="165" fill="#77614f" font-family="Georgia,serif" font-size="25" letter-spacing="8" text-anchor="middle">A LITTLE SOMETHING</text><g transform="translate(80 128) scale(2)">${inner}</g><text x="480" y="1052" fill="#905e55" font-family="Georgia,serif" font-size="47" font-style="italic" text-anchor="middle">For Maha, always.</text><text x="480" y="1091" fill="#907d69" font-family="Arial,sans-serif" font-size="17" letter-spacing="3" text-anchor="middle">YOUR SEVEN FLOWERS</text></svg>`;
 }
 export async function downloadBouquet(ids){
- const svg=exportBouquetSVG(ids);const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});
- const url=URL.createObjectURL(blob);const img=new Image();
- try {
-   await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;});
-   const canvas=document.createElement('canvas');canvas.width=960;canvas.height=1200;
-   const ctx=canvas.getContext('2d');if(!ctx)throw new Error('Canvas not supported');ctx.drawImage(img,0,0);
-   const png=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('PNG export failed')),'image/png'));
-   const pngURL=URL.createObjectURL(png);const a=document.createElement('a');a.download='for-maha-seven-flowers.png';a.href=pngURL;document.body.append(a);a.click();a.remove();
-   setTimeout(()=>URL.revokeObjectURL(pngURL),20000);
-   return true;
+ const svg=exportBouquetSVG(ids); const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'}); const url=URL.createObjectURL(blob); const img=new Image();
+ try{
+  await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;});
+  const canvas=document.createElement('canvas');canvas.width=960;canvas.height=1200; const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Canvas not supported'); ctx.drawImage(img,0,0);
+  const png=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('PNG export failed')),'image/png'));
+  const pngURL=URL.createObjectURL(png); const a=document.createElement('a'); a.download='for-maha-seven-flowers.png'; a.href=pngURL; document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(pngURL),20000);
+  return true;
  } finally {URL.revokeObjectURL(url);}
 }
