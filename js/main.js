@@ -20,7 +20,7 @@ async function init(){
   store.set('flowers',chosen);store.set('completed',true);sceneRoom(chosen);
  });});}
  function sceneRoom(chosen){
-  transition('room',()=>{unmount=mountRoom(root,{flowers:{today:todayLines},chosen,lastVisit:previousVisit,visits,onReplay:sceneHug});});
+  transition('room',()=>{unmount=mountRoom(root,{flowers:{today:todayLines},chosen,lastVisit:previousVisit,visits,onReplay:sceneHug,onNewBouquet:sceneFlowers});});
   store.set('lastVisit',Date.now());
  }
  const flowers=store.get('flowers',[]);

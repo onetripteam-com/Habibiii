@@ -290,3 +290,10 @@ button:disabled{cursor:default;opacity:.35}
  .petals{display:none!important}
  .loading-flower,.botanical,.flower-fan .head-art{animation:none!important}
 }
+/* Bouquet v3: botanical dome in both gift and vase, same selected heads. */
+.bouquet-svg{overflow:visible}
+.bouquet-growing .bouquet-svg{width:100%;height:100%}
+.room-bouquet{cursor:pointer;touch-action:manipulation;border-radius:15px}
+.room-bouquet:focus-visible{outline:3px solid #b56e54;outline-offset:3px}
+.room-bouquet .bouquet-svg{overflow:visible}
+.bouquet-gathering .gather-layer{animation:gather-in 1.05s cubic-bezier(.17,.83,.22,1) var(--delay) both}

@@ -164,47 +164,30 @@ export function flowerSVG(id,klass=''){
  const sway=4.8+(seq%4)*.45, amp=(seq%2?1.4:-1.2);
  return `<svg class="botanical ${klass}" style="--sway:${sway}s;--sway-amp:${amp}deg" viewBox="0 0 200 235" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${singleFlowerMarkup(id,uid)}</svg>`;
 }
-const SLOTS=[
- {x:14,y:86,r:-18,scale:.66,fx:-40,fy:44,fr:-18},
- {x:77,y:38,r:-6,scale:.72,fx:-8,fy:-24,fr:-10},
- {x:154,y:81,r:15,scale:.67,fx:24,fy:26,fr:13},
- {x:224,y:45,r:22,scale:.66,fx:56,fy:-14,fr:16},
- {x:30,y:157,r:-10,scale:.64,fx:-44,fy:76,fr:-18},
- {x:171,y:160,r:12,scale:.64,fx:46,fy:70,fr:16},
- {x:96,y:121,r:2,scale:.7,fx:0,fy:30,fr:0}
+// Florist-inspired dome: one binding point; staggered flower heads; foliage collar.
+// The room and the gift use the very same seven botanical heads and composition.
+const POSITIONS=[
+ [104,157,.67,-19],[150,104,.70,-10],[203,89,.75,2],
+ [257,110,.69,11],[298,162,.66,20],[154,177,.69,-8],[250,181,.70,9]
 ];
-function bouquetStem(slot,index){
- const baseX=199,baseY=363;
- const anchorX=slot.x+100*slot.scale, anchorY=slot.y+128*slot.scale;
- const pull=((anchorX-baseX)*.28).toFixed(1);
- const midY=(anchorY+baseY)*.56;
- return `<path class="bouquet-stem stem-${index}" d="M ${anchorX.toFixed(1)} ${anchorY.toFixed(1)} C ${(anchorX-pull).toFixed(1)} ${midY.toFixed(1)} ${(baseX+pull*0.28).toFixed(1)} ${(baseY-58+index*2).toFixed(1)} ${baseX} ${baseY}" fill="none" stroke="#5c845c" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" opacity=".92"/>`;
+const grip={x:202,y:317};
+function bouquetLeaf(x,y,angle,size=1){return `<g transform="translate(${x} ${y}) rotate(${angle}) scale(${size})"><path d="M0 0 Q-29-38 -7-75 Q26-45 0 0Z" fill="#7b9875" stroke="#587753" stroke-width="1.5"/><path d="M0 0Q-5-42-7-69" stroke="#d8e3bf" stroke-opacity=".75" fill="none" stroke-width="1.8"/></g>`;}
+function bouquetFlower(id,i,stage){
+ const [cx,cy,scale,angle]=POSITIONS[i];
+ const uid=`${safeId(id)}-b-${i}-${++seq}`;const p=PALETTE[id]||PALETTE.rose;
+ // Shapes are drawn around (100,90), then positioned by a stable translation.
+ return `<g class="bunch-flower slot-${i}" style="--delay:${i*95}ms;--drift-x:${(cx-202)*.28}px;--drift-y:${(cy-120)*.45}px" transform="translate(${cx} ${cy}) rotate(${angle}) scale(${scale}) translate(-100 -90)"><g class="gather-layer">${paintDefs(uid,p)}${flowerHead(id,uid)}</g></g>`;
 }
-function bouquetLeaf(x,y,flip=1){
- return `<path d="M ${x} ${y} Q ${x+18*flip} ${y-13} ${x+33*flip} ${y+6} Q ${x+14*flip} ${y+17} ${x} ${y}" fill="#8aa070" stroke="#607f58" stroke-width="1.4" opacity=".86"/>`;
-}
-function bouquetFlower(id,slot,i){
- const uid=`${safeId(id)}-b-${i}-${++seq}`; const p=PALETTE[id]||PALETTE.rose;
- return `<g class="bunch-flower slot-${i}" transform="translate(${slot.x} ${slot.y}) rotate(${slot.r} 100 112) scale(${slot.scale})" style="--from-x:${slot.fx}px;--from-y:${slot.fy}px;--from-r:${slot.fr}deg;--delay:${i*110}ms"><g class="gather-layer">${paintDefs(uid,p)}${flowerHead(id,uid)}</g></g>`;
-}
-export function bouquetMarkup(ids,{wrapped=false,forExport=false,stage='preview'}={}){
- const slots=SLOTS.slice(0,ids.length);
- const stems=slots.map((slot,i)=>bouquetStem(slot,i)).join('');
- const leaves=`${bouquetLeaf(154,288,-1)}${bouquetLeaf(228,297,1)}${bouquetLeaf(181,319,-1)}`;
- const flowers=ids.map((id,i)=>bouquetFlower(id,slots[i],i)).join('');
- const wrap=`<g class="paper-fold"><path class="paper-back" d="M96 233L202 386 306 233 262 247 199 296 136 247Z" fill="url(#paperColor)" stroke="#bc987d" stroke-width="2.3"/><path class="paper-left" d="M96 233 204 299 195 386Z" fill="#d8c3ab" opacity=".95"/><path class="paper-right" d="M306 233 197 299 201 386Z" fill="#f6e7d5" opacity=".97"/><path class="paper-seam" d="M104 235 199 296 298 235" fill="none" stroke="#b58d73" stroke-width="1.9" stroke-dasharray="5 4"/></g><g class="ribbon-tie"><path d="M156 316Q198 332 244 316L241 331Q197 344 160 332Z" fill="url(#ribbonColor)"/><path d="M199 326Q152 286 147 311Q145 332 199 326Q243 287 251 310Q249 331 199 326Z" fill="#ca7667" stroke="#b76059" stroke-width="1.6"/><circle cx="199" cy="326" r="8" fill="#b85c59"/><path d="M195 332 175 374 189 365 198 381 207 334M202 332 227 374 215 366 210 380 201 335" fill="#cf816f" stroke="#b76059" stroke-width="1.6"/></g><g class="tag-write"><path d="M242 336 301 340 297 380 243 376Z" fill="#fff7e8" stroke="#ae9986" stroke-width="1.8"/><path d="M240 342 211 330" stroke="#9c866e" fill="none" stroke-width="2"/><text x="271" y="360" fill="#6d5a4e" font-family="cursive" font-style="italic" font-size="11" font-weight="bold" text-anchor="middle">For Maha</text><path d="M259 367q10 4 23 0" fill="none" stroke="#c58069" stroke-width="1.3"/></g>`;
- return `<svg class="bouquet-svg ${wrapped?'is-wrapped':''} ${stage==='gather'?'is-gathering':''}" viewBox="0 0 400 418" xmlns="http://www.w3.org/2000/svg" aria-label="Bouquet of ${ids.length} selected flowers" role="img">
-  <defs>
-   <linearGradient id="paperColor" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#eadbc5"/><stop offset=".52" stop-color="#f8ead6"/><stop offset="1" stop-color="#d7bea4"/></linearGradient>
-   <linearGradient id="ribbonColor" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#bf6760"/><stop offset="1" stop-color="#db8e76"/></linearGradient>
-   <filter id="bouquetShadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#6b5342" flood-opacity=".16"/></filter>
-  </defs>
-  <g filter="url(#bouquetShadow)">
-   <g class="stem-fan">${stems}${leaves}</g>
-   <g class="flower-fan">${flowers}</g>
-   ${wrapped?wrap:''}
-  </g>
- </svg>`;
+export function bouquetMarkup(ids,{wrapped=false,forExport=false,stage='preview',vase=false}={}){
+ const selected=ids.slice(0,7);
+ const stems=selected.map((id,i)=>{
+   const [cx,cy]=POSITIONS[i], sx=cx-1, sy=cy+20, kink=(i-3)*7;
+   return `<path d="M${sx} ${sy} Q${sx+kink} 244 ${grip.x} ${grip.y} Q${grip.x+3} 341 ${grip.x-5+i*1.5} 376" fill="none" stroke="${i%2?'#62855e':'#527852'}" stroke-width="${i%2?4.4:5.1}" stroke-linecap="round"/>`;
+ }).join('');
+ const collar=[bouquetLeaf(125,236,-51,.79),bouquetLeaf(171,226,-17,.73),bouquetLeaf(231,231,27,.75),bouquetLeaf(281,244,53,.79),bouquetLeaf(193,260,-43,.63),bouquetLeaf(221,268,36,.64)].join('');
+ const heads=selected.map((id,i)=>bouquetFlower(id,i,stage)).join('');
+ const wrap=`<g class="paper-fold"><path class="paper-back" d="M92 224Q141 246 202 302Q260 246 313 224L245 384Q201 405 162 384Z" fill="url(#paperColor)" stroke="#b99d83" stroke-width="2"/><path class="paper-left" d="M92 224 204 314 179 385 113 247Z" fill="#e9d7c1" stroke="#c2a48b" stroke-width="1.5"/><path class="paper-right" d="M313 224 202 314 225 385 290 247Z" fill="#faf0df" stroke="#c2a48b" stroke-width="1.5"/></g><g class="ribbon-tie"><path d="M174 332Q203 341 229 330L228 345Q198 354 176 345Z" fill="url(#ribbonColor)"/><path d="M201 339Q164 307 159 333Q166 351 201 339Q239 308 243 333Q237 351 201 339Z" fill="#ca7667" stroke="#b76059" stroke-width="1.8"/><circle cx="202" cy="340" r="7" fill="#ac5653"/><path d="M198 346 179 377 194 369 203 387 208 344M205 345 228 375 216 369 212 385 202 346" fill="#d58371" stroke="#b76059" stroke-width="1.6"/></g><g class="tag-write"><path d="M232 348 299 351 296 389 230 385Z" fill="#fff8ec" stroke="#ac9681" stroke-width="1.8"/><path d="M232 353 210 340" fill="none" stroke="#ac9681" stroke-width="2"/><text x="264" y="372" fill="#785d4e" text-anchor="middle" font-family="Georgia,cursive" font-size="12" font-style="italic">For Maha</text></g>`;
+ return `<svg class="bouquet-svg ${wrapped?'is-wrapped':''} ${stage==='gather'?'is-gathering':''} ${vase?'in-vase':''}" viewBox="0 0 400 418" xmlns="http://www.w3.org/2000/svg" aria-label="Bouquet of ${selected.length} chosen flowers" role="img"><defs><linearGradient id="paperColor" x1="0" x2="1"><stop stop-color="#dbc0a2"/><stop offset=".5" stop-color="#f8ead5"/><stop offset="1" stop-color="#e2c7ac"/></linearGradient><linearGradient id="ribbonColor" x1="0" x2="1"><stop stop-color="#b95e56"/><stop offset="1" stop-color="#e3a18a"/></linearGradient></defs><g class="stem-fan">${stems}</g><g class="foliage-collar">${collar}</g><g class="flower-fan">${heads}</g>${wrapped&&!vase?wrap:''}</svg>`;
 }
 function exportCardBackground(){
  return `<defs><filter id="exportNoise"><feTurbulence type="fractalNoise" baseFrequency=".86" numOctaves="2" seed="5"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .08 0"/></filter></defs>
