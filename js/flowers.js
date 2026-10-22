@@ -7,7 +7,7 @@ export function mountFlowers(root,flowers,onDone){
  let chosen=[],complete=false,disposed=false;
  root.innerHTML=`<section class="scene flowers-scene" aria-label="Choose seven flowers">
    <div class="flowers-top">
-     <div class="flower-intro"><span class="eyebrow">02 / THIS ONE'S FOR YOU</span><h1>Seven flowers.<br><em>Your rules.</em></h1><p id="flower-subtitle">Pick the thirteen you want to keep.</p></div>
+     <div class="flower-intro"><span class="eyebrow">02 / THIS ONE'S FOR YOU</span><h1>Seven flowers.<br><em>Your rules.</em></h1><p id="flower-subtitle">Pick seven from the thirteen. A whole florist moment.</p></div>
      <div class="flower-status-row">
        <div class="flower-counter" id="flower-counter" aria-live="polite"><strong>0 <span>of 7</span></strong><span class="counter-caption">picked by Maha</span></div>
        <div class="flower-status-note"><span id="flower-instruction">Choose your flowers</span><small>undo and reset wait below</small></div>
@@ -54,11 +54,11 @@ export function mountFlowers(root,flowers,onDone){
   await delay(250); if(disposed) return;
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:false,stage:'gather'});
   display.classList.add('bouquet-gathering');
-  await delay(1250); if(disposed) return;
+  await delay(1650); if(disposed) return;
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:true,stage:'final'});
   display.classList.remove('bouquet-gathering');
   display.classList.add('bouquet-wrapping');
-  await delay(3000); if(disposed) return;
+  await delay(3400); if(disposed) return;
   root.querySelector('#flower-bottom').hidden=true;
   root.querySelector('#bouquet-final').hidden=false;
   await move(root.querySelector('#bouquet-final'),{opacity:0,transform:'translateY(15px)'},{opacity:1,transform:'translateY(0)'},500);

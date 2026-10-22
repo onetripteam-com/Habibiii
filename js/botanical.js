@@ -1,213 +1,185 @@
-const PALETTE={
- rose:{outer:'#cb6961',inner:'#efafa0',shadow:'#a34f50',accent:'#d9a95b'},
- daisy:{outer:'#f7ecd5',inner:'#fffaf0',shadow:'#d8bd87',accent:'#e9bb58'},
- sunflower:{outer:'#edae48',inner:'#f7d879',shadow:'#d98c2f',accent:'#644a32'},
- tulip:{outer:'#d9796e',inner:'#f2b1a0',shadow:'#b85253',accent:'#dcb767'},
- peony:{outer:'#d99ba0',inner:'#f1c7ba',shadow:'#bb747f',accent:'#edc772'},
- lily:{outer:'#f5e2b7',inner:'#fff5da',shadow:'#d9b992',accent:'#b67a3d'},
- orchid:{outer:'#c7a1c5',inner:'#ebcadc',shadow:'#986f9f',accent:'#c47870'},
- lavender:{outer:'#9c8bbd',inner:'#bfb0d2',shadow:'#736999',accent:'#e5c6a4'},
- jasmine:{outer:'#fff4d6',inner:'#fffdf4',shadow:'#dbcfa7',accent:'#ebc977'},
- marigold:{outer:'#eab047',inner:'#ffce66',shadow:'#c78730',accent:'#e7a43b'},
- hibiscus:{outer:'#cf615c',inner:'#ef9f8c',shadow:'#a4404c',accent:'#f0c54e'},
- iris:{outer:'#8c83b1',inner:'#b9abd2',shadow:'#645a92',accent:'#e3b96d'},
- lotus:{outer:'#d59ba1',inner:'#f4c8c6',shadow:'#b57482',accent:'#edcd7d'}
+/* MAHA botanical atelier. One composition engine for picking, wrapping, PNG and room vase.
+ * Every selected species stays visible as a separate focal bloom. Extra foliage and
+ * tiny unopened buds are supporting greenery, not additional selected flowers.
+ * Geometry follows a hand-tied spiral: dome-shaped canopy, one binding point. */
+const COLORS={
+ rose:['#b74f5c','#e38c8a','#f8d6be','#803c4b','#d9ae67'],
+ daisy:['#e2d7ba','#fffdf2','#fffaf1','#c3b58d','#deb256'],
+ sunflower:['#cc872e','#eab13c','#ffe28a','#a3652c','#5d4530'],
+ tulip:['#bf5b59','#e78e80','#f6b9a6','#993f4d','#d9b066'],
+ peony:['#c68191','#e6a8b0','#f8d3c5','#9f6079','#f0c47a'],
+ lily:['#dac3a5','#f4dfbb','#fff3d6','#b9a08f','#aa643d'],
+ orchid:['#a276a4','#c9a1c9','#efccdf','#835786','#bd776d'],
+ lavender:['#746a9e','#9f90bc','#c7b5d8','#605a8c','#decba8'],
+ jasmine:['#d0c8a9','#f2eed9','#fffff2','#aaa17c','#edca70'],
+ marigold:['#ca8230','#e6aa44','#ffd272','#a16b37','#bc7427'],
+ hibiscus:['#bd424e','#e46e6f','#f7aea0','#8d374b','#f3d367'],
+ iris:['#71689f','#9f98c6','#c5b3d5','#574e8b','#ebbf72'],
+ lotus:['#c47f95','#dfa8b2','#f4d4ce','#a15c79','#e4be7b']
 };
-const STEM='#5c855d', STEM_DARK='#4b7050';
-let seq=0;
-const safeId=id=>String(id).replace(/[^a-z0-9-]/gi,'');
-const esc=x=>String(x).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
-function hashCode(str){let h=0;for(let i=0;i<str.length;i++)h=((h<<5)-h)+str.charCodeAt(i)|0;return Math.abs(h);}
-function rng(seed){let x=(hashCode(seed)%2147483646)+1;return ()=>{x=(x*48271)%2147483647;return (x-1)/2147483646;};}
-function clamp(n,a,b){return Math.max(a,Math.min(b,n));}
-function paintDefs(uid,p){
- return `
- <defs>
-  <linearGradient id="petal-${uid}" x1="0" y1="0" x2="0" y2="1">
-   <stop offset="0" stop-color="${p.inner}"/>
-   <stop offset=".57" stop-color="${p.outer}"/>
-   <stop offset="1" stop-color="${p.shadow}"/>
-  </linearGradient>
-  <radialGradient id="petal-wash-${uid}" cx=".45" cy=".24" r=".9">
-   <stop offset="0" stop-color="${p.inner}" stop-opacity=".95"/>
-   <stop offset=".65" stop-color="${p.outer}" stop-opacity=".88"/>
-   <stop offset="1" stop-color="${p.shadow}" stop-opacity=".96"/>
-  </radialGradient>
-  <linearGradient id="leaf-${uid}" x1="0" y1="0" x2="1" y2="1">
-   <stop offset="0" stop-color="#9cb281"/>
-   <stop offset="1" stop-color="#4f7454"/>
-  </linearGradient>
-  <radialGradient id="center-${uid}" cx=".5" cy=".45" r=".8">
-   <stop offset="0" stop-color="${p.accent}"/>
-   <stop offset="1" stop-color="${p.shadow}"/>
-  </radialGradient>
-  <filter id="soft-${uid}" x="-25%" y="-25%" width="150%" height="150%">
-   <feGaussianBlur stdDeviation=".7" result="b"/>
-   <feColorMatrix in="b" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 .22 0" result="soft"/>
-   <feBlend in="SourceGraphic" in2="soft" mode="multiply"/>
-  </filter>
-  <filter id="shadow-${uid}" x="-30%" y="-30%" width="160%" height="160%">
-   <feDropShadow dx="0" dy="2.2" stdDeviation="2.3" flood-color="#705241" flood-opacity=".14"/>
-  </filter>
-  <filter id="grain-${uid}" x="-20%" y="-20%" width="140%" height="140%">
-   <feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="${hashCode(uid)%97}" result="noise"/>
-   <feColorMatrix in="noise" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 .12 0"/>
-   <feBlend in="SourceGraphic" mode="soft-light"/>
-  </filter>
+const flowerSize={rose:63,daisy:54,sunflower:64,tulip:52,peony:73,lily:67,orchid:62,lavender:50,jasmine:51,marigold:54,hibiscus:66,iris:62,lotus:69};
+let serial=0;
+const n=(v)=>Number(v).toFixed(2);
+const seedHash=s=>[...String(s)].reduce((a,c)=>(Math.imul(a,31)+c.charCodeAt(0))|0,987654321)>>>0;
+const seeded=s=>{let x=seedHash(s);return()=>{x^=x<<13;x^=x>>>17;x^=x<<5;return (x>>>0)/4294967295;};};
+const path=(d,fill,stroke='',sw=1,more='')=>`<path d="${d}" fill="${fill}" ${stroke?`stroke="${stroke}" stroke-width="${sw}"`:''} ${more}/>`;
+function defs(uid,id){
+ const c=COLORS[id]||COLORS.rose;
+ return `<defs>
+  <radialGradient id="wash-${uid}" cx=".32" cy=".22" r=".92"><stop stop-color="${c[2]}"/><stop offset=".42" stop-color="${c[1]}"/><stop offset=".82" stop-color="${c[0]}"/><stop offset="1" stop-color="${c[3]}"/></radialGradient>
+  <linearGradient id="fold-${uid}" x1="0" y1="0" x2=".92" y2="1"><stop stop-color="${c[3]}" stop-opacity=".54"/><stop offset=".37" stop-color="${c[1]}" stop-opacity=".78"/><stop offset=".72" stop-color="${c[2]}"/><stop offset="1" stop-color="${c[0]}"/></linearGradient>
+  <radialGradient id="center-${uid}" cx=".35" cy=".32" r=".8"><stop stop-color="${c[4]}"/><stop offset="1" stop-color="${c[3]}"/></radialGradient>
+  <linearGradient id="green-${uid}" x1="0" y1="0" x2=".9" y2="1"><stop stop-color="#b4bc91"/><stop offset=".42" stop-color="#799977"/><stop offset="1" stop-color="#4d715a"/></linearGradient>
  </defs>`;
 }
-function paintedPetal(cx,cy,angle,length,width,fill,stroke,seed,highlight=true){
- const rand=rng(seed); const lean=(rand()-.5)*6, pinch=.32+rand()*.1, belly=.4+rand()*.12, tip=length*(.96+rand()*.1);
- const p1x=cx-width*(.55+rand()*.15), p1y=cy-length*pinch;
- const p2x=cx-width*(.95+rand()*.2), p2y=cy-length*belly;
- const tx=cx+(rand()-.5)*3, ty=cy-tip;
- const p3x=cx+width*(.95+rand()*.2), p3y=cy-length*belly;
- const p4x=cx+width*(.55+rand()*.15), p4y=cy-length*pinch;
- const highlightPath=`M ${cx.toFixed(2)} ${cy.toFixed(2)} C ${(cx-width*.24).toFixed(2)} ${(cy-length*.2).toFixed(2)} ${(cx-width*.2).toFixed(2)} ${(cy-length*.56).toFixed(2)} ${(cx-width*.05).toFixed(2)} ${(cy-length*.84).toFixed(2)}`;
- return `<g transform="rotate(${angle+lean} ${cx} ${cy})"><path d="M ${cx} ${cy} C ${p1x.toFixed(2)} ${p1y.toFixed(2)} ${p2x.toFixed(2)} ${p2y.toFixed(2)} ${tx.toFixed(2)} ${ty.toFixed(2)} C ${p3x.toFixed(2)} ${p3y.toFixed(2)} ${p4x.toFixed(2)} ${p4y.toFixed(2)} ${cx} ${cy} Z" fill="${fill}" stroke="${stroke}" stroke-opacity=".22" stroke-width="1.25"/><path d="${highlightPath}" fill="none" stroke="#fffdf9" stroke-opacity="${highlight?'.26':'.14'}" stroke-width="1.2" stroke-linecap="round"/></g>`;
+function petal(x,y,angle,l,w,uid,idx,{edge=true,heart=false}={}){
+ const r=seeded(uid+idx);const skew=(r()-.5)*.13;
+ const cp1=n(w*(.73+r()*.16)),cp2=n(w*(.86+r()*.25));
+ const tip=n(-l*(.95+r()*.09));
+ // A lobed, scalloped edge rather than a pointed clip-art triangle.
+ const d=`M0 5 C ${-w*.38} ${-l*.2} ${-cp1} ${-l*.38} ${-cp2} ${-l*.61} Q ${-w*.87} ${-l*.83} ${-w*.4} ${tip} Q 0 ${tip-l*.07} ${w*.36} ${tip} Q ${w*.9} ${-l*.86} ${w*(.87+r()*.08)} ${-l*.63} C ${w*(.92+r()*.1)} ${-l*.37} ${w*.42} ${-l*.18} 0 5 Z`;
+ const vein=`M0 1 Q${n((r()-.5)*w*.45)} ${n(-l*.48)} ${n(skew*w)} ${n(-l*.88)}`;
+ return `<g transform="translate(${n(x)} ${n(y)}) rotate(${n(angle)})">${path(d,`url(#${idx%3?'wash':'fold'}-${uid})`,'#fff4e6',.85,'stroke-opacity=".32"')}${path(vein,'none','#fff8e9',1.5,'stroke-opacity=".24" stroke-linecap="round"')}${edge?path(`M${n(-w*.44)} ${n(-l*.93)} Q0 ${n(-l*1.035)} ${n(w*.38)} ${n(-l*.95)}`,'none','#fff4ea',1.4,'stroke-opacity=".35"'):''}</g>`;
 }
-function petalRing({uid,count=8,cx=100,cy=88,length=48,width=18,radius=22,offset=0,fill,stroke,seed='x'}){
- let s='';
- for(let i=0;i<count;i++){
-  const a=offset+(360/count)*i; const rad=a*Math.PI/180;
-  const px=cx+Math.sin(rad)*radius, py=cy-Math.cos(rad)*radius;
-  s+=paintedPetal(px,py,a,length,width,fill,stroke,`${seed}-${i}`);
- }
+function ring(count,radius,length,width,uid,layer=0,angle=0){
+ let s='';for(let i=0;i<count;i++){
+  const a=i*360/count+angle+(seeded(uid+i+layer)()-.5)*9,rd=a*Math.PI/180;
+  const x=Math.sin(rd)*radius,y=-Math.cos(rd)*radius;
+  s+=petal(x,y,a,length*(.92+(i%4)*.04),width*(.9+(i%3)*.08),uid,i+layer*33);
+ }return s;
+}
+function center(uid,r=12,points=26){
+ let s=`<circle r="${r}" fill="url(#center-${uid})"/>`;
+ for(let i=0;i<points;i++){const a=i*2.399963,rad=Math.sqrt((i+.5)/points)*r*.92;s+=`<circle cx="${n(Math.cos(a)*rad)}" cy="${n(Math.sin(a)*rad)}" r="${n(.95+(i%3)*.4)}" fill="${i%3===0?'#f4d58e':'#73553c'}" opacity=".64"/>`;}
  return s;
 }
-function dottedCenter(cx,cy,r,fill,n=26){
- let s=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="${fill}"/>`;
- for(let i=0;i<n;i++){
-  const a=(Math.PI*2/n)*i, rr=r*(.2+.72*((i*7)%n)/n);
-  const x=cx+Math.cos(a)*rr,y=cy+Math.sin(a)*rr;s+=`<circle cx="${x.toFixed(2)}" cy="${y.toFixed(2)}" r="${(i%3?1.3:1.7)}" fill="#e9c06c" opacity=".68"/>`;
- }
- return s;
-}
-function flowerHead(id,uid){
- const p=PALETTE[id]||PALETTE.rose; const petalFill=`url(#petal-${uid})`, washFill=`url(#petal-wash-${uid})`, centerFill=`url(#center-${uid})`;
+function bloom(id,uid){
+ const c=COLORS[id]||COLORS.rose;
  let s='';
- if(id==='rose'){
-  s+=petalRing({uid,count:6,cx:100,cy:87,length:44,width:18,radius:18,offset:10,fill:petalFill,stroke:p.shadow,seed:`${uid}-r1`});
-  s+=petalRing({uid,count:5,cx:100,cy:87,length:36,width:16,radius:10,offset:18,fill:washFill,stroke:p.shadow,seed:`${uid}-r2`});
-  s+=`<path d="M88 95c4-23 31-25 27-2-4 18-22 17-22 4 0-8 8-13 17-8 4 2 6 7 4 12" fill="none" stroke="${p.shadow}" stroke-width="4.5" stroke-linecap="round"/><path d="M96 92c5-10 12-11 15-2" fill="none" stroke="#fff7f0" stroke-opacity=".28" stroke-width="2" stroke-linecap="round"/>`;
- } else if(id==='peony'){
-  s+=petalRing({uid,count:10,cx:100,cy:90,length:42,width:21,radius:22,offset:2,fill:petalFill,stroke:p.shadow,seed:`${uid}-p1`});
-  s+=petalRing({uid,count:8,cx:100,cy:90,length:34,width:19,radius:12,offset:14,fill:washFill,stroke:p.shadow,seed:`${uid}-p2`});
-  s+=petalRing({uid,count:6,cx:100,cy:92,length:25,width:13,radius:3,offset:6,fill:petalFill,stroke:p.shadow,seed:`${uid}-p3`});
-  s+=`<circle cx="100" cy="93" r="5.8" fill="${p.accent}" opacity=".75"/>`;
- } else if(id==='sunflower'){
-  s+=petalRing({uid,count:18,cx:100,cy:88,length:44,width:12,radius:28,offset:0,fill:petalFill,stroke:p.shadow,seed:`${uid}-s1`});
-  s+=petalRing({uid,count:18,cx:100,cy:88,length:32,width:10,radius:18,offset:10,fill:washFill,stroke:p.shadow,seed:`${uid}-s2`});
-  s+=dottedCenter(100,88,24,centerFill,38);
- } else if(id==='tulip'){
-  s+=paintedPetal(84,110,-12,58,20,petalFill,p.shadow,`${uid}-t1`);
-  s+=paintedPetal(100,118,0,74,23,washFill,p.shadow,`${uid}-t2`);
-  s+=paintedPetal(116,110,12,58,20,petalFill,p.shadow,`${uid}-t3`);
-  s+=`<path d="M79 118Q100 133 121 118L116 129Q100 136 84 129Z" fill="#74a06c" opacity=".42"/><path d="M84 84q8 15 16 31 11-16 18-32" fill="none" stroke="#fffaf4" stroke-opacity=".28" stroke-width="2.4" stroke-linecap="round"/>`;
- } else if(id==='lily'){
-  for(let i=0;i<6;i++) s+=paintedPetal(100,93,i*60,59,17,i%2?petalFill:washFill,p.shadow,`${uid}-l${i}`);
-  s+=`<circle cx="100" cy="92" r="7" fill="#f8dfb2"/>`;
-  for(let i=0;i<6;i++){const a=i*Math.PI/3;const x=100+Math.cos(a)*18,y=92+Math.sin(a)*18;s+=`<path d="M100 93 ${x.toFixed(1)} ${y.toFixed(1)}" stroke="#a36e3a" stroke-width="1.7"/><ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="2.3" ry="5.4" fill="#a36e3a" transform="rotate(${(i*60)-10} ${x.toFixed(1)} ${y.toFixed(1)})"/>`;}
-  for(let i=0;i<7;i++){const x=84+i*4.7,y=78+(i%2?7:0);s+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="1.6" fill="#c38b55" opacity=".55"/>`;}
- } else if(id==='orchid'){
-  s+=paintedPetal(78,84,-34,48,25,washFill,p.shadow,`${uid}-o1`);
-  s+=paintedPetal(122,84,34,48,25,washFill,p.shadow,`${uid}-o2`);
-  s+=paintedPetal(67,112,-65,44,21,petalFill,p.shadow,`${uid}-o3`);
-  s+=paintedPetal(133,112,65,44,21,petalFill,p.shadow,`${uid}-o4`);
-  s+=`<path d="M87 88Q100 65 113 88L122 110Q101 140 77 110Z" fill="${washFill}" stroke="${p.shadow}" stroke-opacity=".28" stroke-width="1.4"/><path d="M92 104Q100 84 108 104Q111 118 100 122Q89 117 92 104Z" fill="${centerFill}"/><path d="M95 106q6 3 10 0" fill="none" stroke="#fffaf4" stroke-opacity=".28" stroke-width="1.5"/>`;
- } else if(id==='hibiscus'){
-  s+=petalRing({uid,count:5,cx:100,cy:92,length:50,width:25,radius:26,offset:0,fill:petalFill,stroke:p.shadow,seed:`${uid}-h1`});
-  s+=`<path d="M100 94Q118 97 138 67" stroke="${p.shadow}" stroke-width="5" fill="none" stroke-linecap="round"/><g fill="#f8d775"><circle cx="140" cy="66" r="4.8"/><circle cx="145" cy="58" r="2.8"/><circle cx="137" cy="56" r="2.5"/><circle cx="146" cy="67" r="2.2"/></g>`;
- } else if(id==='lotus'){
-  s+=petalRing({uid,count:7,cx:100,cy:103,length:51,width:21,radius:10,offset:0,fill:petalFill,stroke:p.shadow,seed:`${uid}-lo1`});
-  s+=petalRing({uid,count:6,cx:100,cy:108,length:36,width:16,radius:3,offset:18,fill:washFill,stroke:p.shadow,seed:`${uid}-lo2`});
-  s+=`<ellipse cx="100" cy="108" rx="15" ry="6" fill="${centerFill}"/>`;
- } else if(id==='daisy'){
-  s+=petalRing({uid,count:16,cx:100,cy:90,length:41,width:10,radius:22,offset:2,fill:washFill,stroke:p.shadow,seed:`${uid}-d1`});
-  s+=dottedCenter(100,90,13,centerFill,18);
- } else if(id==='jasmine'){
-  s+=petalRing({uid,count:6,cx:100,cy:90,length:31,width:15,radius:10,offset:4,fill:washFill,stroke:p.shadow,seed:`${uid}-j1`});
-  s+=`<circle cx="100" cy="90" r="8" fill="#f0d486" opacity=".66"/>`;
- } else if(id==='lavender'){
-  for(let j=0;j<8;j++){
-   const y=122-j*11, w=11-j*.5;
-   s+=`<ellipse cx="${94-w/2}" cy="${y}" rx="${w}" ry="${6+j*.15}" transform="rotate(-34 ${94-w/2} ${y})" fill="${j%2?washFill:petalFill}" stroke="${p.shadow}" stroke-opacity=".18" stroke-width="1"/><ellipse cx="${106+w/2}" cy="${y-2}" rx="${w}" ry="${6+j*.15}" transform="rotate(34 ${106+w/2} ${y-2})" fill="${j%2?petalFill:washFill}" stroke="${p.shadow}" stroke-opacity=".18" stroke-width="1"/>`;
-  }
- } else if(id==='marigold'){
-  s+=petalRing({uid,count:22,cx:100,cy:90,length:24,width:14,radius:14,offset:2,fill:petalFill,stroke:p.shadow,seed:`${uid}-m1`});
-  s+=petalRing({uid,count:16,cx:100,cy:90,length:17,width:11,radius:6,offset:11,fill:washFill,stroke:p.shadow,seed:`${uid}-m2`});
-  s+=`<circle cx="100" cy="90" r="5" fill="${centerFill}"/>`;
- } else if(id==='iris'){
-  s+=paintedPetal(100,92,0,54,20,washFill,p.shadow,`${uid}-i0`);
-  s+=paintedPetal(78,98,-65,46,20,petalFill,p.shadow,`${uid}-i1`);
-  s+=paintedPetal(122,98,65,46,20,petalFill,p.shadow,`${uid}-i2`);
-  s+=paintedPetal(89,110,-18,36,14,washFill,p.shadow,`${uid}-i3`);
-  s+=paintedPetal(111,110,18,36,14,washFill,p.shadow,`${uid}-i4`);
-  s+=`<path d="M92 106q8 10 16 0" fill="none" stroke="${p.accent}" stroke-width="5" stroke-linecap="round"/>`;
+ switch(id){
+ case 'rose':
+  s+=ring(8,16,44,18,uid,0,11)+ring(7,9,34,17,uid,1,26)+ring(5,3,25,14,uid,2,7);
+  s+=`<path d="M-13 8Q-20-16-2-17Q17-18 16-2Q17 13 1 13Q-12 10-7-2Q0-11 8-5" fill="none" stroke="${c[3]}" stroke-width="3.9" opacity=".77" stroke-linecap="round"/><path d="M-9 3Q-4-12 9-5" stroke="${c[2]}" stroke-width="2" fill="none" opacity=".64"/>`;
+  break;
+ case 'peony':
+  s+=ring(12,17,46,22,uid,0,3)+ring(10,11,36,19,uid,1,17)+ring(9,6,26,16,uid,2,7)+ring(6,2,17,11,uid,3,12)+center(uid,5,9);break;
+ case 'sunflower':
+  s+=ring(19,23,48,12,uid,0,7)+ring(20,19,39,10,uid,1,16);
+  s+=`<circle r="25" fill="#614630" stroke="#b5833d" stroke-width="3"/>`+center(uid,21,98);break;
+ case 'daisy':
+  s+=ring(16,15,38,9.8,uid,0,7)+ring(15,13,33,9.2,uid,1,13)+center(uid,15,42);break;
+ case 'tulip':
+  s+=`<path d="M-31 4Q-38-19-23-48Q-12-39 0-47Q15-39 27-49Q41-18 29 8Q4 29-26 9Z" fill="url(#wash-${uid})" stroke="${c[3]}" stroke-width="1.5"/>`;
+  s+=petal(-13,10,-17,50,17,uid,2)+petal(13,9,17,51,17,uid,3)+petal(0,15,1,48,15,uid,4);
+  s+=`<path d="M-29 3Q0 19 29 3" fill="none" stroke="${c[3]}" stroke-width="2" opacity=".4"/>`;break;
+ case 'lily':
+  s+=ring(6,8,61,19,uid,0,8);
+  s+=`<circle r="10" fill="#f6d2a6"/>`;
+  for(let i=0;i<6;i++){const a=i*Math.PI/3,tx=Math.sin(a)*31,ty=-Math.cos(a)*31;s+=path(`M0 2 Q${n(tx*.25)} ${n(ty*.5)} ${n(tx)} ${n(ty)}`,'none','#996445',1.7)+`<ellipse cx="${n(tx)}" cy="${n(ty)}" rx="3.5" ry="6" transform="rotate(${n(i*60) } ${n(tx)} ${n(ty)})" fill="#b06d35"/>`;}break;
+ case 'orchid':
+  s+=petal(-21,4,-54,53,24,uid,1)+petal(21,4,54,53,24,uid,2)+petal(-17,-10,-29,49,24,uid,3)+petal(17,-10,29,49,24,uid,4)+petal(0,14,180,34,23,uid,5);
+  s+=`<path d="M-19 10Q0-15 20 10Q11 34 0 24Q-11 33-19 10Z" fill="${c[2]}" stroke="${c[3]}" stroke-width="2"/><path d="M-10 11Q0 1 10 11Q5 22-5 22Z" fill="#b77570"/>`;break;
+ case 'hibiscus':
+  s+=ring(5,17,59,26,uid,0,3);
+  s+=`<circle r="12" fill="#983846" opacity=".65"/><path d="M0 0Q17-6 37-35" fill="none" stroke="#bb494d" stroke-width="5" stroke-linecap="round"/>`;
+  for(let i=0;i<9;i++){const x=24+(i%3)*6,y=-25-Math.floor(i/3)*7;s+=`<circle cx="${x}" cy="${y}" r="3.3" fill="#f8cd63"/>`;}break;
+ case 'lotus':
+  s+=ring(8,14,54,19,uid,0,3)+ring(8,8,41,17,uid,1,16)+ring(6,3,30,13,uid,2,15)+center(uid,8,17);break;
+ case 'marigold':
+  s+=ring(22,13,27,10,uid,0,4)+ring(18,8,21,10,uid,1,11)+ring(15,4,15,9,uid,2,19)+center(uid,6,14);break;
+ case 'jasmine':
+  s+=ring(6,5,37,15,uid,0,4)+ring(5,4,29,13,uid,1,23)+center(uid,7,12);break;
+ case 'lavender':
+  s+=`<path d="M0 28Q-4-25 2-64" stroke="#769074" stroke-width="3.3" fill="none"/>`;
+  for(let j=0;j<11;j++){const y=19-j*8,r=14-j*.45;s+=`<ellipse cx="${n(-r/2)}" cy="${y}" rx="${n(r*.8)}" ry="${n(5.8+j*.07)}" fill="${j%2?c[1]:c[0]}" stroke="${c[3]}" stroke-opacity=".3" transform="rotate(-35 ${n(-r/2)} ${y})"/><ellipse cx="${n(r/2)}" cy="${y-3}" rx="${n(r*.8)}" ry="${n(5.8+j*.07)}" fill="${j%2?c[0]:c[1]}" stroke="${c[3]}" stroke-opacity=".3" transform="rotate(35 ${n(r/2)} ${y-3})"/>`;}break;
+ case 'iris':
+  s+=petal(0,-2,0,57,19,uid,0)+petal(-13,4,-51,49,23,uid,1)+petal(13,4,51,49,23,uid,2)+petal(-15,17,-117,36,21,uid,3)+petal(15,17,117,36,21,uid,4);
+  s+=`<path d="M-17 8Q0 23 17 8" stroke="${c[4]}" stroke-width="5" fill="none" stroke-linecap="round"/>`;break;
  }
- return `<g class="head-art" filter="url(#shadow-${uid})">${s}</g>`;
+ // Very fine, deliberately imperfect botanical contour and translucent shadow.
+ return `${defs(uid,id)}<g class="bloom-paint"><circle cx="3" cy="4" r="${n((flowerSize[id]||62)*.64)}" fill="${c[0]}" opacity=".07"/>${s}</g>`;
 }
-function singleStem(uid,{y1=121,y2=223,curve=0}={}){
- return `<g class="stem-cluster">
-   <path class="stem-main" d="M100 ${y1} C ${100-curve} ${(y1+40).toFixed(1)} ${100+curve*.4} ${(y2-44).toFixed(1)} 100 ${y2}" stroke="${STEM}" stroke-width="5" fill="none" stroke-linecap="round"/>
-   <path d="M95 160Q69 133 42 147Q53 175 96 167" fill="url(#leaf-${uid})" stroke="#56744f" stroke-width="1.7"/>
-   <path d="M104 184Q139 154 157 164Q145 191 104 191" fill="url(#leaf-${uid})" stroke="#56744f" stroke-width="1.7"/>
-   <path d="M66 152 95 166M133 171 107 185" stroke="#dfe6c4" stroke-opacity=".65" stroke-width="1.3" fill="none"/>
-  </g>`;
+function leafShape(x,y,angle,length=48,width=19,shade='#708c6c'){
+ return `<g transform="translate(${n(x)} ${n(y)}) rotate(${angle})"><path d="M0 0Q${-width*.86} ${-length*.48} 0 ${-length}Q${width*1.13} ${-length*.53} 0 0Z" fill="${shade}" stroke="#4d6956" stroke-opacity=".5" stroke-width="1.6"/><path d="M0 0Q3 ${-length*.46} 0 ${-length*.91}" stroke="#d0d8aa" stroke-opacity=".63" stroke-width="1.35" fill="none"/></g>`;
 }
-function singleFlowerMarkup(id,uid){
- const p=PALETTE[id]||PALETTE.rose;
- return `${paintDefs(uid,p)}${singleStem(uid,{curve:id==='orchid'?9:id==='lavender'?-4:4})}<g class="head-group" transform="translate(0 0)">${flowerHead(id,uid)}</g>`;
-}
+const uid=()=>`m${++serial}`;
 export function flowerSVG(id,klass=''){
- const uid=`${safeId(id)}-${++seq}`;
- const sway=4.8+(seq%4)*.45, amp=(seq%2?1.4:-1.2);
- return `<svg class="botanical ${klass}" style="--sway:${sway}s;--sway-amp:${amp}deg" viewBox="0 0 200 235" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${singleFlowerMarkup(id,uid)}</svg>`;
+ const idd=uid();
+ return `<svg class="botanical ${klass}" viewBox="0 0 150 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${id} flower"><path d="M75 90Q61 146 79 212" stroke="#69845e" stroke-width="4.5" stroke-linecap="round" fill="none"/>${leafShape(72,158,-53,38,14)}${leafShape(78,177,44,33,13)}<g transform="translate(75 80) scale(.73)">${bloom(id,idd)}</g></svg>`;
 }
-// Florist-inspired dome: one binding point; staggered flower heads; foliage collar.
-// The room and the gift use the very same seven botanical heads and composition.
-const POSITIONS=[
- [104,157,.67,-19],[150,104,.70,-10],[203,89,.75,2],
- [257,110,.69,11],[298,162,.66,20],[154,177,.69,-8],[250,181,.70,9]
+/* The canopy is a compressed, gently asymmetrical florist's dome, not a horizontal row.
+ * Larger flowers occupy the focal area; small varieties are raised for airy movement.
+ * Sort by visual layer so the petals physically overlap. */
+const SLOTS=[
+ {x:150,y:266,s:.96,a:-13},
+ {x:208,y:204,s:1.00,a:-8},
+ {x:278,y:184,s:1.05,a:5},
+ {x:353,y:222,s:.91,a:15},
+ {x:383,y:283,s:.84,a:18},
+ {x:269,y:286,s:1.04,a:2},
+ {x:195,y:323,s:.88,a:-9}
 ];
-const grip={x:202,y:317};
-function bouquetLeaf(x,y,angle,size=1){return `<g transform="translate(${x} ${y}) rotate(${angle}) scale(${size})"><path d="M0 0 Q-29-38 -7-75 Q26-45 0 0Z" fill="#7b9875" stroke="#587753" stroke-width="1.5"/><path d="M0 0Q-5-42-7-69" stroke="#d8e3bf" stroke-opacity=".75" fill="none" stroke-width="1.8"/></g>`;}
-function bouquetFlower(id,i,stage){
- const [cx,cy,scale,angle]=POSITIONS[i];
- const uid=`${safeId(id)}-b-${i}-${++seq}`;const p=PALETTE[id]||PALETTE.rose;
- // Shapes are drawn around (100,90), then positioned by a stable translation.
- return `<g class="bunch-flower slot-${i}" style="--delay:${i*95}ms;--drift-x:${(cx-202)*.28}px;--drift-y:${(cy-120)*.45}px" transform="translate(${cx} ${cy}) rotate(${angle}) scale(${scale}) translate(-100 -90)"><g class="gather-layer">${paintDefs(uid,p)}${flowerHead(id,uid)}</g></g>`;
+const tieX=254,tieY=444;
+function fillerSpray(x,y,angle,scale){
+ let part=`<g transform="translate(${x} ${y}) rotate(${angle}) scale(${scale})"><path d="M0 48Q7 0 3-47M0 22Q-24-10-31-34M2 1Q24-22 28-43" stroke="#799477" stroke-width="2.8" fill="none" stroke-linecap="round"/>`;
+ for(const [a,b,r] of [[3,-47,7],[-31,-34,6],[28,-43,7],[-17,-17,6],[18,-23,5],[-2,-13,6]]){
+  part+=`<circle cx="${a}" cy="${b}" r="${r+1.5}" fill="#87997a" opacity=".8"/><circle cx="${a-1}" cy="${b-1.5}" r="${r*.76}" fill="#f4eee1"/><circle cx="${a+2}" cy="${b+1}" r="${r*.38}" fill="#d6bea6"/>`;
+ }
+ return part+'</g>';
 }
-export function bouquetMarkup(ids,{wrapped=false,forExport=false,stage='preview',vase=false}={}){
- const selected=ids.slice(0,7);
+function paperFold(){
+ return `<g class="paper-fold">
+ <path class="paper-back" d="M96 327Q122 341 155 344L251 433L346 342Q380 340 408 317L342 555Q270 583 191 554Z" fill="url(#kraftBack)" stroke="#c9af91" stroke-width="3"/>
+ <path class="paper-left" d="M97 328Q135 368 257 437L224 563Q133 492 97 328Z" fill="url(#kraftLeft)" stroke="#bea58b" stroke-width="2.4"/>
+ <path class="paper-right" d="M407 319Q361 370 254 438L293 566Q379 489 407 319Z" fill="url(#kraftRight)" stroke="#bea58b" stroke-width="2.4"/>
+ <path class="paper-edge" d="M100 327Q174 387 253 438Q334 385 405 323" stroke="#faf1da" stroke-opacity=".6" stroke-width="3" fill="none"/>
+ </g>`;
+}
+function ribbon(){
+ return `<g class="ribbon-tie"><path d="M209 459Q249 472 298 453L291 478Q246 492 213 477Z" fill="url(#ribbon)"/><path d="M251 463Q206 419 188 447Q185 480 251 463Q300 418 322 442Q324 477 251 463Z" fill="#d28f80" stroke="#a86561" stroke-width="2.8"/><path d="M244 473L211 530L232 522L241 546L256 476M259 473L298 528L280 523L278 550L253 476" fill="#c77b72" stroke="#aa645d" stroke-width="2.4"/><ellipse cx="251" cy="466" rx="12" ry="10" fill="#ad625f"/><path d="M244 463Q251 457 260 466" fill="none" stroke="#e9b3a0" stroke-width="2"/></g>`;
+}
+function tag(){return `<g class="tag-write"><path d="M297 477L376 485L369 532L288 525Z" fill="#fff9eb" stroke="#af9581" stroke-width="2"/><path d="M291 486Q273 476 255 466" stroke="#aa8a74" stroke-width="2" fill="none"/><circle cx="301" cy="487" r="3.3" fill="#cfab82"/><text x="334" y="506" font-family="Georgia,serif" font-size="15.8" font-style="italic" text-anchor="middle" fill="#785b4b">For Maha</text><path d="M309 515Q335 523 352 515" stroke="#c99281" stroke-width="1.3" fill="none"/></g>`;}
+function bouquetDefs(u){return `<defs>
+ <linearGradient id="kraftBack" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f6e6d1"/><stop offset=".48" stop-color="#e8ccb0"/><stop offset="1" stop-color="#cbae91"/></linearGradient>
+ <linearGradient id="kraftLeft" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f9efdf"/><stop offset=".55" stop-color="#e8d7c2"/><stop offset="1" stop-color="#c8b094"/></linearGradient>
+ <linearGradient id="kraftRight" x1="1" y1="0" x2="0" y2="1"><stop stop-color="#fff8e8"/><stop offset=".57" stop-color="#f1dfc8"/><stop offset="1" stop-color="#cbb398"/></linearGradient>
+ <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e3a394"/><stop offset="1" stop-color="#ad5d5e"/></linearGradient>
+ </defs>`;}
+export function bouquetMarkup(ids,{wrapped=false,stage='preview',vase=false,forExport=false}={}){
+ const selected=Array.isArray(ids)?ids.slice(0,7):[];
+ const u=uid();
+ // Stem ends are deliberately splayed, whereas all stems cross once in the hand.
  const stems=selected.map((id,i)=>{
-   const [cx,cy]=POSITIONS[i], sx=cx-1, sy=cy+20, kink=(i-3)*7;
-   return `<path d="M${sx} ${sy} Q${sx+kink} 244 ${grip.x} ${grip.y} Q${grip.x+3} 341 ${grip.x-5+i*1.5} 376" fill="none" stroke="${i%2?'#62855e':'#527852'}" stroke-width="${i%2?4.4:5.1}" stroke-linecap="round"/>`;
+  const slot=SLOTS[i],lean=(i-3)*6;
+  return `<path d="M${slot.x} ${slot.y+24}Q${n(slot.x+lean*.64)} ${n((slot.y+tieY)*.55)} ${tieX} ${tieY}Q${n(tieX+(i-3)*4)} 498 ${n(tieX+(i-3)*8)} 556" fill="none" stroke="${i%2?'#668864':'#59785b'}" stroke-width="${4.4+(i%3)*.5}" stroke-linecap="round"/>`;
  }).join('');
- const collar=[bouquetLeaf(125,236,-51,.79),bouquetLeaf(171,226,-17,.73),bouquetLeaf(231,231,27,.75),bouquetLeaf(281,244,53,.79),bouquetLeaf(193,260,-43,.63),bouquetLeaf(221,268,36,.64)].join('');
- const heads=selected.map((id,i)=>bouquetFlower(id,i,stage)).join('');
- const wrap=`<g class="paper-fold"><path class="paper-back" d="M92 224Q141 246 202 302Q260 246 313 224L245 384Q201 405 162 384Z" fill="url(#paperColor)" stroke="#b99d83" stroke-width="2"/><path class="paper-left" d="M92 224 204 314 179 385 113 247Z" fill="#e9d7c1" stroke="#c2a48b" stroke-width="1.5"/><path class="paper-right" d="M313 224 202 314 225 385 290 247Z" fill="#faf0df" stroke="#c2a48b" stroke-width="1.5"/></g><g class="ribbon-tie"><path d="M174 332Q203 341 229 330L228 345Q198 354 176 345Z" fill="url(#ribbonColor)"/><path d="M201 339Q164 307 159 333Q166 351 201 339Q239 308 243 333Q237 351 201 339Z" fill="#ca7667" stroke="#b76059" stroke-width="1.8"/><circle cx="202" cy="340" r="7" fill="#ac5653"/><path d="M198 346 179 377 194 369 203 387 208 344M205 345 228 375 216 369 212 385 202 346" fill="#d58371" stroke="#b76059" stroke-width="1.6"/></g><g class="tag-write"><path d="M232 348 299 351 296 389 230 385Z" fill="#fff8ec" stroke="#ac9681" stroke-width="1.8"/><path d="M232 353 210 340" fill="none" stroke="#ac9681" stroke-width="2"/><text x="264" y="372" fill="#785d4e" text-anchor="middle" font-family="Georgia,cursive" font-size="12" font-style="italic">For Maha</text></g>`;
- return `<svg class="bouquet-svg ${wrapped?'is-wrapped':''} ${stage==='gather'?'is-gathering':''} ${vase?'in-vase':''}" viewBox="0 0 400 418" xmlns="http://www.w3.org/2000/svg" aria-label="Bouquet of ${selected.length} chosen flowers" role="img"><defs><linearGradient id="paperColor" x1="0" x2="1"><stop stop-color="#dbc0a2"/><stop offset=".5" stop-color="#f8ead5"/><stop offset="1" stop-color="#e2c7ac"/></linearGradient><linearGradient id="ribbonColor" x1="0" x2="1"><stop stop-color="#b95e56"/><stop offset="1" stop-color="#e3a18a"/></linearGradient></defs><g class="stem-fan">${stems}</g><g class="foliage-collar">${collar}</g><g class="flower-fan">${heads}</g>${wrapped&&!vase?wrap:''}</svg>`;
-}
-function exportCardBackground(){
- return `<defs><filter id="exportNoise"><feTurbulence type="fractalNoise" baseFrequency=".86" numOctaves="2" seed="5"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .08 0"/></filter></defs>
- <rect width="960" height="1200" fill="#f8f0e3"/>
- <g opacity=".55"><circle cx="170" cy="206" r="140" fill="#f3d2bf"/><circle cx="758" cy="236" r="160" fill="#dde5ca"/><circle cx="812" cy="808" r="125" fill="#f4debc"/></g>
- <g opacity=".18"><path d="M94 212q212-178 445-18" fill="none" stroke="#dfbda3" stroke-width="44" stroke-linecap="round"/><path d="M542 116q159-59 274 77" fill="none" stroke="#e6dcbf" stroke-width="31" stroke-linecap="round"/></g>
- <rect width="960" height="1200" fill="#ead8c5" opacity=".12" filter="url(#exportNoise)"/>`;
+ const backLeaves=[
+  leafShape(119,312,-64,88,26,'#718e74'),leafShape(173,318,-29,93,23,'#9eae83'),leafShape(226,295,-8,86,23,'#658767'),
+  leafShape(300,306,21,88,24,'#8da17b'),leafShape(368,316,57,95,26,'#79936c'),leafShape(400,343,74,72,20,'#829b7c')
+ ].join('');
+ const frontLeaves=[leafShape(158,379,-76,72,24,'#628364'),leafShape(222,392,-29,61,20,'#9aaa87'),leafShape(299,398,41,68,23,'#708a6c'),leafShape(362,375,70,64,23,'#829b75')].join('');
+ const filler=[fillerSpray(122,190,-24,.78),fillerSpray(356,171,16,.81),fillerSpray(108,308,-34,.71),fillerSpray(400,309,35,.74)].join('');
+ // Stable DOM geometry lets all stems animate from dispersed positions to a single grip.
+ const blooms=selected.map((id,i)=>{
+  const slot=SLOTS[i],sz=flowerSize[id]||60;
+  const factor=slot.s*(id==='lavender'?.92:1);
+  const extra=(id==='lily'||id==='hibiscus')?0.92:1;
+  return `<g class="bouquet-bloom bloom-${i}" style="--delay:${i*105}ms;--arrive-x:${n((slot.x-tieX)*.36)}px;--arrive-y:${n((slot.y-220)*.43+55)}px;--arrive-r:${n(slot.a*1.8)}deg" transform="translate(${slot.x} ${slot.y}) rotate(${slot.a}) scale(${n(factor*extra)})"><g class="bloom-motion">${bloom(id,`${u}-${i}`)}</g></g>`;
+ }).join('');
+ return `<svg class="bouquet-svg ${stage==='gather'?'is-gathering':''} ${vase?'in-vase':''} ${wrapped&&!vase?'is-wrapped':''}" viewBox="0 0 500 580" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bouquet made with ${selected.join(', ')}">
+ ${bouquetDefs(u)}<g class="bouquet-botanical"><g class="stem-fan">${stems}</g><g class="foliage-behind">${backLeaves}${filler}</g><g class="flower-fan">${blooms}</g><g class="foliage-front">${frontLeaves}</g></g>${wrapped&&!vase?`${paperFold()}${ribbon()}${tag()}`:''}
+ </svg>`;
 }
 export function exportBouquetSVG(ids){
- const svg=bouquetMarkup(ids,{wrapped:true,forExport:true,stage:'final'});
- const inner=svg.replace(/^<svg[^>]*>/,'').replace(/<\/svg>\s*$/,'');
- return `<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1200" viewBox="0 0 960 1200">${exportCardBackground()}<rect x="50" y="52" width="860" height="1092" rx="30" fill="#f5e9d7" stroke="#d5b99b" stroke-width="3"/><g opacity=".65" fill="none" stroke="#caad91" stroke-width="3"><path d="M115 125Q145 95 178 130M755 105q48 34 75 4M120 995q45 24 74-2"/></g><text x="480" y="165" fill="#77614f" font-family="Georgia,serif" font-size="25" letter-spacing="8" text-anchor="middle">A LITTLE SOMETHING</text><g transform="translate(80 128) scale(2)">${inner}</g><text x="480" y="1052" fill="#905e55" font-family="Georgia,serif" font-size="47" font-style="italic" text-anchor="middle">For Maha, always.</text><text x="480" y="1091" fill="#907d69" font-family="Arial,sans-serif" font-size="17" letter-spacing="3" text-anchor="middle">YOUR SEVEN FLOWERS</text></svg>`;
+ const art=bouquetMarkup(ids,{wrapped:true,stage:'final',forExport:true}).replace(/^<svg[^>]*>/,'').replace(/<\/svg>\s*$/,'');
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="1350" viewBox="0 0 1080 1350"><defs><radialGradient id="printPaper"><stop stop-color="#fff9ee"/><stop offset="1" stop-color="#ead9c3"/></radialGradient></defs><rect width="1080" height="1350" fill="url(#printPaper)"/><rect x="56" y="56" width="968" height="1238" rx="25" fill="#f9f0e4" stroke="#dac4ad" stroke-width="3"/><g opacity=".19"><circle cx="198" cy="248" r="163" fill="#f3af9b"/><circle cx="863" cy="371" r="190" fill="#b9c7ae"/></g><text x="540" y="146" font-family="Georgia,serif" fill="#806555" font-size="28" letter-spacing="7" text-anchor="middle">MAHA'S SEVEN FLOWERS</text><g transform="translate(105 120) scale(1.72)">${art}</g><text x="540" y="1235" font-family="Georgia,serif" fill="#9c665d" font-size="37" font-style="italic" text-anchor="middle">Just because.</text></svg>`;
 }
 export async function downloadBouquet(ids){
- const svg=exportBouquetSVG(ids); const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'}); const url=URL.createObjectURL(blob); const img=new Image();
+ const svg=exportBouquetSVG(ids),url=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml;charset=utf-8'})),im=new Image();
  try{
-  await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=url;});
-  const canvas=document.createElement('canvas');canvas.width=960;canvas.height=1200; const ctx=canvas.getContext('2d'); if(!ctx) throw new Error('Canvas not supported'); ctx.drawImage(img,0,0);
-  const png=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error('PNG export failed')),'image/png'));
-  const pngURL=URL.createObjectURL(png); const a=document.createElement('a'); a.download='for-maha-seven-flowers.png'; a.href=pngURL; document.body.append(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(pngURL),20000);
-  return true;
- } finally {URL.revokeObjectURL(url);}
+  await new Promise((res,rej)=>{im.onload=res;im.onerror=rej;im.src=url;});
+  const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');if(!ctx)throw Error('Canvas unavailable');ctx.drawImage(im,0,0);
+  const png=await new Promise((res,rej)=>canvas.toBlob(b=>b?res(b):rej(Error('PNG export blocked')),'image/png'));
+  const link=URL.createObjectURL(png);const a=document.createElement('a');a.href=link;a.download='for-maha-seven-flowers.png';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(link),30000);return true;
+ }finally{URL.revokeObjectURL(url);}
 }

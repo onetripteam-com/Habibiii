@@ -290,10 +290,108 @@ button:disabled{cursor:default;opacity:.35}
  .petals{display:none!important}
  .loading-flower,.botanical,.flower-fan .head-art{animation:none!important}
 }
-/* Bouquet v3: botanical dome in both gift and vase, same selected heads. */
-.bouquet-svg{overflow:visible}
-.bouquet-growing .bouquet-svg{width:100%;height:100%}
-.room-bouquet{cursor:pointer;touch-action:manipulation;border-radius:15px}
-.room-bouquet:focus-visible{outline:3px solid #b56e54;outline-offset:3px}
-.room-bouquet .bouquet-svg{overflow:visible}
-.bouquet-gathering .gather-layer{animation:gather-in 1.05s cubic-bezier(.17,.83,.22,1) var(--delay) both}
+
+/* === THE BOTANICAL ATELIER: bouquet rebuild === */
+.bouquet-svg{overflow:visible;contain:layout style}
+.bouquet-display{top:24%;height:48%}
+.bouquet-growing{inset:-8% -2% 0}
+.bouquet-growing .bouquet-svg{width:100%;height:100%;max-width:390px;filter:drop-shadow(0 9px 9px rgba(112,84,60,.1))}
+.bouquet-bloom .bloom-motion{transform-box:fill-box;transform-origin:center;}
+.bouquet-bloom .bloom-paint{filter:drop-shadow(0px 2px 1px rgba(89,62,56,.13))}
+.bouquet-gathering .bloom-motion{animation:florist-gather 1.35s cubic-bezier(.12,.84,.22,1.0) var(--delay) both}
+.bouquet-gathering .stem-fan{animation:stems-together 1.25s ease-out both}
+@keyframes florist-gather{0%{opacity:.5;transform:translate(var(--arrive-x),var(--arrive-y)) rotate(var(--arrive-r)) scale(.82)}72%{opacity:1}100%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}}
+@keyframes stems-together{from{opacity:.25;transform:scaleX(1.2)}to{opacity:1;transform:scaleX(1)}}
+.bouquet-svg .paper-fold,.bouquet-svg .ribbon-tie,.bouquet-svg .tag-write{transform-box:fill-box;transform-origin:center bottom}
+.bouquet-wrapping .paper-back{animation:paper-rise .75s .1s cubic-bezier(.17,.8,.26,1) both}
+.bouquet-wrapping .paper-left{animation:paper-left-close .82s .4s cubic-bezier(.17,.8,.26,1) both}
+.bouquet-wrapping .paper-right{animation:paper-right-close .82s .6s cubic-bezier(.17,.8,.26,1) both}
+.bouquet-wrapping .paper-edge{animation:paper-rise .62s .72s both}
+.bouquet-wrapping .ribbon-tie{animation:tie-in .68s 1.28s cubic-bezier(.2,.88,.25,1.2) both}
+.bouquet-wrapping .tag-write{animation:tag-in .75s 1.9s ease-out both}
+.bouquet-wrapping .tag-write text{animation:none;stroke:none;fill-opacity:1}
+.bouquet-final{bottom:calc(12px + env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,#f8e8d9ef,#f8e8d9b3);border-radius:19px;padding:8px 10px 5px;}
+.room-bouquet{left:57%;top:16.5%;width:41%;height:29%;z-index:6;padding:0;min-width:44px;min-height:44px;display:block;background:transparent;border:0;overflow:visible;cursor:pointer;transform-origin:50% 100%;}
+.room-bouquet .bouquet-svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 3px 2px #3e3f2f33)}
+.room-bouquet .bouquet-bloom .bloom-paint{filter:none}
+.room-bouquet .bouquet-bloom .bloom-motion{animation:flower-sway 5.8s ease-in-out infinite;--sway-amp:1deg}
+.room-bouquet .stem-fan{transform-origin:50% 100%}
+.room-vase{top:36%;z-index:7;pointer-events:none}
+.room-bouquet:focus-visible{outline:3px dashed #b56751;outline-offset:4px}
+.room-bouquet:active{transform:scale(.975)}
+
+/* === Four real room palettes. Clock-driven window light remains independent. === */
+.room-paint{isolation:isolate}
+.room-background,.room-front{transition:filter .55s ease,opacity .55s ease}
+.room-theme-accents{position:absolute;z-index:4;inset:0;pointer-events:none;transition:background .55s ease,opacity .55s ease}
+.room-scene[data-theme="story"] .room-theme-accents{background:linear-gradient(140deg,#fff8ed26 8%,transparent 47%,#d4aa7720)}
+.room-scene[data-theme="monsoon"]{background:#bdcbb4}
+.room-scene[data-theme="monsoon"] .room-background{filter:hue-rotate(37deg) saturate(.72) brightness(.88)}
+.room-scene[data-theme="monsoon"] .room-front{filter:hue-rotate(28deg) saturate(.73) brightness(.94)}
+.room-scene[data-theme="monsoon"] .room-theme-accents{background:linear-gradient(145deg,#3b77622a,transparent 54%,#5f8b5c28),radial-gradient(ellipse at 20% 5%,#d5edc83a,transparent 34%)}
+.room-scene[data-theme="monsoon"] .window-sky{box-shadow:inset 0 0 0 400px rgba(78,123,110,.12)}
+.room-scene[data-theme="monsoon"] .room-theme-accents::after{content:'❦';position:absolute;top:13%;left:-3%;font:100px Georgia,serif;color:#57796031;transform:rotate(-28deg)}
+.room-scene[data-theme="sunroom"]{background:#f2ddc5}
+.room-scene[data-theme="sunroom"] .room-background{filter:sepia(.16) saturate(.84) brightness(1.08) hue-rotate(-9deg)}
+.room-scene[data-theme="sunroom"] .room-front{filter:sepia(.2) saturate(.85) brightness(1.07)}
+.room-scene[data-theme="sunroom"] .room-theme-accents{background:linear-gradient(122deg,#ffecc66a 0%,#fff5db20 37%,transparent 65%),radial-gradient(ellipse at 79% 15%,#fff9d845,transparent 30%)}
+.room-scene[data-theme="sunroom"] .room-theme-accents::before{content:'';position:absolute;left:-50%;top:7%;width:100%;height:68%;transform:rotate(-24deg);background:linear-gradient(90deg,transparent 0 38%,#fff7da44 40% 46%,transparent 48% 66%,#fff7da22 68% 70%,transparent 72%);pointer-events:none}
+.room-scene[data-theme="terracotta"]{background:#c89c7d}
+.room-scene[data-theme="terracotta"] .room-background{filter:sepia(.28) saturate(1.3) hue-rotate(-16deg) brightness(.9)}
+.room-scene[data-theme="terracotta"] .room-front{filter:sepia(.28) saturate(1.23) hue-rotate(-14deg) brightness(.97)}
+.room-scene[data-theme="terracotta"] .room-theme-accents{background:linear-gradient(164deg,#bf795c30,#eed7aa18 63%,#8b513a25)}
+.room-scene[data-theme="terracotta"] .room-theme-accents::after{content:'✳';font:68px Georgia,serif;color:#cd976653;position:absolute;top:10%;left:8%;transform:rotate(17deg)}
+.room-scene.light-night .room-theme-accents{box-shadow:inset 0 0 0 1000px rgba(48,62,58,.13)}
+.room-scene.light-night .room-paint{filter:brightness(.92)}
+.room-scene.light-morning .room-theme-accents{opacity:.94}
+.room-scene.light-dusk .room-theme-accents{box-shadow:inset 0 0 0 1000px rgba(202,135,95,.09)}
+.room-scene[data-theme="monsoon"] .today-card{background:#f4f5e7}
+.room-scene[data-theme="terracotta"] .today-card{background:#f6e5d6}
+.room-scene[data-theme="sunroom"] .today-card{background:#fff8e8}
+
+/* Room-theme selector lives in the lower thumb zone. */
+.theme-trigger{position:absolute;z-index:18;right:5%;bottom:calc(8px + env(safe-area-inset-bottom,0px));min-height:44px;min-width:143px;padding:8px 12px;border-radius:24px;color:#725443;background:#faead5e8;border:1px solid #c9a88b;box-shadow:0 2px 0 #77544535;font-size:11px;font-weight:750;}
+.theme-trigger:focus-visible{outline:3px solid #a96555}
+.theme-backdrop{position:absolute;inset:0;z-index:44;display:flex;align-items:flex-end;background:#382f2988;padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px));}
+.theme-panel{width:100%;max-height:94%;overflow:auto;overscroll-behavior:contain;background:#fff4e3;border-radius:24px 24px 17px 17px;padding:20px 16px 15px;border:2px solid #ddc6a7;box-shadow:0 12px 40px #3b2b2455;}
+.theme-panel>.eyebrow{color:#a3715d}
+.theme-panel h2{font-size:clamp(26px,7vw,32px);margin:5px 0 9px;line-height:1}
+.theme-intro{font:12px/1.4 var(--sans);color:#856b59;margin:0 0 13px}
+.theme-options{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.theme-option{display:flex;flex-direction:column;align-items:stretch;text-align:left;background:#fcf5e7;border:2px solid #e0cfb9;border-radius:13px;padding:5px 5px 8px;min-height:138px;color:#4f4238;}
+.theme-option[aria-pressed="true"]{border-color:#8c9a73;background:#e9ead9;box-shadow:inset 0 0 0 1px #8b9d78;}
+.theme-option strong{display:block;font:16px/1.1 Georgia,serif;padding:5px 5px 3px}
+.theme-option small{display:block;font:9px/1.25 var(--sans);padding:0 5px;color:#897462}
+.theme-swatch{display:block;height:68px;border-radius:8px;overflow:hidden;position:relative;background:linear-gradient(#eadcc5 0 63%,#ba9070 64%);}
+.theme-swatch::before{content:'';position:absolute;top:8px;right:22px;width:35px;height:41px;border-radius:17px 17px 0 0;border:4px solid #b48265;background:linear-gradient(155deg,#9db8ad,#f4cf9f);}
+.theme-swatch::after{content:'';position:absolute;left:9px;bottom:8px;width:40px;height:20px;border-radius:9px 9px 0 0;background:#dbab91;box-shadow:3px -10px 0 #f6dac3,0 4px 0 #936b5a;}
+.theme-swatch i{position:absolute;right:6px;bottom:6px;width:17px;height:18px;border-radius:3px 3px 6px 6px;background:#829586;}
+.swatch-monsoon{background:linear-gradient(#c4d3bd 0 63%,#829d84 64%)}
+.swatch-monsoon::before{background:linear-gradient(140deg,#748f7d,#b6c7b3);border-color:#65856b}
+.swatch-monsoon::after{background:#829e87;box-shadow:3px -10px 0 #b8c5a8,0 4px 0 #52765f}
+.swatch-sunroom{background:linear-gradient(#fff0cd 0 63%,#e8c6a1 64%)}
+.swatch-sunroom::before{background:linear-gradient(135deg,#a4d3c4,#f7dfaa);border-color:#e5c39c}
+.swatch-sunroom::after{background:#f3c1ad;box-shadow:3px -10px 0 #fff0da,0 4px 0 #cf9974}
+.swatch-terracotta{background:linear-gradient(#d6aa85 0 63%,#a26b54 64%)}
+.swatch-terracotta::before{background:linear-gradient(140deg,#bdad8a,#e9ba8d);border-color:#885b46}
+.swatch-terracotta::after{background:#b66c5d;box-shadow:3px -10px 0 #e9bd99,0 4px 0 #855442}
+.theme-done{width:100%;margin-top:12px;}
+@media(max-height:780px){
+ .theme-panel{padding:13px 12px 10px}
+ .theme-panel h2{font-size:26px}
+ .theme-intro{font-size:11px;margin-bottom:9px}
+ .theme-option{min-height:121px}
+ .theme-swatch{height:54px}
+}
+@media(max-width:374px){.theme-trigger{right:4%;min-width:129px}.replay-opening{left:4%;min-width:139px}}
+@media(prefers-reduced-motion:reduce){
+ .bouquet-gathering .bloom-motion,.bouquet-wrapping .paper-fold *, .bouquet-wrapping .ribbon-tie,.bouquet-wrapping .tag-write{animation:none!important;opacity:1!important;transform:none!important}
+ .room-bouquet .bouquet-bloom .bloom-motion{animation:none!important}
+}
+
+/* The decorative layer adds distinct objects, not just a hue rotation. */
+.room-theme-art{width:100%;height:100%;position:absolute;inset:0;pointer-events:none}
+.room-theme-art>g{display:none}
+.room-scene[data-theme="monsoon"] .theme-monsoon,
+.room-scene[data-theme="sunroom"] .theme-sunroom,
+.room-scene[data-theme="terracotta"] .theme-terracotta{display:inline}
