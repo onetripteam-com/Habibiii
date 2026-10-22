@@ -4,7 +4,7 @@ const BASE=new URL('./',self.location.href).href;
 const FILES=[
  './','./index.html','./css/style.css','./js/main.js','./js/hug.js','./js/flowers.js',
  './js/botanical.js','./js/room.js','./js/store.js','./js/time.js',
- './js/audio.js','./js/animation.js','./js/doors.js',
+ './js/audio.js','./js/animation.js','./js/doors.js','./js/places.js','./js/portal.js',
  './content/hug.json','./content/flowers.json','./content/today.json',
  './assets/room-back.svg','./assets/room-front.svg','./assets/icon.svg',
  './assets/icon-192.png','./assets/icon-512.png','./assets/apple-touch-icon.png',

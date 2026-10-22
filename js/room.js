@@ -1,7 +1,8 @@
 import {store} from './store.js';
 import {flowerSVG,bouquetMarkup} from './botanical.js';
 import {kuwaitParts,lightOfDay,dailyLine,greeting} from './time.js';
-import {roomDoors,enterDoor,hasNew} from './doors.js';
+import {PLACES,isUnlocked,isNew} from './places.js';
+import {makePortalSystem} from './portal.js';
 import {soundEffect,startSound} from './audio.js';
 const esc=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 let weatherTimer;
@@ -42,11 +43,11 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
      <div class="room-greeting" id="room-greeting"><span class="eyebrow">YOUR LITTLE CORNER OF THE WORLD</span><h1>${esc(greeting(lastVisit,now))}</h1><div class="place-clock">☼ &nbsp;Kuwait <span class="clock-value" id="clock-value">${parts.clock}</span></div></div>
      <button type="button" class="room-bouquet" id="room-bouquet" aria-label="Pick a new bouquet for today">${bouquetMarkup(chosen,{vase:true})}</button><div class="room-vase" aria-hidden="true"><svg viewBox="0 0 110 130"><defs><linearGradient id="vase" x2="1" y2="0"><stop stop-color="#adbea5"/><stop offset=".5" stop-color="#d7d6b3"/><stop offset="1" stop-color="#829e90"/></linearGradient></defs><ellipse cx="55" cy="22" rx="31" ry="10" fill="#668579"/><path d="M23 22Q21 80 39 113Q55 123 71 113Q89 80 87 22Z" fill="url(#vase)" stroke="#779487" stroke-width="3"/><ellipse cx="55" cy="22" rx="33" ry="8" fill="#b1c0a4" stroke="#6f9185" stroke-width="3"/><path d="M44 33Q39 77 47 107" fill="none" stroke="#f7e9cc" stroke-width="4" opacity=".5"/></svg></div>
      <button class="today-card" id="today-card" aria-label="Today's note: ${esc(dailyLine(flowers.today,now))}"><span class="today-label">TODAY, FOR MAHA ✳</span><span class="today-copy">${esc(dailyLine(flowers.today,now))}</span><span class="today-tiny">a note on your sill</span></button>
+     <div class="room-evidence" aria-live="polite"><span class="evidence-postcard" id="evidence-postcard" title="Kept Kerala postcard" hidden>KERALA<br>♡</span><span class="evidence-letter" id="evidence-letter" title="Kept a little letter" hidden>✉</span><span class="evidence-leaf" id="evidence-leaf" title="Watered the plant" hidden>❧</span><div class="evidence-stamps" id="evidence-stamps" aria-hidden="true"></div></div>
      <div class="room-objects" id="room-objects"></div>
      <div class="room-bottom-label">tap something curious <span aria-hidden="true">↗</span></div>
      <button type="button" class="replay-opening" id="replay-opening">↶ replay the opening</button><button type="button" class="theme-trigger" id="theme-trigger" aria-label="Change the room theme">✎ Make it yours</button>
    </div>
-   <div class="door-backdrop" id="door-backdrop" hidden><div class="door-card" role="dialog" aria-modal="true" aria-labelledby="door-title"><div class="door-glyph" aria-hidden="true">✿</div><span class="eyebrow">COMING SOON TO THIS LITTLE ROOM</span><h2 id="door-title"></h2><p id="door-copy"></p><button class="button button-primary" id="door-close">Back to the room ↗</button></div></div>
    <div class="theme-backdrop" id="theme-backdrop" hidden>
       <div class="theme-panel" role="dialog" aria-modal="true" aria-labelledby="theme-panel-title">
        <span class="eyebrow">A LITTLE REDECORATING</span>
@@ -64,19 +65,26 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
    <div class="install-nudge" id="install-nudge" hidden><button class="nudge-close" id="nudge-close" aria-label="Dismiss tip">×</button><span class="eyebrow">A LITTLE SHORTCUT</span><strong>Want this on your home screen?</strong><p>In Safari, tap <b>Share</b> → <b>Add to Home Screen</b>. Turn on <b>Open as Web App</b> if offered, then tap Add.</p></div>
  </section>`;
  const objects=root.querySelector('#room-objects');
- const spots=[['music','radio',16,45,16,12],['letters','letter box',9,58,29,12],['movies','projector',45,69,24,11],['travel','suitcase',74,78,23,14],['games','game console',25,89,29,10],['rest','lamp',76,57,20,15],['rest','bed',10,77,38,12]];
+ const scene=root.querySelector('.room-scene');
+ const portal=makePortalSystem({room:scene,frame:document.querySelector('#app'),visits,onReturn:refreshEvidence});
+ const spots=[['music','radio',16,45,16,12],['letters','letter box',9,58,29,12],['movies','projector',45,69,24,11],['travel','suitcase',74,78,23,14],['games','game console',25,89,29,10],['rest','lamp',76,57,20,15],['rest','bed',10,77,38,12],['garden','plant',84,88,16,12]];
  spots.forEach(([id,label,x,y,w,h])=>{
- const b=document.createElement('button');b.type='button';b.className=`room-object object-${id}`;b.style.cssText=`left:${x}%;top:${y}%;width:${w}%;height:${h}%;`;b.setAttribute('aria-label',`Open ${id==='rest'?'Rest':roomDoors.find(d=>d.id===id)?.name} (${label})`);
- b.innerHTML=`<span class="object-dot ${hasNew(id)?'new-item':''}" aria-hidden="true"></span><span class="sr-only">${esc(label)}</span>`;
- b.addEventListener('click',()=>open(id));objects.append(b);
+  const b=document.createElement('button'); b.type='button'; b.className=`room-object object-${id} ${isUnlocked(id,visits)?'object-ready':'object-waiting'}`;
+  b.style.cssText=`left:${x}%;top:${y}%;width:${w}%;height:${h}%;`;
+  b.dataset.place=id;b.title=isUnlocked(id,visits)?`Open ${PLACES[id].name}`:'Still getting ready — you can peek inside';
+  b.setAttribute('aria-label',`Visit ${PLACES[id].name} (${label})`);
+  b.innerHTML=`<span class="object-hint" aria-hidden="true"></span><span class="object-dot ${isNew(id,visits)?'new-item':''}" aria-hidden="true"></span><span class="sr-only">${esc(label)}</span>`;
+  b.addEventListener('click',()=>portal.open(id,b)); objects.append(b);
  });
- const backdrop=root.querySelector('#door-backdrop');let lastFocus=null;
- const close=()=>{backdrop.hidden=true;lastFocus?.focus({preventScroll:true});};
- const open=id=>{startSound();soundEffect('door');if(enterDoor(id,{root,close}))return;
-  const d=roomDoors.find(d=>d.id===id);lastFocus=document.activeElement;
-  root.querySelector('#door-title').textContent=d.name;root.querySelector('#door-copy').textContent=d.line;backdrop.hidden=false;root.querySelector('#door-close').focus({preventScroll:true});};
- root.querySelector('#door-close').addEventListener('click',close);
- backdrop.addEventListener('click',event=>{if(event.target===backdrop)close();});
+ function refreshEvidence(){
+  root.querySelector('#evidence-postcard').hidden=!store.get('postcardPinned',false);
+  root.querySelector('#evidence-letter').hidden=!store.get('keptLetter',false);
+  root.querySelector('#evidence-leaf').hidden=!store.get('gardenWatered',false);
+  const seen=spots.filter((x,i)=>spots.findIndex(y=>y[0]===x[0])===i).filter(([id])=>store.get('seenPlace:'+id,false));
+  const stamps=root.querySelector('#evidence-stamps');stamps.innerHTML=seen.slice(0,4).map(([id])=>`<span class="wall-stamp stamp-${id}">${PLACES[id].icon}</span>`).join('');
+  objects.querySelectorAll('[data-place]').forEach(b=>{b.querySelector('.object-dot').classList.toggle('new-item',isNew(b.dataset.place,visits));});
+ }
+ refreshEvidence();
  const themeBackdrop=root.querySelector('#theme-backdrop');
  const themeTrigger=root.querySelector('#theme-trigger');
  const themeClose=()=>{themeBackdrop.hidden=true;themeTrigger.focus({preventScroll:true});};
@@ -92,7 +100,6 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
  const onEscape=e=>{
    if(e.key==='Escape'){
      if(!themeBackdrop.hidden){themeClose();return;}
-     if(!backdrop.hidden){close();return;}
    }
    if(e.key==='Tab'&&!themeBackdrop.hidden){
      const tabs=[...themeBackdrop.querySelectorAll('button:not([disabled])')];
@@ -100,11 +107,10 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
      if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
      else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
    }
-   else if(e.key==='Tab'&&!backdrop.hidden){e.preventDefault();root.querySelector('#door-close').focus();}
  };
  document.addEventListener('keydown',onEscape);
  root.querySelector('#replay-opening').addEventListener('click',()=>{startSound();soundEffect('tap');onReplay();});
- const sill=root.querySelector('#today-card');sill.addEventListener('click',()=>{startSound();soundEffect('pick');sill.classList.remove('card-flip');void sill.offsetWidth;sill.classList.add('card-flip');});
+ const sill=root.querySelector('#today-card');sill.addEventListener('click',()=>{startSound();portal.open('letters',sill);});
  const bouquet=root.querySelector('#room-bouquet');bouquet.addEventListener('click',()=>{startSound();soundEffect('door');onNewBouquet();});
  const clock=root.querySelector('#clock-value');
  const sky=root.querySelector('#window-sky');let dayAtMount=parts.date, lightAtMount=light;
@@ -125,5 +131,5 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
    store.set('installShown',true);const n=root.querySelector('#install-nudge');n.hidden=false;
    root.querySelector('#nudge-close').addEventListener('click',()=>{n.hidden=true;store.set('installDismissed',true);});
  }
- return ()=>{clearInterval(weatherTimer);document.removeEventListener('keydown',onEscape);};
+ return ()=>{portal.destroy();clearInterval(weatherTimer);document.removeEventListener('keydown',onEscape);};
 }

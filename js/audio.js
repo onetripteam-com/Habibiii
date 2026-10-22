@@ -1,13 +1,60 @@
 import {store} from './store.js';
-const Context=window.AudioContext||window.webkitAudioContext;
-let ctx,bus,ambience,timer,started=false,muted=store.get('muted',false)===true,step=0;
-function ready(){if(!Context)return false;if(!ctx){ctx=new Context();bus=ctx.createGain();bus.gain.value=0;bus.connect(ctx.destination);}if(ctx.state==='suspended')ctx.resume().catch(()=>{});return true;}
-function note(freq,when,duration,volume=.03,wave='sine'){
- if(!ctx)return;const osc=ctx.createOscillator(),env=ctx.createGain();osc.type=wave;osc.frequency.setValueAtTime(freq,when);env.gain.setValueAtTime(.0001,when);env.gain.exponentialRampToValueAtTime(volume,when+.018);env.gain.exponentialRampToValueAtTime(.0001,when+duration);osc.connect(env).connect(bus);osc.start(when);osc.stop(when+duration+.025);
+const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+let context, master, tick, active=false, chordIndex=0;
+const chords=[[220,277.18,329.63],[196,246.94,293.66],[174.61,220,261.63],[196,261.63,329.63]];
+let muted=store.get('muted',false) === true;
+function init() {
+  if(!AudioContextClass) return false;
+  if(!context) { context=new AudioContextClass(); master=context.createGain(); master.gain.value=0; master.connect(context.destination); }
+  if(context.state==='suspended') context.resume().catch(()=>{});
+  return true;
 }
-function chime(root,sequence,spacing=.115,vol=.033){if(!ctx)return;const t=ctx.currentTime+.01;sequence.forEach(([factor,duration],i)=>{note(root*factor,t+i*spacing,duration,vol*(1-i*.1));note(root*factor*2,t+i*spacing,duration*.65,vol*.13);});}
-function bed(){if(!ctx||muted||document.hidden)return;const chords=[[196,246.94,293.66],[174.61,220,261.63],[220,261.63,329.63],[196,246.94,329.63]];let t=ctx.currentTime+.04;for(const [i,f] of chords[step++%4].entries())note(f/2,t+i*.18,6.5,.012,'sine');}
-function render(){const b=document.querySelector('#sound-toggle');if(!b)return;b.setAttribute('aria-pressed',String(muted));b.setAttribute('aria-label',muted?'Unmute sound':'Mute sound');b.querySelector('span').textContent=muted?'♩':'♫';b.classList.toggle('is-muted',muted);}
-export function startSound(){if(muted||!ready())return;if(started){bus.gain.setTargetAtTime(.45,ctx.currentTime,.15);return;}started=true;bus.gain.setTargetAtTime(.45,ctx.currentTime,.3);bed();timer=setInterval(bed,5900);}
-export function soundEffect(kind='tap'){if(muted||!ctx||ctx.state!=='running')return;switch(kind){case 'pick':chime(440,[[1,.24],[1.25,.35]],.13,.038);break;case 'undo':chime(392,[[1,.17],[.84,.28]],.13,.025);break;case 'complete':chime(392,[[1,.5],[1.26,.57],[1.5,.8],[2,1.15]],.18,.049);break;case 'door':chime(349.23,[[1,.28],[1.5,.5]],.18,.025);break;default:chime(523.25,[[1,.15],[1.25,.21]],.09,.021);}}
-export function initAudioUI(){render();document.querySelector('#sound-toggle')?.addEventListener('click',()=>{muted=!muted;store.set('muted',muted);render();if(muted){if(bus&&ctx)bus.gain.setTargetAtTime(0,ctx.currentTime,.09);}else{startSound();soundEffect('tap');}});document.addEventListener('visibilitychange',()=>{if(!bus||!ctx)return;bus.gain.setTargetAtTime(document.hidden||muted?0:.45,ctx.currentTime,.15);});}
+function tone(frequency,at,length,volume=0.015,type='sine') {
+  if(!context||!master) return;
+  const oscillator=context.createOscillator(),envelope=context.createGain();
+  oscillator.type=type; oscillator.frequency.setValueAtTime(frequency,at);
+  envelope.gain.setValueAtTime(0.00001,at);
+  envelope.gain.exponentialRampToValueAtTime(Math.max(volume,0.0001),at+Math.min(length*0.34,1.25));
+  envelope.gain.exponentialRampToValueAtTime(0.00001,at+length);
+  oscillator.connect(envelope).connect(master); oscillator.start(at);oscillator.stop(at+length+0.04);
+  oscillator.onended=()=>{oscillator.disconnect();envelope.disconnect();};
+}
+function pad() {
+  if(!context || muted || document.hidden) return;
+  let at=context.currentTime+0.03;
+  const notes=currentPlace==='room'?chords[chordIndex%chords.length].map(f=>f/2):PLACE_INTERVALS[currentPlace].map(r=>({room:110,paper:146.83,radio:98,cinema:87.31,travel:130.81,arcade:164.81,rest:87.31,garden:110}[currentPlace]||110)*r);
+  notes.forEach((f,i)=>tone(f,at+i*0.08,7.5,currentPlace==='arcade'?.055:.09,'sine'));
+  chordIndex++;
+}
+function updateButton() {
+  const b=document.querySelector('#sound-toggle'); if(!b)return;
+  b.setAttribute('aria-pressed',String(muted)); b.setAttribute('aria-label',muted?'Unmute sound':'Mute sound');
+  b.querySelector('span').textContent=muted?'♩':'♫'; b.classList.toggle('is-muted',muted);
+}
+export function startSound(){ if(active||muted||!init())return;active=true;master.gain.setTargetAtTime(0.15,context.currentTime,0.6);pad();tick=setInterval(pad,6200); }
+export function soundEffect(kind='tap') {
+  if(muted||!active||!context||context.state!=='running') return;
+  const now=context.currentTime;
+  const sets={tap:[[440,0],[659,.09]],pick:[[523,0],[659,.09],[784,.2]],undo:[[523,0],[349,.12]],complete:[[392,0],[523,.15],[659,.3],[784,.5]],door:[[349,0],[440,.13]],arcade:[[523,0],[784,.08],[1046,.16]]};
+  (sets[kind]||sets.tap).forEach(([n,d])=>tone(n,now+d,0.28,0.055,'sine'));
+}
+export function initAudioUI() {
+  updateButton();
+  document.querySelector('#sound-toggle')?.addEventListener('click',()=>{
+    muted=!muted;store.set('muted',muted); updateButton();
+    if(muted){ if(master&&context)master.gain.setTargetAtTime(0,context.currentTime,0.05); }
+    else {if(!active)startSound();else if(master&&context)master.gain.setTargetAtTime(0.15,context.currentTime,0.15); soundEffect('tap');}
+  });
+  document.addEventListener('visibilitychange',()=>{if(!master||!context)return;master.gain.setTargetAtTime((document.hidden||muted)?0:0.15,context.currentTime,0.16);});
+}
+
+// The place changes its ambient voicing; nothing plays until a real user gesture.
+let currentPlace='room';
+const PLACE_INTERVALS={room:[1,1.25,1.5],paper:[1,1.333,1.666],radio:[1,1.2,1.5],cinema:[1,1.25,1.75],travel:[1,1.333,1.5],arcade:[1,1.5,2],rest:[1,1.25,1.5],garden:[1,1.2,1.6]};
+export function setAudioPlace(place='room'){
+ currentPlace=PLACE_INTERVALS[place]?place:'room';
+ if(!context||muted||!active||document.hidden)return;
+ const root={room:196,paper:220,radio:164.81,cinema:146.83,travel:196,arcade:246.94,rest:174.61,garden:220}[currentPlace];
+ const now=context.currentTime+.07;
+ PLACE_INTERVALS[currentPlace].forEach((ratio,i)=>tone(root*ratio,now+i*.12,2.7,currentPlace==='rest'?.015:.025,'sine'));
+}

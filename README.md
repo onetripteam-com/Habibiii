@@ -17,15 +17,11 @@ Open `http://localhost:8000/` in a browser. For iPhone, publish over HTTPS using
 
 ## Deployment: GitHub Pages
 
-This project lives in **[onetripteam-com/Habibiii](https://github.com/onetripteam-com/Habibiii)**, currently a **private** repository. The deployment workflow at `.github/workflows/deploy-pages.yml` is installed but GitHub Pages must be enabled in repository settings.
-
-1. Open **Settings → Pages**. Choose **GitHub Actions** under **Build and deployment**. The included workflow deploys the root website on every push to `main` and can also be started from **Actions → Deploy MAHA to GitHub Pages → Run workflow**.
-2. If eligible for Pages on this repository, the URL will be `https://onetripteam-com.github.io/Habibiii/`. Until the Pages settings and the Action run are successful, that URL may not be live.
-3. If GitHub shows that Pages cannot be enabled for a private repository on your plan, consider Cloudflare Pages with access controls, or choose yourself whether to change repository visibility; the project upload does **not** change privacy.
-4. Once published, test online over HTTPS, then enable Airplane Mode and reopen the site to verify offline caching.
-5. After each website change, increment `VERSION` in `sw.js` (e.g. `v1.0.1`) so returning users refresh cached assets.
-
-An alternative is **Settings → Pages → Deploy from a branch**, choosing `main` and `/ (root)`; you can disable the workflow if you pick branch deployment instead.
+1. Create a new **public** GitHub repository for this project (or a separate branch/directory on an existing website); upload the entire **contents** of this folder, including `.nojekyll`, `manifest.json`, and `sw.js`.
+2. Go to **Settings → Pages**. Under **Build and deployment**, choose **Deploy from a branch**, pick `main`, set directory to `/ (root)`, then Save.
+3. Once Pages finishes, open the HTTPS URL of the form `https://YOUR-USERNAME.github.io/YOUR-REPO/`.
+4. Test it once with Wi‑Fi, then enable Airplane Mode and reopen it. Service worker caching should make the site available after its first fully loaded online visit.
+5. If you change the project later, update `VERSION` in `sw.js` (e.g. `v1.0.1`), commit, and load the page online once to install the new cache.
 
 **Important privacy reality:** `noindex`, `robots.txt`, and an unlisted URL discourage indexing but **do not make a GitHub Pages website private**. Anyone holding the link can open it. If the content becomes truly personal, add real access controls with a hosting platform rather than trusting `noindex`.
 
@@ -90,3 +86,9 @@ See `IPHONE-QA.md` for 30 checks, including viewport matrix 360×740, 393×852, 
 - **Copy**: your favourite inside jokes; Maha's favourite flowers; one affectionate natural Malayalam phrase she actually says; a few travel memories to hint at in the room without making a timeline.
 
 **Scope note:** No surgery/health references, no other rooms, no space-themed visuals, no stock-template UI.
+
+## One Room, Many Places (portal architecture)
+
+This release adds seven themed, full-frame portal previews. See `PORTAL-ARCHITECTURE-QA.md` for object mapping, navigation implementation and iPhone QA. Source files: `js/places.js` (independent palettes/art metaphors) and `js/portal.js` (View Transitions with GSAP / Web Animations fallback). The Room stays mounted throughout a portal trip, including its saved bouquet, selected room theme and Kuwait-clock window.
+
+These are intentionally **preview environments** for unbuilt rooms, not completed mini-movies, games, letters or travel features.
