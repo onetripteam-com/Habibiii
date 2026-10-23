@@ -1,5 +1,5 @@
 /* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-opening-v1.8.0';
+const VERSION='maha-opening-v1.9.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
  './','./index.html','./css/style.css','./js/main.js','./js/hug.js','./js/flowers.js',
@@ -8,7 +8,7 @@ const FILES=[
  './js/arcade.js','./js/games/common.js','./js/games/rules.js',
  './js/games/chai.js','./js/games/sadya.js','./js/games/baggage.js',
  './js/games/phase2-rules.js','./js/games/doctor.js','./js/games/world.js','./js/games/vlog.js','./js/places.js','./js/portal.js',
- './js/media-control.js','./js/cinema.js','./js/radio.js','./js/travel.js',
+ './js/media-control.js','./js/cinema.js','./js/radio.js','./js/travel.js','./js/garden.js','./js/rest.js','./content/comfort.json',
  './content/movies.json','./content/radio.json','./content/places.json',
  './assets/video/kerala.en.vtt','./assets/video/kerala.ml.vtt',
  './assets/video/kuwait.en.vtt','./assets/video/kuwait.ml.vtt',

@@ -1064,3 +1064,91 @@ button:disabled{cursor:default;opacity:.35}
 /* Cabinet-scale poster hit areas: override shared 44px button minimum. */
 .cinema-host .cinema-poster{min-height:clamp(216px,28vh,260px)}
 @media(max-height:745px){.cinema-host .cinema-poster{min-height:216px}}
+
+/* PROMPT E — MAHA'S LIVING GARDEN; original botanical type on Canvas 2D */
+.portal-screen[data-place="garden"]{--place-bg:#f4efda;--place-ink:#465e49;--place-accent:#bc7960;--place-soft:#c5d5b7}
+.portal-screen[data-place="garden"] .portal-place{background:radial-gradient(ellipse at 18% 8%,#fffaf0,#dfe6d3 80%)}
+.portal-screen[data-place="garden"] .portal-content{top:calc(59px + env(safe-area-inset-top,0px));bottom:calc(7px + env(safe-area-inset-bottom,0px));padding:0 13px;overflow:hidden}
+.garden-host{height:100%;width:100%;min-height:0;position:relative;overflow:hidden}
+.wordgarden{position:relative;height:100%;width:100%;display:flex;flex-direction:column;align-items:stretch;gap:7px;min-height:0;color:#435f4b;font-family:Georgia,'Iowan Old Style',serif}
+.wg-heading{text-align:center;flex-shrink:0;padding:0 6px}
+.wg-kicker,.rr-kicker{display:block;letter-spacing:.14em;font:700 9px/1.4 var(--sans);opacity:.77}
+.wg-heading h1{font-size:clamp(23px,6.3vw,32px);line-height:1.05;letter-spacing:-.045em;margin:3px 0 0;font-weight:400}
+.wg-heading h1 em{color:#ba755e}
+.wg-prompts{display:flex;gap:5px;flex-shrink:0;align-items:center;justify-content:center;overflow:hidden}
+.wg-prompts button{min-height:44px;min-width:0;flex:1;border-radius:18px;background:#ffffff91;border:1px solid #c2b9a0;color:#52745b;padding:5px;font:700 clamp(10px,2.6vw,12px) var(--sans)}
+.wg-prompts button[aria-pressed="true"]{background:#76967d;color:#fffaf0;border-color:#76967d}
+.wg-hint{text-align:center;font:italic 12px/1.3 Georgia,serif;min-height:27px;margin:0;display:grid;place-items:center;color:#647766}
+.wg-canvas-wrap{position:relative;flex:1 1 auto;min-height:154px;width:100%;border-radius:23px;background:#f7efd9;border:1px solid #c9c6aa;box-shadow:inset 0 5px 40px #879b7b22,0 4px 12px #5d766220;overflow:hidden;touch-action:manipulation}
+.wg-canvas-wrap canvas{position:absolute;inset:0;display:block;width:100%;height:100%;}
+.wg-focus{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);border:1px solid #8fa58b;background:#fff8e9e8;border-radius:25px;min-height:43px;min-width:235px;padding:6px 12px;color:#4c7058;font:700 11px/1.15 var(--sans);white-space:normal;max-width:95%;box-shadow:0 3px 14px #394d3035}
+.wg-focus:active{transform:translateX(-50%) scale(.96)}
+.wg-hidden-input{position:absolute;left:0;bottom:0;width:6px;height:6px;padding:0;opacity:.01;pointer-events:none;border:0;font-size:16px!important;transform:none!important;z-index:-1}
+.wg-word{flex-shrink:0;min-height:32px;display:flex;justify-content:center;gap:9px;align-items:center;color:#536b54;min-width:0}
+.wg-word span{font:italic 20px Georgia,serif;max-width:62%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wg-word small{font:600 10px var(--sans);opacity:.65}
+.wg-bottom{flex-shrink:0;display:flex;flex-direction:column;gap:5px;padding:3px 3px 0}
+.wg-palette{display:flex;align-items:center;justify-content:space-between;gap:3px}
+.wg-palette button{display:flex;align-items:center;flex-direction:column;min-height:44px;min-width:0;flex:1;gap:3px;border-radius:10px;background:transparent;color:#566b58;padding:1px 0}
+.wg-palette button span{display:block;width:22px;height:22px;border-radius:50%;border:2px solid #fdf9ed;box-shadow:0 0 0 1px #a9b59f;transition:transform .2s}
+.wg-palette button[aria-pressed="true"] span{transform:scale(1.17);box-shadow:0 0 0 2px #6d8b72}
+.wg-palette button small{font:650 10px var(--sans);text-transform:capitalize}
+.wg-actions{display:flex;gap:8px}
+.wg-actions button{border-radius:22px;background:#e5cead;border:1px solid #bba68a;color:#655b4b;flex:1;min-height:44px;font:750 12px var(--sans);padding:5px 7px}
+.wg-actions [data-release]{background:#c87e63;color:#fff7ee;border-color:#a56752}
+.wg-actions [data-dream-save]{background:#72957a;color:#fff7ec;border-color:#668771}
+.wg-status{min-height:16px;margin:0;text-align:center;font:italic 12px Georgia,serif;color:#6a7963}
+
+/* PROMPT E — THE QUIET REST ROOM */
+.portal-screen[data-place="rest"]{--place-bg:#e6ddc9;--place-ink:#465c4f;--place-accent:#b27f64;--place-soft:#b8cbb4}
+.portal-screen[data-place="rest"] .portal-place{background:linear-gradient(145deg,#eae1ce,#becfbf 82%)}
+.portal-screen[data-place="rest"] .portal-content{top:calc(60px + env(safe-area-inset-top,0px));bottom:calc(8px + env(safe-area-inset-bottom,0px));padding:0 12px;overflow:hidden}
+.rest-host{height:100%;min-height:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:none}
+.rest-host::-webkit-scrollbar{display:none}
+.restroom{display:flex;flex-direction:column;gap:7px;color:#43584e;min-height:100%;font-family:Georgia,serif;padding-bottom:8px}
+.restroom-top{text-align:center;flex:none}
+.restroom-top h1{font-size:clamp(24px,6.6vw,34px);margin:3px 0 0;font-weight:400;letter-spacing:-.04em}
+.restroom-top h1 em{color:#a97256}
+.rr-window{position:relative;flex:none;width:100%;height:clamp(175px,27vh,270px);border:8px solid #c7aa88;border-radius:55% 55% 8px 8px / 15% 15% 8px 8px;overflow:hidden;background:#6e978a;box-shadow:inset 0 0 0 4px #f7e2bb,0 8px 18px #5268593c;--rr-lamp-brightness:.72;isolation:isolate}
+.rr-window canvas{display:block;width:100%;height:100%}
+.rr-window-bars{position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent 47%,#a88c70 47%,#a88c70 51%,transparent 51%),linear-gradient(0deg,transparent 46%,#a88c70 46%,#a88c70 49%,transparent 49%);opacity:.8}
+.rr-night-sill{position:absolute;left:-5%;right:-5%;height:13px;bottom:-1px;background:linear-gradient(#e6c49d,#ab896e);border-top:2px solid #fff0cf}
+.rr-glass-note{position:absolute;bottom:12px;left:12px;margin:0;padding:4px 8px;border-radius:9px;background:#f6f0dbbc;font:italic 12px Georgia,serif;color:#49655b}
+.rr-lamp{position:absolute;right:9%;bottom:9px;height:130px;width:83px;pointer-events:none}
+.rr-lamp-light{position:absolute;left:50%;top:-31px;width:200px;height:215px;background:radial-gradient(ellipse at 50% 14%,#ffedacbe,transparent 74%);transform:translate(-50%,-42%);transform-origin:50% 23%;pointer-events:none;mix-blend-mode:screen;transition:opacity .15s,transform .15s}
+.rr-lamp-shade{position:absolute;left:12px;top:25px;width:63px;height:41px;clip-path:polygon(23% 0,78% 0,100% 100%,0 100%);background:linear-gradient(90deg,#bb865c,#efcc8e,#b78261);filter:drop-shadow(0 2px 1px #9a7053)}
+.rr-lamp-stem{position:absolute;left:43px;top:63px;width:5px;height:53px;background:#775d50}
+.rr-lamp-base{position:absolute;left:20px;top:113px;width:49px;height:8px;border-radius:50%;background:#775d50}
+.rr-dials{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:none}
+.rr-dials label{background:#fff6e4c7;border:1px solid #b6b6a0;border-radius:14px;padding:7px 10px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px;color:#536455;font:750 11px var(--sans)}
+.rr-dials output{font-size:10px}
+.rr-dials input{grid-column:1/-1;width:100%;margin:3px 0 0;accent-color:#728f7c;height:23px;touch-action:pan-x}
+.rr-rain-toggle{min-height:44px;width:100%;border:1px solid #7d9885;border-radius:24px;background:#e0eada;color:#4b6f5c;font:750 12px var(--sans)}
+.rr-lower{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-height:177px;flex:1 0 auto}
+.rr-breath-card,.rr-comfort{border-radius:18px;border:1px solid #c3b59c;background:#fffaecdd;padding:10px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.rr-breath-header{display:flex;flex-direction:column;gap:5px}
+.rr-breath-header span,.rr-section-kicker{font:850 9px/1.3 var(--sans);letter-spacing:.06em;color:#8b6e57}
+.rr-breath-header button{min-height:34px;border-radius:15px;background:#76947a;color:#fff6e7;font:750 11px var(--sans)}
+.rr-breath-display{display:flex;align-items:center;gap:6px;min-height:71px}
+.rr-breath-orb{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 32% 27%,#f9ecd4,#a2bda3 68%,#769882);box-shadow:0 0 0 8px #cbd9bb40;transform:scale(.83);display:grid;place-items:center;font:25px Georgia,serif;color:#f8f3df;flex-shrink:0;will-change:transform}
+.rr-breath-copy strong{display:block;font:italic 13px Georgia,serif;color:#4d6b57}
+.rr-breath-copy small{display:block;font:10px/1.3 var(--sans);margin-top:4px}
+.rr-breath-card p{font:italic 11px/1.3 Georgia,serif;color:#8b7966;margin:auto 0 0}
+.rr-comfort-tabs{display:flex;gap:3px}
+.rr-comfort-tabs button{flex:1;min-height:34px;padding:4px 2px;border-radius:10px;background:#ecdbc2;font:750 10px var(--sans);color:#846e5f}
+.rr-comfort-tabs button[aria-pressed="true"]{background:#779780;color:#fff6ed}
+.rr-comfort ul{margin:0;padding:0;list-style:none;flex:1;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.rr-comfort li{font:11px/1.34 var(--sans);color:#5d6d59;overflow-wrap:anywhere}
+.rr-foot{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rr-foot button{min-height:44px;border-radius:20px;background:#f2d9ba;color:#74563e;border:1px solid #c9af90;font:750 11px/1.2 var(--sans);padding:5px}
+.rr-voice-caption,.rr-copyright{font:italic 11px/1.25 Georgia,serif;color:#6d7769;margin:1px 0;text-align:center}
+.rr-copyright{font:9px/1.25 var(--sans);opacity:.7}
+@media(max-height:760px){
+ .portal-screen[data-place="garden"] .portal-content{top:calc(55px + env(safe-area-inset-top,0px))}
+ .wg-heading h1{font-size:24px}.wg-hint{font-size:11px;min-height:22px}
+ .wg-palette button small{font-size:9px}
+ .rr-window{height:175px}.rr-lower{min-height:160px}.rr-breath-display{min-height:52px}.rr-breath-orb{width:42px;height:42px}
+ .rr-comfort li{font-size:10px}
+}
+@media(max-width:365px){.rr-breath-card,.rr-comfort{padding:7px}.rr-comfort-tabs button{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.wg-focus:active{transform:translateX(-50%)}.rr-lamp-light{transition:none}.rr-breath-orb{will-change:auto}}

@@ -7,7 +7,7 @@ export const PLACES={
  travel:{id:'travel',name:'The Almost-Anywhere Club',short:'Travel',icon:'◇',metaphor:'suitcase',entry:'travel',sound:'travel',unlock:2,theme:{bg:'#d8dfcb',ink:'#415648',accent:'#a7644d',soft:'#eecf96',font:'Georgia,serif',texture:'map'}},
  games:{id:'games',name:'The Slightly Silly Arcade',short:'Arcade',icon:'✦',metaphor:'console',entry:'arcade',sound:'arcade',unlock:1,theme:{bg:'#f7d69c',ink:'#4d403a',accent:'#b86659',soft:'#8fa88f',font:'system-ui,sans-serif',texture:'dots'}},
  rest:{id:'rest',name:'The Quiet Corner',short:'Rest',icon:'◡',metaphor:'lamp',entry:'rest',sound:'rest',unlock:1,theme:{bg:'#6f8173',ink:'#fff2d7',accent:'#e8b87d',soft:'#bbcfb0',font:'Georgia,serif',texture:'linen'}},
- garden:{id:'garden',name:'The Little Greenhouse',short:'Garden',icon:'❀',metaphor:'sprout',entry:'garden',sound:'garden',unlock:3,theme:{bg:'#dfe8cd',ink:'#385742',accent:'#a76d5e',soft:'#88a77c',font:'Georgia,serif',texture:'leaf'}}
+ garden:{id:'garden',name:'The Little Greenhouse',short:'Garden',icon:'❀',metaphor:'sprout',entry:'garden',sound:'garden',unlock:1,theme:{bg:'#dfe8cd',ink:'#385742',accent:'#a76d5e',soft:'#88a77c',font:'Georgia,serif',texture:'leaf'}}
 };
 export const PLACE_LIST=Object.values(PLACES);
 export function isUnlocked(id,visits){return visits>=(PLACES[id]?.unlock??Infinity) || Boolean(store.get('unlocked:'+id,false));}

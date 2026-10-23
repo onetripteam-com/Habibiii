@@ -12,7 +12,7 @@ const CABINETS=[
 ];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const escape=s=>String(s).replace(/[&<>"']/g,v=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[v]));
-export function mountArcade(host,{onStamp=()=>{}}={}){
+export function mountArcade(host,{onStamp=()=>{},autoPlayId=null}={}){
  let index=0,current=null,game=null,disposed=false,paused=false,muted=store.get('arcadeMuted',false)===true,showing='lobby',entryTimer=null;
  host.classList.add('arcade-host');
  const stats=id=>({best:Number(store.get('arcadeBest:'+id,0))||0,stamp:Boolean(store.get('gameCompletions',{})[id])});
@@ -48,6 +48,6 @@ export function mountArcade(host,{onStamp=()=>{}}={}){
   host.querySelector('[data-again]').addEventListener('click',()=>startGame(id));host.querySelector('[data-cabinets]').addEventListener('click',returnToCabinets);
  }
  function returnToCabinets(){if(game){game.stop();game=null}clearTimeout(entryTimer);showing='lobby';paused=false;goodSound('tap');lobby()}
- lobby();
+ if(autoPlayId&&MODULES[autoPlayId]){index=CABINETS.findIndex(c=>c.id===autoPlayId);startGame(autoPlayId);}else lobby();
  return ()=>{disposed=true;clearTimeout(entryTimer);if(game){game.stop();game=null}host.innerHTML='';host.classList.remove('arcade-host')};
 }

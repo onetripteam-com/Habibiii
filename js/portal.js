@@ -8,6 +8,8 @@ import {mountArcade} from './arcade.js';
 import {mountCinema} from './cinema.js';
 import {mountRadio} from './radio.js';
 import {mountTravel} from './travel.js';
+import {mountGarden} from './garden.js';
+import {mountRest} from './rest.js';
 
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function rectInFrame(el,frame){const a=el.getBoundingClientRect(),f=frame.getBoundingClientRect();return {x:a.left-f.left,y:a.top-f.top,width:Math.max(1,a.width),height:Math.max(1,a.height),fw:f.width,fh:f.height};}
@@ -16,7 +18,7 @@ function animate(el,frames,options){if(!el?.animate)return Promise.resolve();con
 function gsapTween(el,props,duration){return new Promise(resolve=>window.gsap.to(el,{...props,duration:duration/1000,ease:'power3.inOut',onComplete:resolve}));}
 
 export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
- let active=null,busy=false,destroyed=false,lastSource=null,lastFocus=null,unmountPlace=()=>{};
+ let active=null,busy=false,destroyed=false,lastSource=null,lastFocus=null,unmountPlace=()=>{},nextArcadeId=null;
  const portal=document.createElement('section');portal.className='portal-screen';portal.id='portal-screen';portal.hidden=true;portal.setAttribute('aria-label','A different place');
  portal.innerHTML='<div class="portal-surface" id="portal-surface"></div>';
  frame.append(portal);
@@ -35,13 +37,17 @@ export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
   } else if(place.id==='games'){
    const target=portal.querySelector('.portal-content');
    target.innerHTML='<div class="mail-loading">The arcade lights are warming up…</div>';
-   unmountPlace=mountArcade(target,{onStamp:()=>onReturn?.('games')});
+   unmountPlace=mountArcade(target,{onStamp:()=>onReturn?.('games'),autoPlayId:nextArcadeId});nextArcadeId=null;
   } else if(place.id==='movies'){
    unmountPlace=mountCinema(portal.querySelector('.portal-content'));
   } else if(place.id==='music'){
    unmountPlace=mountRadio(portal.querySelector('.portal-content'));
   } else if(place.id==='travel'){
    unmountPlace=mountTravel(portal.querySelector('.portal-content'),{onPostcard:()=>onReturn?.('travel')});
+  } else if(place.id==='garden'){
+   unmountPlace=mountGarden(portal.querySelector('.portal-content'));
+  } else if(place.id==='rest'){
+   unmountPlace=mountRest(portal.querySelector('.portal-content'),{onPlay:()=>{const choices=['chai','sadya','baggage','doctor','world','vlog'];nextArcadeId=choices[Math.floor(Math.random()*choices.length)];navigate('games')}});
   } else {
    portal.querySelectorAll('[data-action]').forEach(button=>button.addEventListener('click',()=>action(button)));
   }

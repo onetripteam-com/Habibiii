@@ -1,0 +1,7 @@
+{
+  "shows": ["[Her comfort show — replace with a real favourite]", "[Something funny she's watched twice]", "[An easy movie for an ordinary evening]"],
+  "snacks": ["[Her favourite snack from Kuwait]", "[A little something from Kerala]", "[Chai? Or absolutely not chai today.]"],
+  "songs": ["[Song that reminds her of home]", "[A song for slow evenings]", "[A familiar playlist — add your own link separately]"],
+  "voice": {"src":"", "caption":"[Record a short note here in your own voice. This caption stays until you add it.]", "licence":"Your own recording only. Do not include privately in a public repository."},
+  "rain": {"src":"", "licence":"Original, synthesized locally with Web Audio white-noise filtering (no external sample)."}
+}

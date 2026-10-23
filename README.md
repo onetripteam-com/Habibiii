@@ -159,3 +159,11 @@ The current site works without external assets. Optional author-provided replace
 Run `node --test tests/arcade-rules.test.mjs tests/arcade-phase2-rules.test.mjs tests/letter-unlocks.test.mjs` for the pure gameplay/unlock checks. The sandbox-safe isolated browser verification is `python tests/ui_phase2_isolated.py 393 852` (also tested at 402×874 and 360×740). It tests emulated touch/browser logic, **not** a physical iPhone; the harness swaps real-time tick advancement for faster UI coverage.
 
 Read `ARCADE-PHASE-2-QA.md` for the exact Safari checklist and the remaining manual checks. Phase 2 is the requested endpoint; no further phase is started automatically.
+
+## Prompt E · The Garden & The Quiet Corner
+
+- The **potted plant** opens an original Canvas 2D serif word garden. Three modes: Type your name, Where to next?, Let it go. Five warm palettes, 700ms backspace withering, iPhone input-event typing/autocorrect support, visualViewport-aware canvas, local-only Travel dream pin, and 1179×2556 PNG wallpaper export.
+- The **lamp and bed** open one restful room: animated rain-on-glass, adjustable lamp, locally synthesized adjustable-volume rain (starts only after a tap), an optional 4/4/6 breathing circle, comfort lists from `content/comfort.json`, a future 'Press to hear me' recording slot with caption fallback, and a random existing Arcade game.
+- No medical outcome claims, streaks, or audio autoplay. Prompt E uses the existing return-to-room portal engine and global mute system. Unmounting either destination cancels animation and media activity.
+- Complete media filenames, licences, constraints: [PROMPT-E-MEDIA-MANIFEST.md](PROMPT-E-MEDIA-MANIFEST.md). Testing and Safari checklist: [PROMPT-E-QA.md](PROMPT-E-QA.md).
+- The site is **public**: keep private voice recordings, private names and messages out of this repository and publicly accessible assets, even if the source is moved to a private repository without restricting the published site.
