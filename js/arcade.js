@@ -1,0 +1,50 @@
+/** PROMPT C / Phase 1 — the room's one-cabinet-at-a-time arcade. */
+import {store} from './store.js';
+import {startSound,soundEffect} from './audio.js';
+const MODULES={chai:()=>import('./games/chai.js'),sadya:()=>import('./games/sadya.js'),baggage:()=>import('./games/baggage.js')};
+const CABINETS=[
+ {id:'chai',name:'Chai Maker',marquee:'CHAAYA CHAMPION',subtitle:'Pour · Boil · Spice',colour:'#d68b69',screen:'#234d45',icon:'☕',accent:'#f6d38d',blurb:'One pot. Several very opinionated customers.'},
+ {id:'sadya',name:'Sadya Builder',marquee:'SADYA EXPRESS',subtitle:'Serve it before the aunties arrive',colour:'#628a5b',screen:'#224c35',icon:'❧',accent:'#f3da82',blurb:'Nine dishes. One banana leaf. Zero family peace.'},
+ {id:'baggage',name:'Airport Baggage',marquee:'KWI BAGGAGE',subtitle:'Only fourteen kilos of dreams',colour:'#687c9d',screen:'#263f60',icon:'✈',accent:'#f2bc83',blurb:'Pack smart. Customs has questions.'}
+];
+const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+const escape=s=>String(s).replace(/[&<>"']/g,v=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[v]));
+export function mountArcade(host,{onStamp=()=>{}}={}){
+ let index=0,current=null,game=null,disposed=false,paused=false,muted=store.get('arcadeMuted',false)===true,showing='lobby',entryTimer=null;
+ host.classList.add('arcade-host');
+ const stats=id=>({best:Number(store.get('arcadeBest:'+id,0))||0,stamp:Boolean(store.get('gameCompletions',{})[id])});
+ const goodSound=k=>{if(!muted){startSound();soundEffect(k)}};
+ const markup=c=>{const a=stats(c.id);return `<div class="arcade-cabinet" style="--cab:${c.colour};--monitor:${c.screen};--neon:${c.accent}">
+  <div class="cabinet-top"><div class="cabinet-marquee"><span class="marquee-tiny">MAHA'S VERY UNOFFICIAL</span><strong>${c.marquee}</strong><span class="marquee-star">✦ &nbsp; ✳ &nbsp; ✦</span></div></div>
+  <div class="cabinet-bezel"><div class="cabinet-monitor"><div class="scanlines"></div><span class="cabinet-pixel-art">${c.icon}</span><strong>${c.name}</strong><small>${c.subtitle}</small></div></div>
+  <div class="cabinet-deck"><span class="cabinet-stick"><i></i></span><span class="cabinet-buttons"><i></i><i></i><i></i></span><span class="cabinet-coin">◉ INSERT</span></div><div class="cabinet-bottom"><span>PLAYER ONE: MAHA</span><span>✦ THE WORLD'S MOST SERIOUS NON-SPORTS</span></div></div>
+ <p class="cabinet-description">${c.blurb}</p><p class="arcade-cabinet-score">${a.stamp?'◉ PASSPORT STAMP EARNED':'○ NOT YET STAMPED'} &nbsp;·&nbsp; BEST ${a.best.toLocaleString('en-IN')}</p>`};
+ const getIndex=i=>(i+CABINETS.length)%CABINETS.length;
+ function lobby(){showing='lobby';paused=false;current=null;host.innerHTML=`<div class="arcade-app arcade-lobby"><div class="arcade-sign"><span class="sign-sparks">✦ ✳ ✦</span> THE SLIGHTLY SILLY ARCADE <small>NO REAL COINS WERE HARMED</small></div><div class="cabinet-switcher"><button class="cabinet-arrow" data-prev type="button" aria-label="Previous cabinet">‹</button><div class="cabinet-stage" id="cabinet-stage" tabindex="0" role="group" aria-label="Arcade cabinet. Swipe to change games.">${markup(CABINETS[index])}</div><button class="cabinet-arrow" data-next type="button" aria-label="Next cabinet">›</button></div><div class="arcade-pips" aria-label="Game ${index+1} of 3">${CABINETS.map((c,i)=>`<button type="button" data-pip="${i}" aria-label="See ${c.name}" aria-pressed="${i===index}">${i===index?'●':'○'}</button>`).join('')}</div><button class="arcade-play" type="button" data-play>◉ INSERT COIN & PLAY</button><p class="arcade-footnote">Swipe the cabinet. Three more are being built. No refunds on imaginary money.</p><div class="arcade-stamps" aria-label="Passport stamps">${CABINETS.map(c=>`<span class="${stats(c.id).stamp?'earned':''}" title="${c.name}">${c.icon}</span>`).join('')}</div></div>`;
+  host.querySelector('[data-prev]').addEventListener('click',()=>turn(-1));host.querySelector('[data-next]').addEventListener('click',()=>turn(1));
+  host.querySelector('[data-play]').addEventListener('click',()=>launch());host.querySelectorAll('[data-pip]').forEach(b=>b.addEventListener('click',()=>turn(0,+b.dataset.pip)));
+  const stage=host.querySelector('.cabinet-stage');let startX=null,startY=null;
+  stage.addEventListener('pointerdown',e=>{startX=e.clientX;startY=e.clientY});
+  stage.addEventListener('pointerup',e=>{if(startX===null)return;const dx=e.clientX-startX,dy=e.clientY-startY;startX=null;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy))turn(dx<0?1:-1)});
+  stage.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();turn(1)}if(e.key==='ArrowLeft'){e.preventDefault();turn(-1)}if(e.key==='Enter'){e.preventDefault();launch()}});
+ }
+ function turn(n,absolute){const next=Number.isFinite(absolute)?absolute:getIndex(index+n);if(next===index)return;index=next;goodSound('tap');const stage=host.querySelector('.cabinet-stage');if(!stage)return;const old=stage.firstElementChild;stage.innerHTML=markup(CABINETS[index]);stage.classList.remove('cabinet-turn');void stage.offsetWidth;stage.classList.add('cabinet-turn');host.querySelector('.arcade-pips').innerHTML=CABINETS.map((c,i)=>`<button type="button" data-pip="${i}" aria-label="See ${c.name}" aria-pressed="${i===index}">${i===index?'●':'○'}</button>`).join('');host.querySelectorAll('[data-pip]').forEach(b=>b.addEventListener('click',()=>turn(0,+b.dataset.pip))); }
+ async function launch(){if(showing!=='lobby'||disposed)return;showing='loading';goodSound('coin');const app=host.querySelector('.arcade-app');app.classList.add('coin-inserting');const coin=document.createElement('span');coin.className='falling-coin';coin.textContent='◉';app.append(coin);await new Promise(r=>entryTimer=setTimeout(r,reduced()?20:570));if(disposed||showing!=='loading')return;await startGame(CABINETS[index].id);}
+ async function startGame(id){if(game){game.stop();game=null}showing='playing';paused=false;current=id;host.innerHTML=`<div class="arcade-app arcade-active arcade-active-${id}"><div class="arcade-game-bar"><button type="button" data-cabinets aria-label="Return to arcade cabinets">‹ Cabinets</button><span>◉ ${CABINETS.find(x=>x.id===id).name}</span><button type="button" data-arcade-mute aria-pressed="${muted}" aria-label="${muted?'Enable':'Mute'} arcade game sounds">${muted?'♩':'♫'}</button></div><div class="arcade-game-board" id="arcade-game-board"><p>Warming up the cabinet…</p></div><div class="arcade-control-row"><button type="button" data-pause>Ⅱ Pause</button><button type="button" data-restart>↻ Restart</button></div><div class="arcade-pause-curtain" hidden><strong>PAUSED</strong><span>Even a highly unofficial arcade allows breaks.</span><button type="button" data-resume>▶ Resume</button></div></div>`;
+  const mod=await MODULES[id]();if(disposed||showing!=='playing'||current!==id)return;const board=host.querySelector('#arcade-game-board');
+  const handleFinish=r=>{if(disposed||showing!=='playing')return;showResult(r)};
+  game=mod.start(board,{isPaused:()=>paused,onFinish:handleFinish,sound:goodSound});
+  host.querySelector('[data-cabinets]').addEventListener('click',returnToCabinets);
+  host.querySelector('[data-pause]').addEventListener('click',()=>setPause(!paused));host.querySelector('[data-resume]').addEventListener('click',()=>setPause(false));host.querySelector('[data-restart]').addEventListener('click',()=>{goodSound('tap');startGame(id)});
+  host.querySelector('[data-arcade-mute]').addEventListener('click',()=>{muted=!muted;store.set('arcadeMuted',muted);const b=host.querySelector('[data-arcade-mute]');b.textContent=muted?'♩':'♫';b.setAttribute('aria-pressed',String(muted));b.setAttribute('aria-label',muted?'Enable arcade game sounds':'Mute arcade game sounds')});
+ }
+ function setPause(v){paused=v;const curtain=host.querySelector('.arcade-pause-curtain');if(curtain)curtain.hidden=!v;const b=host.querySelector('[data-pause]');if(b)b.textContent=v?'▶ Resume':'Ⅱ Pause';}
+ function showResult(r){showing='result';paused=false;const id=current;if(game){game.stop();game=null}const best=Math.max(r.score,Number(store.get('arcadeBest:'+id,0))||0);store.set('arcadeBest:'+id,best);
+  if(r.won){const completed={...store.get('gameCompletions',{}),[id]:true};store.set('gameCompletions',completed);store.set('game:'+id+':completed',true);const passport=Array.isArray(store.get('passportStamps',[]))?store.get('passportStamps',[]):[];if(!passport.some(p=>p.id===id)){store.set('passportStamps',[...passport,{id,earnedAt:new Date().toISOString(),score:r.score}])}goodSound('complete');onStamp(id)}else goodSound('undo');
+  host.innerHTML=`<div class="arcade-app arcade-result"><span class="arcade-result-top">ARCADE OFFICIAL RESULTS OFFICE</span><span class="arcade-result-medal">${r.won?'✦':'♡'}</span><h2>${r.won?'PASSPORT STAMPED!':'EVERY ATTEMPT COUNTS.'}</h2><div class="arcade-result-score"><span>SCORE</span><strong>${r.score.toLocaleString('en-IN')}</strong><small>PERSONAL BEST · ${best.toLocaleString('en-IN')}</small></div><p class="arcade-result-quote">“${escape(r.description)}”</p>${r.won?'<div class="arcade-stamp-award">✦ One more stamp in your little passport ✦</div>':'<div class="arcade-stamp-award">No shame. Not even from imaginary airport staff.</div>'}<div class="arcade-result-buttons"><button type="button" data-again>↻ One more?</button><button type="button" data-cabinets>Other cabinets →</button></div></div>`;
+  host.querySelector('[data-again]').addEventListener('click',()=>startGame(id));host.querySelector('[data-cabinets]').addEventListener('click',returnToCabinets);
+ }
+ function returnToCabinets(){if(game){game.stop();game=null}clearTimeout(entryTimer);showing='lobby';paused=false;goodSound('tap');lobby()}
+ lobby();
+ return ()=>{disposed=true;clearTimeout(entryTimer);if(game){game.stop();game=null}host.innerHTML='';host.classList.remove('arcade-host')};
+}

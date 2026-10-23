@@ -81,7 +81,7 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
   root.querySelector('#evidence-letter').hidden=!store.get('keptLetter',false);
   root.querySelector('#evidence-leaf').hidden=!store.get('gardenWatered',false);
   const seen=spots.filter((x,i)=>spots.findIndex(y=>y[0]===x[0])===i).filter(([id])=>store.get('seenPlace:'+id,false));
-  const stamps=root.querySelector('#evidence-stamps');stamps.innerHTML=seen.slice(0,4).map(([id])=>`<span class="wall-stamp stamp-${id}">${PLACES[id].icon}</span>`).join('');
+  const stamps=root.querySelector('#evidence-stamps');const passport=Array.isArray(store.get('passportStamps',[]))?store.get('passportStamps',[]):[];stamps.innerHTML=seen.slice(0,3).map(([id])=>`<span class="wall-stamp stamp-${id}">${PLACES[id].icon}</span>`).join('')+passport.slice(0,3).map(stamp=>`<span class="wall-stamp passport-game-stamp" title="${stamp.id} game won">✦</span>`).join('');
   objects.querySelectorAll('[data-place]').forEach(b=>{b.querySelector('.object-dot').classList.toggle('new-item',isNew(b.dataset.place,visits));});
  }
  refreshEvidence();

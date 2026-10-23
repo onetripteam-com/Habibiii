@@ -35,7 +35,7 @@ export function startSound(){ if(active||muted||!init())return;active=true;maste
 export function soundEffect(kind='tap') {
   if(muted||!active||!context||context.state!=='running') return;
   const now=context.currentTime;
-  const sets={tap:[[440,0],[659,.09]],pick:[[523,0],[659,.09],[784,.2]],undo:[[523,0],[349,.12]],complete:[[392,0],[523,.15],[659,.3],[784,.5]],door:[[349,0],[440,.13]],arcade:[[523,0],[784,.08],[1046,.16]]};
+  const sets={tap:[[440,0],[659,.09]],pick:[[523,0],[659,.09],[784,.2]],undo:[[523,0],[349,.12]],complete:[[392,0],[523,.15],[659,.3],[784,.5]],door:[[349,0],[440,.13]],arcade:[[523,0],[784,.08],[1046,.16]],coin:[[784,0],[523,.09],[392,.19]],pour:[[293.66,0],[329.63,.09]],correct:[[523,0],[659,.09],[784,.2]],wrong:[[311,0],[244,.16]],alarm:[[220,0],[176,.1],[220,.2],[176,.3]]};
   (sets[kind]||sets.tap).forEach(([n,d])=>tone(n,now+d,0.28,0.055,'sine'));
 }
 export function initAudioUI() {

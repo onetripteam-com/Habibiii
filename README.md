@@ -119,3 +119,9 @@ It uses **envelopes and paper**, not a grid of identical cards. Its **Inbox / Op
 - **Avoid accidental mirroring:** On moving to private hosting, disable the current public GitHub Pages deployment and keep truly private letter content only in the private repository. Do not put private content in publicly downloadable archives.
 
 A password or access layer gates the website, but it does not provide end-to-end encryption for content delivered to the browser. Give access only to intended readers; even protected site content can be saved or copied by authorized visitors.
+
+## PROMPT C · Arcade Phase 1 (built)
+
+The room's Games portal opens a swipeable collection of three hand-drawn arcade cabinets: **Chai Maker**, **Sadya Builder**, and **Airport Baggage**. All three contain working touch-first mechanics, pause/restart, local sound control, funny results, persistent local best scores, and winning passport stamps. The `{type:"game", id:"chai"}` Letter unlock rule is connected through `gameCompletions` in `store.js`. A loss never blocks another attempt. These three games require no image downloads; CSS/SVG contains the placeholders. Phase 2's Decode the Doctor, Where in the World, and Vlog Director are **not yet built**.
+
+See `ARCADE-PHASE-1-QA.md` for the exact replacement art brief, game instructions, design constraints, testing, and Kerala Sadya reference citations. Test with `npm test`; all game data remains local on her device. Do not commit personal photos, letters, or handwriting to this currently public repository.

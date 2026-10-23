@@ -5,7 +5,7 @@ export const PLACES={
  music:{id:'music',name:'Radio Maha',short:'Music',icon:'♫',metaphor:'dial',entry:'radio',sound:'radio',unlock:1,theme:{bg:'#3d584d',ink:'#f8eccf',accent:'#e5b877',soft:'#7d9b7c',font:'Georgia,serif',texture:'linen'}},
  movies:{id:'movies',name:'The Little Cinema',short:'Cinema',icon:'▣',metaphor:'curtains',entry:'cinema',sound:'cinema',unlock:2,theme:{bg:'#2d332d',ink:'#f5e9cf',accent:'#ce9e73',soft:'#765a4a',font:'Georgia,serif',texture:'film'}},
  travel:{id:'travel',name:'The Almost-Anywhere Club',short:'Travel',icon:'◇',metaphor:'suitcase',entry:'travel',sound:'travel',unlock:2,theme:{bg:'#d8dfcb',ink:'#415648',accent:'#a7644d',soft:'#eecf96',font:'Georgia,serif',texture:'map'}},
- games:{id:'games',name:'The Slightly Silly Arcade',short:'Arcade',icon:'✦',metaphor:'console',entry:'arcade',sound:'arcade',unlock:3,theme:{bg:'#f7d69c',ink:'#4d403a',accent:'#b86659',soft:'#8fa88f',font:'system-ui,sans-serif',texture:'dots'}},
+ games:{id:'games',name:'The Slightly Silly Arcade',short:'Arcade',icon:'✦',metaphor:'console',entry:'arcade',sound:'arcade',unlock:1,theme:{bg:'#f7d69c',ink:'#4d403a',accent:'#b86659',soft:'#8fa88f',font:'system-ui,sans-serif',texture:'dots'}},
  rest:{id:'rest',name:'The Quiet Corner',short:'Rest',icon:'◡',metaphor:'lamp',entry:'rest',sound:'rest',unlock:1,theme:{bg:'#6f8173',ink:'#fff2d7',accent:'#e8b87d',soft:'#bbcfb0',font:'Georgia,serif',texture:'linen'}},
  garden:{id:'garden',name:'The Little Greenhouse',short:'Garden',icon:'❀',metaphor:'sprout',entry:'garden',sound:'garden',unlock:3,theme:{bg:'#dfe8cd',ink:'#385742',accent:'#a76d5e',soft:'#88a77c',font:'Georgia,serif',texture:'leaf'}}
 };

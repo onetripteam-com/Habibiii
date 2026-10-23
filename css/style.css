@@ -668,3 +668,194 @@ button:disabled{cursor:default;opacity:.35}
 @keyframes reader-arrive{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:none}}
 @keyframes reader-unfold{from{opacity:.5;transform:scaleY(.9)}to{opacity:1;transform:scaleY(1)}}
 @media(prefers-reduced-motion:reduce){.letter-reader,.letter-reader .reader-paper{animation:none!important}}
+
+/* ============================================================
+   PROMPT C • PHASE 1 — ONE ARCADE CABINET AT A TIME
+   Shared portal, unique hand-painted-looking CSS arcade metaphor.
+   ============================================================ */
+.portal-screen[data-place="games"]{--place-bg:#f9ddaa;--place-ink:#493a38;--place-accent:#b86150;--place-soft:#f5ad85}
+.portal-screen[data-place="games"] .portal-place{background:radial-gradient(ellipse at 50% 24%,#fff1bb 0,#f6cca0 52%,#dc9f86 100%)}
+.portal-screen[data-place="games"] .portal-place:before{background:radial-gradient(circle at 8% 81%,#e9a46677,transparent 42%),radial-gradient(circle at 95% 9%,#ecefa877,transparent 32%);opacity:1}
+.portal-screen[data-place="games"] .portal-content{left:0;right:0;top:calc(64px + env(safe-area-inset-top,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:0 12px}
+.arcade-host{height:100%;font-family:'Avenir Next','Trebuchet MS',system-ui,sans-serif}
+.arcade-app{position:relative;width:100%;height:100%;min-height:0;display:flex;flex-direction:column;align-items:center;overflow:hidden}
+.arcade-sign{text-align:center;color:#5d4741;font-size:clamp(10px,2.8vw,13px);font-weight:1000;letter-spacing:.08em;margin:2px 0 6px;line-height:1.15}
+.arcade-sign small{display:block;font-size:8px;margin-top:4px;color:#a46b58;letter-spacing:.18em}
+.sign-sparks{color:#c27154;margin-right:5px}
+.cabinet-switcher{position:relative;width:100%;display:flex;align-items:center;justify-content:center;flex:1 1 auto;min-height:0;max-height:470px;gap:1px}
+.cabinet-stage{height:100%;width:min(81%,309px);max-width:309px;min-width:0;display:flex;flex-direction:column;justify-content:center;align-items:center;outline-offset:3px;touch-action:pan-y}
+.cabinet-stage.cabinet-turn .arcade-cabinet{animation:cabinet-switch .23s ease-out both}
+@keyframes cabinet-switch{0%{opacity:.45;transform:translateX(17px) rotate(4deg) scale(.92)}100%{opacity:1;transform:translateX(0) rotate(0) scale(1)}}
+.cabinet-arrow{width:37px;height:63px;flex:none;background:#fff4d7a9;color:#83564a;border:1px solid #c7957777;border-radius:26px;font-family:Georgia,serif;font-size:39px;line-height:1;box-shadow:0 3px 0 #ad7f6240;z-index:2}
+.cabinet-arrow:active{transform:scale(.89)}
+.arcade-cabinet{position:relative;width:100%;height:min(100%,385px);min-height:233px;display:flex;flex-direction:column;align-items:stretch;filter:drop-shadow(0 10px 5px #6c4c3b48)}
+.cabinet-top{height:22%;border:7px solid #4b4547;border-bottom:2px solid #423a3e;border-radius:16px 16px 4px 4px;background:linear-gradient(120deg,var(--cab),#453f44);padding:6px 10px}
+.cabinet-marquee{position:relative;width:100%;height:100%;border:2px solid #fff0b666;background:linear-gradient(135deg,#323940,#5a3842);text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:skew(-1deg);box-shadow:inset 0 0 9px var(--neon)}
+.marquee-tiny{font-size:6px;letter-spacing:.22em;color:#efdab4;font-weight:800}
+.cabinet-marquee strong{font-size:clamp(16px,4.9vw,23px);letter-spacing:.035em;line-height:1.15;color:var(--neon);text-shadow:1px 1px #0007}
+.marquee-star{font-size:10px;color:#fff2bd;letter-spacing:.5em}
+.cabinet-bezel{flex:1;min-height:0;border:10px solid #4b4247;background:linear-gradient(125deg,var(--cab),#4a4450);padding:9px 9px 5px;border-top-width:4px;box-shadow:inset 4px 3px #ffffff19}
+.cabinet-monitor{height:100%;min-height:0;position:relative;border:7px solid #1e3039;border-radius:35% / 12%;background:radial-gradient(ellipse at 50% 46%,var(--monitor),#152f35 100%);box-shadow:inset 0 0 20px #071d23,inset 0 0 0 2px #9da99d;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--neon);gap:5px}
+.cabinet-monitor .scanlines{position:absolute;inset:0;pointer-events:none;opacity:.16;background:repeating-linear-gradient(0deg,#061b22 0 2px,transparent 2px 5px);border-radius:inherit}
+.cabinet-pixel-art{font-size:clamp(47px,16vw,79px);font-family:Georgia,serif;line-height:1;filter:drop-shadow(2px 2px #0005)}
+.cabinet-monitor strong{font-size:clamp(14px,4.7vw,21px);letter-spacing:.04em;line-height:1.1}
+.cabinet-monitor small{font-size:clamp(8px,2.6vw,11px);color:#fff2da;max-width:95%;line-height:1.25}
+.cabinet-deck{height:17%;flex:none;background:linear-gradient(165deg,var(--cab),#56444c);border:8px solid #4b4247;border-top-width:3px;display:flex;justify-content:space-around;align-items:center;gap:7px}
+.cabinet-stick{position:relative;border-radius:50%;width:32px;height:19px;background:#34373c;box-shadow:inset 0 0 0 3px #9f9495}
+.cabinet-stick i{position:absolute;left:12px;bottom:10px;background:#a85f60;border:4px solid #372f37;width:15px;height:18px;border-radius:50%;transform:rotate(-18deg)}
+.cabinet-buttons{display:flex;gap:7px}
+.cabinet-buttons i{width:15px;height:12px;border-radius:50%;background:#efb16c;border:2px solid #543d46;box-shadow:0 3px #3b3542}
+.cabinet-buttons i:nth-child(2){background:#d88f97}.cabinet-buttons i:nth-child(3){background:#94b7a1}
+.cabinet-coin{font-size:9px;font-weight:900;color:#ffe3b4;letter-spacing:.04em;background:#3c3740;padding:7px 3px;border-radius:4px;border:1px solid #9b8d84}
+.cabinet-bottom{height:10%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1px;background:#4b4247;border-radius:1px 1px 14px 14px;color:#ebceb5;font-size:7px;letter-spacing:.13em}
+.cabinet-bottom span:last-child{font-size:6px;letter-spacing:.05em;opacity:.6}
+.cabinet-description{max-width:310px;font:italic 12px/1.2 Georgia,serif;text-align:center;color:#764d42;margin:5px 0 0}
+.arcade-cabinet-score{font-size:9px;text-align:center;letter-spacing:.06em;font-weight:900;color:#805c4b;margin:5px 0 0}
+.arcade-pips{flex:none;display:flex;justify-content:center;gap:12px;margin:6px 0}
+.arcade-pips button{background:transparent;color:#885b52;border:0;min-height:25px;min-width:29px;padding:0;font-size:19px;line-height:1}
+.arcade-pips button[aria-pressed="true"]{color:#b85c53}
+.arcade-play{flex:none;min-height:54px;width:min(94%,345px);background:#443e45;color:#fff0ba;font-size:14px;font-weight:1000;letter-spacing:.075em;border:2px solid #efb77e;border-radius:12px;box-shadow:0 5px 0 #845447,0 10px 15px #72493844;margin:4px 0}
+.arcade-play:active{transform:translateY(3px);box-shadow:0 2px 0 #845447}
+.arcade-footnote{font:italic 11px/1.35 Georgia,serif;max-width:310px;text-align:center;color:#8d6552;margin:8px 0 2px}
+.arcade-stamps{display:flex;gap:10px;justify-content:center;align-items:center;height:27px;flex:none}
+.arcade-stamps span{font-size:18px;color:#b99878;filter:grayscale(1);opacity:.42}
+.arcade-stamps span.earned{color:#a75c48;opacity:1;filter:none;text-shadow:0 2px #fff0c1}
+.falling-coin{position:absolute;z-index:8;left:50%;top:15%;color:#efcb76;font-size:50px;text-shadow:0 4px #795b48;animation:coin-drop .55s ease-in both;pointer-events:none}
+@keyframes coin-drop{0%{opacity:0;transform:translateY(-15px) rotate(-50deg) scale(1.7)}20%{opacity:1}100%{opacity:0;transform:translateY(330px) rotate(590deg) scale(.2)}}
+.coin-inserting .arcade-cabinet{animation:coin-light .5s ease-out}
+@keyframes coin-light{50%{filter:brightness(1.3)}}
+/* Game machines — compact screens, controls stay inside the portrait viewport. */
+.arcade-active{gap:0}
+.arcade-game-bar{width:100%;display:flex;align-items:center;gap:5px;justify-content:space-between;min-height:38px;flex:none}
+.arcade-game-bar button{min-height:38px;border-radius:13px;background:#fff5d7bb;padding:0 9px;color:#694640;font:900 11px var(--sans);border:1px solid #c59277;white-space:nowrap}
+.arcade-game-bar span{font:900 11px/1.15 var(--sans);letter-spacing:.03em;text-align:center;color:#684d46}
+.arcade-game-board{width:100%;flex:1;min-height:0;overflow:hidden;position:relative;display:flex;justify-content:center}
+.mini-game{position:relative;width:100%;height:100%;min-height:0;display:flex;flex-direction:column;align-items:center;gap:6px;overflow:hidden}
+.game-kicker{font-size:8px;font-weight:900;letter-spacing:.12em;display:flex;justify-content:space-between;width:100%;border-bottom:1px dashed #8e6b58aa;padding-bottom:4px;color:#7d5548}
+.game-kicker span{color:#b36756}
+.mini-game h2{font:normal clamp(20px,5.7vw,27px)/1.05 Georgia,serif;text-align:center;margin:3px 0;color:#5b4340;letter-spacing:-.04em}
+.game-direction{font:normal 12px/1.3 var(--sans);margin:0;text-align:center;min-height:29px;color:#7b584b;max-width:340px}
+.arcade-control-row{display:flex;gap:11px;width:100%;flex:none;height:45px;justify-content:center;align-items:center}
+.arcade-control-row button{width:45%;height:38px;border-radius:22px;background:#fff4d8be;color:#705248;border:1px solid #bd947e;font-weight:800;font-size:12px}
+.arcade-pause-curtain{position:absolute;inset:45px 0 0;background:#2f3340eb;color:#fff1d1;z-index:7;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:18px;text-align:center;padding:20px}
+.arcade-pause-curtain strong{font-size:37px;letter-spacing:.23em;font-family:Georgia,serif}
+.arcade-pause-curtain span{font:italic 16px Georgia,serif;max-width:275px}
+.arcade-pause-curtain button{min-height:49px;border:2px solid #f0d2a4;border-radius:24px;background:#eab37e;color:#423a3c;font-weight:900;padding:0 28px}
+/* Chai Maker — handcrafted kettle and theatrical tea cup */
+.chai-stage{flex:1;min-height:115px;max-height:270px;width:92%;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;filter:drop-shadow(0 9px 5px #86624b4d)}
+.chai-stage:before{content:'';position:absolute;width:175px;height:82%;border-radius:50%;background:radial-gradient(ellipse,#fff6d0bb,transparent 70%);z-index:-1}
+.chai-steam{height:21px;font:27px Georgia,serif;color:#ba795d;animation:chai-steam 3s ease-in-out infinite;transform-origin:bottom}
+@keyframes chai-steam{50%{opacity:.38;transform:translateY(-5px)}}
+.chai-glass{position:relative;width:130px;height:69%;max-height:173px;min-height:84px;overflow:hidden;border:7px solid #a16d52;border-top:8px solid #f5d9b8;border-bottom:14px solid #925e49;border-radius:9px 9px 29px 29px;background:#fff9e38c;box-shadow:inset 6px 0 #fff9ef91,4px 3px 0 #9a624c33;transform:perspective(160px) rotateX(-3deg)}
+.chai-glass:before{content:'';position:absolute;right:-20px;top:22px;width:32px;height:56px;border:10px solid #a16d52;border-radius:45%;z-index:-1}
+.chai-liquid{position:absolute;bottom:0;left:0;right:0;height:0;background:linear-gradient(90deg,#905234,#bf7a44 54%,#e3a665);transition:height .05s linear}
+.chai-target{position:absolute;top:32%;width:100%;left:0;border-top:2px dashed #f4efd8;filter:drop-shadow(0 1px #684738)}
+.chai-gauge{width:170px;margin-top:7px;display:flex;align-items:center;gap:5px;font-size:9px;color:#79543f}
+.chai-gauge-track{height:8px;flex:1;background:#ead0a7;position:relative;border-radius:8px;overflow:visible}
+.chai-gauge-track div{height:100%;width:0;background:#b87a51;border-radius:8px}
+.chai-gauge-track i{position:absolute;left:68%;top:-4px;width:3px;height:16px;background:#68473d}
+.chai-steps{width:100%;display:flex;gap:3px;justify-content:center}
+.chai-steps span{flex:1;text-align:center;padding:7px 2px;border-radius:6px;background:#d9b69b90;color:#896c5f;font-size:9px;font-weight:900;letter-spacing:.06em}
+.chai-steps span.is-on{background:#a56350;color:#fff1d2}
+.chai-beat{width:96%;display:flex;flex-direction:column;align-items:center;gap:4px;color:#7b4f43;font:italic 11px Georgia,serif;min-height:32px}
+.beat-track{height:14px;width:100%;position:relative;border-radius:14px;background:#e2b792;border:2px solid #c78e70}
+.beat-track span{position:absolute;top:0;left:0;width:14px;height:10px;border-radius:50%;background:#685756;transform:translateX(-50%)}
+.beat-track i{position:absolute;left:72%;width:9px;height:12px;top:-1px;border-radius:2px;background:#ecd368}
+.chai-action-row{width:100%;flex:none;margin-top:auto}
+.game-big-button{width:100%;min-height:57px;border:2px solid #f6d89b;border-radius:12px;background:#6a473f;color:#fff2d3;font:900 15px var(--sans);letter-spacing:.06em;box-shadow:0 5px #bc8a69;touch-action:none}
+.game-big-button.is-held{transform:translateY(3px);background:#9e5b41;box-shadow:0 2px #bc8a69}
+.game-micro{font:italic 11px Georgia,serif;color:#865f4f;text-align:center;margin:1px 0 4px;min-height:13px}
+/* Sadya Builder — leaf, spots and tray, with simultaneous drag and tap. */
+.sadya-game{gap:4px}
+.sadya-game h2{font-size:clamp(19px,5.6vw,24px)}
+.game-status{height:32px;display:flex;align-items:center;justify-content:space-between;width:100%;font-size:10px;font-weight:800;color:#745544;gap:4px;flex:none}
+.game-status strong{font-size:13px;white-space:nowrap}
+.game-cheat-toggle,.game-inline-button{border-radius:18px;border:1px solid #b68b70;color:#674c42;background:#fff3d4;font-size:10px;font-weight:750;padding:5px 8px;min-height:30px}
+.sadya-leaf{width:100%;height:min(32%,224px);min-height:135px;position:relative;flex:none;filter:drop-shadow(0 5px 4px #58744b39)}
+.sadya-leaf>svg{width:100%;height:100%;pointer-events:none}
+.sadya-slot{position:absolute;transform:translate(-50%,-50%);width:12.5%;min-width:36px;min-height:36px;height:17%;display:flex;flex-direction:column;justify-content:center;align-items:center;border:1.3px dashed #eaf1c9c9;border-radius:50%;background:#fffbd025;color:#f9f7e1;touch-action:manipulation}
+.sadya-slot:nth-last-child(-n+3){width:18%;height:26%}
+.sadya-slot-art{font-size:20px;line-height:1;color:#fffaddab}
+.sadya-slot-label{font-size:6px;font-weight:950;color:#fefbe4;letter-spacing:.05em}
+.sadya-slot.served{background:#f9e6b88f;border-style:solid;border-color:#e9d7ab}
+.sadya-slot .sadya-food{width:80%;height:80%;border-radius:50%;display:grid;place-items:center;background:var(--food,#ebc08f);font-size:20px;color:#6a4d3d;text-shadow:0 1px #fff5d8}
+.sadya-slot.oops{animation:slot-nope .3s ease}
+@keyframes slot-nope{30%{transform:translate(-55%,-50%) rotate(-7deg)}65%{transform:translate(-45%,-50%) rotate(7deg)}}
+.sadya-message,.bag-message{text-align:center;font:italic 11px/1.3 Georgia,serif;color:#765345;min-height:30px;margin:2px 0}
+.sadya-tray{flex:1;min-height:0;width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:5px;align-items:stretch}
+.sadya-dish{border:1px solid #b89177;border-radius:10px;background:#fff3d7cc;color:#684b42;display:flex;gap:4px;align-items:center;padding:3px 5px;text-align:left;min-height:0;touch-action:none;box-shadow:0 2px #b187685e}
+.sadya-dish i{font-style:normal;border-radius:50%;background:var(--food,#e9b98b);display:grid;place-items:center;width:28px;height:28px;flex:none;font:22px Georgia,serif;color:#644937}
+.sadya-dish span{font-size:10px;line-height:1.1;font-weight:800}
+.sadya-dish.selected{outline:2.5px solid #a9644f;background:#fff5b9}
+.sadya-dish.served{opacity:.4}
+.sadya-dish:disabled{opacity:.36}
+.sadya-actions{display:flex;align-items:center;gap:8px;width:100%;flex:none;min-height:36px}
+.sadya-actions>button{width:44%;flex:none}
+.sadya-actions>span{font:italic 10px/1.3 Georgia,serif;color:#846a59}
+.sadya-cheat{position:absolute;inset:8% 0 3%;z-index:4;border:4px solid #cfb381;border-radius:11px;background:#fff4d4;padding:22px 17px;display:flex;flex-direction:column;justify-content:center;gap:12px;box-shadow:0 12px 27px #473c3555;color:#655244}
+.sadya-cheat h3{font:26px Georgia,serif;margin:0}
+.sadya-cheat p{font:14px/1.45 Georgia,serif;margin:0}
+.sadya-cheat button{min-height:42px;border-radius:22px;background:#7e936d;color:#fff4d8;font-weight:800}
+/* Baggage — fitting silhouettes into a gridded vintage suitcase. */
+.baggage-game{gap:5px}
+.baggage-game h2{font-size:clamp(19px,5.5vw,26px)}
+.bag-scale{width:100%;border:1px solid #c19c84;background:#fff0d0b0;border-radius:10px;padding:6px 10px;display:grid;grid-template-columns:1fr auto;gap:5px;color:#685048;min-height:52px;flex:none}
+.bag-scale span{font-size:9px;font-weight:900;letter-spacing:.09em;align-self:center}
+.bag-scale strong{font-size:16px}
+.weight-track{grid-column:1 / -1;height:8px;border-radius:9px;background:#d5b69d;overflow:hidden}
+.weight-track>div{height:100%;width:0;background:linear-gradient(90deg,#86a374,#d7a363,#b85c4e);transition:width .2s ease}
+.bag-scale.overweight{animation:weight-alarm .5s ease}
+@keyframes weight-alarm{20%,60%{background:#e7786b;color:#fff6e5}40%,80%{background:#fff0d0}}
+.suitcase-scene{position:relative;flex:1;max-height:255px;min-height:175px;width:83%;border-radius:21px;background:linear-gradient(115deg,#c99771,#9a705d);border:9px solid #7e6156;box-shadow:inset 0 0 0 3px #ead2ad,0 7px 0 #79574777;display:grid;place-items:center}
+.suitcase-handle-shape{position:absolute;width:36%;height:20px;top:-27px;left:32%;border:7px solid #72574c;border-bottom:0;border-radius:12px 12px 0 0}
+.suitcase-latch{position:absolute;width:13px;height:26px;background:#ecd09a;border:3px solid #7b5d4c;top:12%}
+.latch-left{left:-9px}.latch-right{right:-9px}
+.suitcase-grid{width:90%;height:90%;display:grid;grid-template-columns:repeat(5,1fr);grid-template-rows:repeat(6,1fr);gap:3px}
+.suitcase-grid button{background:#f9e6bd2a;border:1px dashed #f7ddb4a1;border-radius:4px;color:#f6f0dd;min-width:0;min-height:0;padding:0;font:18px Georgia,serif}
+.suitcase-grid button.packed{background:var(--item-color);border:1px solid #fff3d7a8;color:#513b3b}
+.bag-tray{width:100%;flex:1;min-height:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:5px}
+.bag-item{min-height:0;border:1px solid #b08d75;border-radius:9px;background:#fff2daae;color:#634b41;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;touch-action:none;padding:2px}
+.bag-item-art{font:clamp(17px,6vw,26px) Georgia,serif;line-height:1}
+.bag-item-copy{font-size:9px;line-height:1.05;text-align:center}
+.bag-item-copy b{font-weight:850;display:block}
+.bag-item-copy small{display:block;font-size:8px;color:#846e61;margin-top:2px}
+.bag-item.selected{background:#ffe8a6;outline:2.5px solid #a55f4f}
+.bag-item.packed{opacity:.32}
+.bag-actions{display:flex;justify-content:space-between;gap:10px;width:100%;flex:none;min-height:39px}
+.bag-actions button{width:50%;min-height:37px;font-size:11px}
+/* Post-game scorecard: poster, not generic card grid. */
+.arcade-result{justify-content:center;gap:15px;text-align:center;border:6px double #b47d5c;border-radius:10px;background:repeating-linear-gradient(0deg,#fff3d5 0 21px,#f4e1c2 22px 23px);padding:21px 12px;box-shadow:inset 0 0 0 5px #fff6e7c7}
+.arcade-result-top{font:900 9px var(--sans);letter-spacing:.18em;color:#875f4f}
+.arcade-result-medal{font-size:65px;line-height:1;color:#c48a57;text-shadow:3px 4px #ebd2a0}
+.arcade-result h2{font:normal 30px Georgia,serif;color:#5b433d;margin:0;max-width:310px}
+.arcade-result-score{display:flex;flex-direction:column;gap:5px;width:75%;padding:13px;border-block:3px solid #ac7862;color:#7c5747}
+.arcade-result-score>span{font-size:10px;letter-spacing:.25em;font-weight:900}
+.arcade-result-score strong{font:48px/.95 Georgia,serif;color:#a35a48}
+.arcade-result-score small{font-size:10px;letter-spacing:.08em}
+.arcade-result-quote{max-width:305px;font:italic 17px/1.35 Georgia,serif;margin:0;color:#66483e}
+.arcade-stamp-award{font:800 11px var(--sans);color:#9b6950}
+.arcade-result-buttons{display:flex;gap:9px;width:100%;justify-content:center}
+.arcade-result-buttons button{min-height:50px;flex:1;border-radius:21px;border:1px solid #af715c;background:#a45f4e;color:#fff0d1;font:850 12px var(--sans)}
+.arcade-result-buttons button:last-child{background:#f7e5c5;color:#745142}
+.passport-game-stamp{background:#f0d5ad;border:2px double #b6795c;color:#975a43}
+@media(max-height:800px){
+ .arcade-sign{margin:0 0 2px}.cabinet-switcher{max-height:394px}.cabinet-description{margin:2px 0 0}.arcade-pips{margin:3px 0}
+ .arcade-footnote{margin:5px 0 2px}.arcade-stamps{height:18px}.arcade-stamps span{font-size:14px}
+ .arcade-play{min-height:50px}.mini-game{gap:3px}.chai-stage{max-height:218px}
+ .sadya-leaf{height:min(30%,190px);min-height:120px}.sadya-actions{min-height:32px}
+ .suitcase-scene{max-height:220px;min-height:151px}.bag-scale{min-height:47px}
+}
+@media(max-height:690px){
+ .arcade-sign{font-size:10px}.arcade-sign small{font-size:7px}.cabinet-switcher{max-height:305px}.cabinet-description{font-size:11px}
+ .cabinet-arrow{height:48px;width:30px}.cabinet-stage{width:min(82%,300px)}.arcade-cabinet{min-height:195px}.arcade-footnote{font-size:10px}
+ .mini-game h2{font-size:20px}.game-direction{font-size:11px;min-height:20px}.arcade-game-bar{min-height:33px}
+ .arcade-control-row{height:40px}.sadya-leaf{min-height:115px}.sadya-message,.bag-message{font-size:10px;min-height:20px}
+ .sadya-dish i{width:22px;height:22px;font-size:17px}.sadya-dish span{font-size:9px}
+ .suitcase-scene{min-height:128px}.bag-tray{min-height:105px}.bag-item-art{font-size:19px}
+}
+@media(prefers-reduced-motion:reduce){
+ .arcade-app *,.arcade-app *:before,.arcade-app *:after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+
+.suitcase-grid button.bag-preview:not(.packed){background:#f2e0a87a;border:2px solid #fff6d0;box-shadow:inset 0 0 0 1px #a27356}
+.suitcase-grid button.bag-preview.bag-preview-no{background:#de877080;border-color:#e28e82}
