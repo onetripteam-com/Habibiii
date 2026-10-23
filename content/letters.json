@@ -1,0 +1,354 @@
+{
+  "schemaVersion": 1,
+  "letters": [
+    {
+      "id": "hello-from-here",
+      "section": "inbox",
+      "kind": "typed",
+      "title": "An envelope with your name on it",
+      "date": "2026-10-23",
+      "preview": "Look, actual mail. Sort of.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "Okay, yes, I built a whole post office to tell you something I could have texted. That is exactly the level of sensible you should expect from me.",
+        "I wanted one place where a message could wait for you, without a blue tick or a reply deadline. Open it after a messy day, or three random Tuesdays from now. Nothing here is checking attendance.",
+        "[ADD A SMALL, REAL MEMORY THAT MAKES HER LAUGH.]"
+      ],
+      "ps": "The stamp department is one person and the management is terrible.",
+      "malayalam": "ശരി, that's enough drama for one envelope."
+    },
+    {
+      "id": "ordinary-tuesday",
+      "section": "inbox",
+      "kind": "typed",
+      "title": "In defence of ordinary Tuesdays",
+      "date": "2026-10-23",
+      "preview": "An important, completely unofficial opinion.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "I think normal days are underrated. Everyone makes a big deal about birthdays and big milestones, but what about an average Tuesday where nothing exploded and you found a good snack?",
+        "This is an official letter saying you don't have to turn every week into a highlight reel. [ADD THE EVERYDAY THING SHE ALWAYS DOES THAT YOU ADMIRE.] Even on ordinary days, that's worth noticing."
+      ],
+      "ps": "You are not required to write back. This office has extremely relaxed rules."
+    },
+    {
+      "id": "five-visits",
+      "section": "inbox",
+      "kind": "typed",
+      "title": "The fifth time? Suspicious.",
+      "date": "2026-10-23",
+      "preview": "There may be a reward for returning.",
+      "draft": true,
+      "unlock": {
+        "type": "visits",
+        "n": 5
+      },
+      "pages": [
+        "Five visits? Either you're curious or you are checking whether I have fixed all my bugs. Both reasons are fair.",
+        "I kept this little note here because the best part of a place like this is coming back without needing an occasion. [ADD A TINY INSIDE JOKE ABOUT REPEATING SOMETHING.]"
+      ],
+      "ps": "The unofficial loyalty scheme is one smile. Terms and conditions: none."
+    },
+    {
+      "id": "handwritten-thirty",
+      "section": "inbox",
+      "kind": "handwritten",
+      "title": "A page from my notebook",
+      "date": "2026-10-23",
+      "preview": "One piece of paper, kept for later.",
+      "draft": true,
+      "unlock": {
+        "type": "daysAfterFirstVisit",
+        "n": 30
+      },
+      "images": [
+        "./assets/letters/handwritten-placeholder.svg"
+      ],
+      "transcriptionPages": [
+        "[ADD A PHOTO OR SCAN OF YOUR OWN HANDWRITING TO /assets/letters/.]",
+        "[REPLACE THIS WITH YOUR REAL HANDWRITTEN TEXT SO READ AS TEXT IS USEFUL.]"
+      ],
+      "ps": "The placeholder artwork is intentionally not pretend handwriting."
+    },
+    {
+      "id": "a-day-in-2027",
+      "section": "inbox",
+      "kind": "typed",
+      "title": "A letter for later-later",
+      "date": "2026-10-23",
+      "preview": "Sealed until its date arrives.",
+      "draft": true,
+      "unlock": {
+        "type": "date",
+        "on": "2027-07-07"
+      },
+      "pages": [
+        "Well, look at the calendar. The future arrived with absolutely no warning.",
+        "I hope you have collected a few good stories between then and now. [ADD A REAL REFERENCE TO SOMETHING SHE HOPES TO DO.] If plans changed, that's allowed too."
+      ],
+      "ps": "I wrote this earlier. I remain excellent at overthinking stationery."
+    },
+    {
+      "id": "when-tired",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When your battery is at 3%",
+      "date": "2026-10-23",
+      "preview": "When everything has asked for a piece of your day.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "Have you tried turning the whole day off and on again? Kidding. Sort of.",
+        "You don’t need a clever comeback, a full to-do list, or a plan right now. Sit for a minute. Get some water. Find something soft to lean against. One thing can wait. Probably seven things.",
+        "[ADD HER FAVOURITE SMALL COMFORT—FOOD, SONG, OR HABIT.]"
+      ],
+      "ps": "ശരി, that’s all from the very unofficial rest department."
+    },
+    {
+      "id": "when-miss-home",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When you miss home",
+      "date": "2026-10-23",
+      "preview": "A small piece of Kerala in an envelope.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "Some places have an unfair ability to sit inside your chest, don’t they? A smell from the kitchen, a particular rain, or someone shouting from another room. Suddenly you’re somewhere else.",
+        "I can’t pack Kerala into a letter, unfortunately. International shipping would be a nightmare. But I can remind you of [ADD A SPECIFIC HOME MEMORY OR PLACE]. Missing a place and building a life elsewhere can both be true."
+      ],
+      "ps": "അയ്യോ, now I want proper snacks too."
+    },
+    {
+      "id": "when-great-news",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When you have great news",
+      "date": "2026-10-23",
+      "preview": "Yes, this calls for noise.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "First of all: WHAT. Tell me everything. I need the full version, including the unnecessary background details and the dramatic pause.",
+        "I hope you let yourself enjoy it before turning it into the next target. [ADD THE KIND OF GOOD NEWS YOU HOPE SHE GETS.] If this news deserves a snack, order the fancy one."
+      ],
+      "ps": "I will be accepting a full voice-note briefing."
+    },
+    {
+      "id": "when-nervous",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When something big is tomorrow",
+      "date": "2026-10-23",
+      "preview": "For the night before.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "The night before a big thing always makes ordinary objects look suspiciously important. Even the clock becomes a personal enemy.",
+        "You can be nervous and still turn up. Check what you need, set an alarm, and stop rehearsing every possible universe. [ADD A MEMORY OF HER HANDLING SOMETHING HARD.] One step at a time is a perfectly respectable plan."
+      ],
+      "ps": "ശരി. Tomorrow does not need a trailer tonight."
+    },
+    {
+      "id": "when-cant-sleep",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When sleep is avoiding you",
+      "date": "2026-10-23",
+      "preview": "This letter has no bedtime lecture.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "If your brain has scheduled a surprise conference at 2 a.m., I would like to formally complain.",
+        "There is nothing you have to solve just because it got quiet. Maybe put the screen down after this, unclench your shoulders, or imagine us arguing about [ADD A RIDICULOUS SHARED TOPIC]. If you’re still awake, the night is just being slow; no need to fight the clock."
+      ],
+      "ps": "This post office is also terrible at keeping office hours."
+    },
+    {
+      "id": "when-overthinking",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When your brain opens 47 tabs",
+      "date": "2026-10-23",
+      "preview": "The committee can adjourn now.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "I know, I know. What if this, what if that, and what if the other thing that has not happened and probably has no plans to.",
+        "You don’t have to decide the entire future from one uncomfortable moment. Write down the one thing you can actually do, and let the remaining tabs wait. [ADD A PRIVATE JOKE ABOUT HER OVERTHINKING IF SHE WOULD ENJOY IT.]"
+      ],
+      "ps": "Minutes of the meeting: absolutely no decisions required."
+    },
+    {
+      "id": "when-laugh",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When you need a laugh",
+      "date": "2026-10-23",
+      "preview": "A low-budget comedy department.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "Breaking news: the Ministry of Unnecessary Drama has appointed you Head of Eye-Rolling. Salary: one imaginary jhumka and unlimited sarcasm.",
+        "A highly trained pigeon has been sent to deliver this letter. It got distracted by a samosa and is currently negotiating compensation. [REPLACE WITH YOUR ACTUAL INSIDE JOKE.]"
+      ],
+      "ps": "Please do not report this office to management. I am management."
+    },
+    {
+      "id": "when-stuck",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When you feel stuck",
+      "date": "2026-10-23",
+      "preview": "No motivational poster inside.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "People love saying “just take the next step.” Very helpful, thank you, mysterious poster on the internet.",
+        "Maybe you don’t know what the next step is yet. That’s fine. Try a small experiment, ask one person, or just leave the question on the table for a little while. [ADD A TIME SHE FIGURED OUT A DETOUR.] Not every pause is a failure."
+      ],
+      "ps": "If anyone says “hustle harder,” I will hide their calendar."
+    },
+    {
+      "id": "when-finished-big",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When you finish something big",
+      "date": "2026-10-23",
+      "preview": "Please accept this extremely official applause.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "Hold on. You finished it? That deserves a proper moment. Not the “okay, what next?” version. The actual sit-back-and-look-at-it version.",
+        "I wish I could hand you a ridiculous certificate with [ADD HER FUNNIEST NICKNAME]. Since I cannot, this letter must do. I’m glad you saw it through, whatever the road there looked like."
+      ],
+      "ps": "Certificate pending. Printer has gone for tea."
+    },
+    {
+      "id": "when-raining",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When it is raining",
+      "date": "2026-10-23",
+      "preview": "A weather report from someone unqualified.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "Some rain asks for a window seat and absolutely no important plans. Other rain soaks your shoes and ruins your hair. Both have excellent dramatic timing.",
+        "If you can, steal a quiet minute and listen to it. Then remember [ADD A MONSOON MEMORY OR A KERALA PLACE]. It doesn’t have to mean anything profound. Rain can just be rain."
+      ],
+      "ps": "ചായ? This letter votes yes, but the kettle has its own opinion."
+    },
+    {
+      "id": "when-birthday",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When it is your birthday",
+      "date": "2026-10-23",
+      "preview": "An extremely unofficial birthday dispatch.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "Happy birthday! I considered writing something mature and dignified. Then I remembered who would be reading it.",
+        "I hope today gives you at least one moment that feels completely yours. [ADD HER BIRTHDAY TRADITION OR A FUNNY PAST BIRTHDAY MEMORY.] Whatever the year ahead brings, I hope you get room to choose things you like."
+      ],
+      "ps": "Age is classified information. Enquiries will be ignored."
+    },
+    {
+      "id": "when-first-vlog",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When you post your first vlog",
+      "date": "2026-10-23",
+      "preview": "The director has entered the chat.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "You actually pressed publish. I’m impressed and also ready to be insufferably supportive.",
+        "Please send me the link before I start pretending to be your PR manager. [ADD THE TRAVEL PLACE OR FIRST VIDEO IDEA YOU TWO DISCUSSED.] The first version doesn’t have to look like the hundredth. You made a thing and put it out there."
+      ],
+      "ps": "Autographs will be collected in the lobby."
+    },
+    {
+      "id": "when-forgot-yourself",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When you forget who you are",
+      "date": "2026-10-23",
+      "preview": "A few facts, not a pep talk.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "I won’t write a dramatic list claiming to know every version of you. People change. That’s the whole point.",
+        "But I do remember [ADD A REAL EXAMPLE OF HER KINDNESS], [ADD SOMETHING SHE FINDS HILARIOUS], and how you handled [ADD A SMALL TRUE MOMENT]. Those happened. They count. You can take your time figuring out the rest."
+      ],
+      "ps": "No inspirational background music was harmed in this letter."
+    },
+    {
+      "id": "when-missing-me",
+      "section": "openWhen",
+      "kind": "openWhen",
+      "title": "When you miss me",
+      "date": "2026-10-23",
+      "preview": "A suspiciously convenient envelope.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "Excuse me? You miss me? I’ll need this statement in writing, signed and witnessed.",
+        "Jokes aside, I miss the silly little conversations—the ones that start nowhere and somehow take twenty minutes. [ADD A REAL MEMORY FROM A CALL OR AN OLD DAY IN BANGALORE.] If you want to send a message, send one. No perfect opening line needed."
+      ],
+      "ps": "ശരി, enough. My ego has already grown three sizes."
+    },
+    {
+      "id": "for-a-big-day",
+      "section": "quiet",
+      "kind": "typed",
+      "title": "For a big day",
+      "date": "2026-10-23",
+      "preview": "A small note, exactly when it belongs here.",
+      "draft": true,
+      "unlock": {
+        "type": "always"
+      },
+      "pages": [
+        "A quick note before a big day: put the useful things where you can find them. Charge your phone. Drink some water. Ask what you need to ask.",
+        "You don’t have to make the day meaningful or brave or anything with a dramatic soundtrack. Just take it as it comes, one ordinary step at a time. [ADD ONE TRUE, GENTLE LINE YOU WOULD SAY TO HER.]"
+      ],
+      "ps": "You can open this again tomorrow. Or not. No attendance register."
+    }
+  ]
+}

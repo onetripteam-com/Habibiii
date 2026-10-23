@@ -66,7 +66,7 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
  </section>`;
  const objects=root.querySelector('#room-objects');
  const scene=root.querySelector('.room-scene');
- const portal=makePortalSystem({room:scene,frame:document.querySelector('#app'),visits,onReturn:refreshEvidence});
+ const portal=makePortalSystem({room:scene,frame:document.querySelector('#app'),visits,lastVisit,onReturn:refreshEvidence});
  const spots=[['music','radio',16,45,16,12],['letters','letter box',9,58,29,12],['movies','projector',45,69,24,11],['travel','suitcase',74,78,23,14],['games','game console',25,89,29,10],['rest','lamp',76,57,20,15],['rest','bed',10,77,38,12],['garden','plant',84,88,16,12]];
  spots.forEach(([id,label,x,y,w,h])=>{
   const b=document.createElement('button'); b.type='button'; b.className=`room-object object-${id} ${isUnlocked(id,visits)?'object-ready':'object-waiting'}`;

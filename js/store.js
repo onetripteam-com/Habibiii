@@ -21,5 +21,6 @@ export function beginVisit() {
   try { already = sessionStorage.getItem(PREFIX+'seenThisSession') === '1'; sessionStorage.setItem(PREFIX+'seenThisSession','1'); } catch {}
   let n = Number(store.get('visits',0)) || 0;
   if (!already) { n += 1; store.set('visits',n); }
+  if (!store.get('firstVisitAt')) store.set('firstVisitAt', Date.now());
   return n;
 }

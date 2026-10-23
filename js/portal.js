@@ -3,6 +3,7 @@ import {PLACES,placeCSSVars,placeMarkup,isUnlocked,visitPlace} from './places.js
 import {store} from './store.js';
 import {startSound,soundEffect,setAudioPlace} from './audio.js';
 import {reduce} from './animation.js';
+import {mountLetters} from './letters.js';
 
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function rectInFrame(el,frame){const a=el.getBoundingClientRect(),f=frame.getBoundingClientRect();return {x:a.left-f.left,y:a.top-f.top,width:Math.max(1,a.width),height:Math.max(1,a.height),fw:f.width,fh:f.height};}
@@ -10,8 +11,8 @@ const escapedName=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','
 function animate(el,frames,options){if(!el?.animate)return Promise.resolve();const animation=el.animate(frames,{fill:'both',...options});return animation.finished.catch(()=>{}).finally(()=>animation.cancel());}
 function gsapTween(el,props,duration){return new Promise(resolve=>window.gsap.to(el,{...props,duration:duration/1000,ease:'power3.inOut',onComplete:resolve}));}
 
-export function makePortalSystem({room,frame,visits,onReturn}){
- let active=null,busy=false,destroyed=false,lastSource=null,lastFocus=null;
+export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
+ let active=null,busy=false,destroyed=false,lastSource=null,lastFocus=null,unmountPlace=()=>{};
  const portal=document.createElement('section');portal.className='portal-screen';portal.id='portal-screen';portal.hidden=true;portal.setAttribute('aria-label','A different place');
  portal.innerHTML='<div class="portal-surface" id="portal-surface"></div>';
  frame.append(portal);
@@ -20,9 +21,16 @@ export function makePortalSystem({room,frame,visits,onReturn}){
  function writeScreen(place,locked){
   portal.dataset.place=place.id;portal.style.cssText=placeCSSVars(place);
   portal.setAttribute('aria-label',place.name);
+  unmountPlace();unmountPlace=()=>{};
   surface.innerHTML=`<button class="portal-back" type="button" aria-label="Back to Maha’s room"><span aria-hidden="true">←</span> Room</button><div class="portal-place" data-metaphor="${place.metaphor}" data-sound="${place.sound}" data-texture="${place.theme.texture}"><div class="portal-content">${placeMarkup(place.id,{locked})}</div></div>`;
   portal.querySelector('.portal-back').addEventListener('click',close);
-  portal.querySelectorAll('[data-action]').forEach(button=>button.addEventListener('click',()=>action(button)));
+  if(place.id==='letters'){
+   const target=portal.querySelector('.portal-content');
+   target.innerHTML='<div class="mail-loading">Delivering letters…</div>';
+   unmountPlace=mountLetters(target,{visits,lastVisit,onKeep:()=>onReturn?.('letters'),onPlay:()=>navigate('games')});
+  } else {
+   portal.querySelectorAll('[data-action]').forEach(button=>button.addEventListener('click',()=>action(button)));
+  }
  }
  async function morphFallback(opening,source){
   const rect=rectInFrame(source,frame);
@@ -92,8 +100,15 @@ export function makePortalSystem({room,frame,visits,onReturn}){
   const target=lastSource;
   portal.classList.remove('portal-arrived');
   try{if(canView())await viewTransition(false,target);else await morphFallback(false,target);}catch(e){console.warn('Reverse transition fallback',e);room.classList.remove('room-portal-away');portal.hidden=true;}
+  unmountPlace();unmountPlace=()=>{};
   setAudioPlace('room');
   const old=active;active=null;busy=false;onReturn?.(old);lastFocus?.focus({preventScroll:true});
+ }
+ async function navigate(placeId){
+  if(!active||busy)return;
+  await close();
+  const source=room.querySelector(`.room-object[data-place="${placeId}"]`);
+  if(source)await open(placeId,source);
  }
  function action(button){
   const name=button.dataset.action;
@@ -107,5 +122,5 @@ export function makePortalSystem({room,frame,visits,onReturn}){
  }
  const onKey=e=>{if(e.key==='Escape'&&active){e.preventDefault();close();}};
  document.addEventListener('keydown',onKey);
- return {open,close,get active(){return active;},destroy(){destroyed=true;document.removeEventListener('keydown',onKey);portal.remove();setAudioPlace('room');}};
+ return {open,close,get active(){return active;},destroy(){destroyed=true;unmountPlace();document.removeEventListener('keydown',onKey);portal.remove();setAudioPlace('room');}};
 }

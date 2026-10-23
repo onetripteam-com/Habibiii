@@ -1,7 +1,7 @@
 /** Destination registry: each place owns its visual tokens, metaphor and arrival cue. */
 import {store} from './store.js';
 export const PLACES={
- letters:{id:'letters',name:'The Post Office',short:'Letters',icon:'✉',metaphor:'flap',entry:'post',sound:'paper',unlock:1,theme:{bg:'#efe0c5',ink:'#533b36',accent:'#9e594b',soft:'#eac69b',font:'Georgia,serif',texture:'paper'}},
+ letters:{id:'letters',name:'The Letter Box',short:'Letters',icon:'✉',metaphor:'flap',entry:'post',sound:'paper',unlock:1,theme:{bg:'#efe0c5',ink:'#533b36',accent:'#9e594b',soft:'#eac69b',font:'Georgia,serif',texture:'paper'}},
  music:{id:'music',name:'Radio Maha',short:'Music',icon:'♫',metaphor:'dial',entry:'radio',sound:'radio',unlock:1,theme:{bg:'#3d584d',ink:'#f8eccf',accent:'#e5b877',soft:'#7d9b7c',font:'Georgia,serif',texture:'linen'}},
  movies:{id:'movies',name:'The Little Cinema',short:'Cinema',icon:'▣',metaphor:'curtains',entry:'cinema',sound:'cinema',unlock:2,theme:{bg:'#2d332d',ink:'#f5e9cf',accent:'#ce9e73',soft:'#765a4a',font:'Georgia,serif',texture:'film'}},
  travel:{id:'travel',name:'The Almost-Anywhere Club',short:'Travel',icon:'◇',metaphor:'suitcase',entry:'travel',sound:'travel',unlock:2,theme:{bg:'#d8dfcb',ink:'#415648',accent:'#a7644d',soft:'#eecf96',font:'Georgia,serif',texture:'map'}},

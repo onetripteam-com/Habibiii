@@ -92,3 +92,30 @@ See `IPHONE-QA.md` for 30 checks, including viewport matrix 360×740, 393×852, 
 This release adds seven themed, full-frame portal previews. See `PORTAL-ARCHITECTURE-QA.md` for object mapping, navigation implementation and iPhone QA. Source files: `js/places.js` (independent palettes/art metaphors) and `js/portal.js` (View Transitions with GSAP / Web Animations fallback). The Room stays mounted throughout a portal trip, including its saved bouquet, selected room theme and Kuwait-clock window.
 
 These are intentionally **preview environments** for unbuilt rooms, not completed mini-movies, games, letters or travel features.
+
+
+## PROMPT B — The Letter Box (editable, privacy-first)
+
+The Letter Box is a full place reached by tapping the room's letter box or today's note.
+It uses **envelopes and paper**, not a grid of identical cards. Its **Inbox / Open When / Keepsakes** tabs all render from `content/letters.json`. The first inbox has **two open** typed letters and **three sealed** letters; the 14 `Open When` entries are clearly marked **DRAFT** and need rewriting.
+
+**Before you share with Maha:**
+
+1. In `content/config.json` replace `senderName: "[MY NAME]"` with your preferred sender label. Set `senderEmail` to your actual address ONLY after the destination website has proper access control. `null` disables Write back rather than creating a broken mailto link.
+2. Rewrite all DRAFT texts in `content/letters.json`. Replace every `[BRACKETED]` real-memory placeholder. The default prose is sample writing and must not be treated as a real personal memory.
+3. For real handwritten pages, put high-resolution scans under `assets/letters/` (e.g., `page-1.jpg`, `page-2.jpg`). Update `images` for the handwritten letter; update `transcriptionPages` to match. The shipped SVG is a **plain placeholder**, not your handwriting.
+4. Optional quiet letter: set `quietLetterDate` to an ISO date like `"2027-07-07"`, or leave it `null` to hide it completely. It appears seven Kuwait-calendar days before the date; after the date plus 14 days it moves into Open When. The content is deliberately general and makes no health claims.
+5. `unlock` examples: `{"type":"date","on":"2027-07-07"}`, `{"type":"visits","n":5}`, `{"type":"daysAfterFirstVisit","n":30}`, `{"type":"game","id":"chai"}`, and `{"type":"always"}`. The `game` rule requires `gameCompletions["chai"] === true` in local store after a real game is implemented. The rules are pure functions in `js/letter-unlocks.js`, covered by `npm test`.
+6. "Note to future me", keepsakes, read status, first visit and visit count use **localStorage** and never leave the device from this feature. Browser data clearing removes them. No server sync or account, so another device won't have those notes.
+
+### VERY IMPORTANT: never commit real letters to a public repository
+
+**Habibiii is currently a public GitHub repository and GitHub Pages is public.** Do not add real names, personal stories, handwriting images, email addresses, confidential dates, or private notes to it. `noindex`/`robots.txt` does **not** protect files from direct URL access. A private Git repository by itself also does **not** make its deployed website private. Every JSON, image and HTML asset delivered to a browser is readable by anyone who can access the deployment URL. Git history preserves previously committed material, even if deleted later.
+
+**Safer release using a separate private source repo and access-controlled hosting:**
+
+- **Cloudflare Pages:** Create a new **private** GitHub repository (not the current public Habibiii). Copy this project there only **after** removing demo public deploys and confirming it will not sync to the public branch. In Cloudflare dashboard, go to **Workers & Pages → Create application → Pages → Connect to Git**. Authorize GitHub and select the private repository, production branch `main`, **no build command** for this static site and `/` output. Then configure **Cloudflare Access** with a custom Cloudflare-managed domain: Zero Trust → Access controls → Applications → Create new → Self-hosted → Add public hostname, then an Allow policy for Maha's email (verify email login works). Also check whether the default `*.pages.dev` endpoint and preview URLs remain accessible; do not put truly private material online until **all accessible hostnames** are protected or disabled. See official guides: https://developers.cloudflare.com/pages/get-started/git-integration/ and https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/self-hosted-public-app/ .
+- **Netlify:** With a private GitHub repo, use **Add new project → Import an existing project → GitHub**, authorize and choose the repo, deploy branch `main`, no build command, publish directory `.`. Set **Project configuration → General → Visitor access** to password-protected or restricted project visibility, according to your plan. Verify protection covers production, previews and any alternate domains before uploading personal letters. Plan features vary. See https://docs.netlify.com/start/quickstarts/deploy-from-repository/ and https://docs.netlify.com/deploy/protect-deploys/ .
+- **Avoid accidental mirroring:** On moving to private hosting, disable the current public GitHub Pages deployment and keep truly private letter content only in the private repository. Do not put private content in publicly downloadable archives.
+
+A password or access layer gates the website, but it does not provide end-to-end encryption for content delivered to the browser. Give access only to intended readers; even protected site content can be saved or copied by authorized visitors.
