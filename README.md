@@ -1,3 +1,7 @@
+## Prompt D — Movies, Radio and Travel
+
+The room portals now open three real destinations: Projector/Movies (`js/cinema.js`), HABIBII FM/Radio (`js/radio.js`), and Suitcase/Travel (`js/travel.js`). Configuration is in `content/movies.json`, `content/radio.json` and `content/places.json`. New assets are **not** included by default: all screens run with code-drawn illustrations. See [MEDIA-MANIFEST.md](MEDIA-MANIFEST.md) for exact filenames, durations, sizes, licenses, and preparation steps. Dream pins and passport progress are saved only on the device.
+
 # MAHA — A Little Escape
 
 **PROMPT A — Opening experience + permanent home room**

@@ -5,6 +5,9 @@ import {startSound,soundEffect,setAudioPlace} from './audio.js';
 import {reduce} from './animation.js';
 import {mountLetters} from './letters.js';
 import {mountArcade} from './arcade.js';
+import {mountCinema} from './cinema.js';
+import {mountRadio} from './radio.js';
+import {mountTravel} from './travel.js';
 
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function rectInFrame(el,frame){const a=el.getBoundingClientRect(),f=frame.getBoundingClientRect();return {x:a.left-f.left,y:a.top-f.top,width:Math.max(1,a.width),height:Math.max(1,a.height),fw:f.width,fh:f.height};}
@@ -33,6 +36,12 @@ export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
    const target=portal.querySelector('.portal-content');
    target.innerHTML='<div class="mail-loading">The arcade lights are warming up…</div>';
    unmountPlace=mountArcade(target,{onStamp:()=>onReturn?.('games')});
+  } else if(place.id==='movies'){
+   unmountPlace=mountCinema(portal.querySelector('.portal-content'));
+  } else if(place.id==='music'){
+   unmountPlace=mountRadio(portal.querySelector('.portal-content'));
+  } else if(place.id==='travel'){
+   unmountPlace=mountTravel(portal.querySelector('.portal-content'),{onPostcard:()=>onReturn?.('travel')});
   } else {
    portal.querySelectorAll('[data-action]').forEach(button=>button.addEventListener('click',()=>action(button)));
   }

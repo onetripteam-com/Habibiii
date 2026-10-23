@@ -1,0 +1,140 @@
+{
+  "version": 1,
+  "caption": "Illustrated memory map. Pin locations are approximate, not navigation coordinates.",
+  "places": [
+    {
+      "id": "kerala",
+      "name": "Kerala",
+      "x": 57,
+      "y": 69,
+      "gate": "wood",
+      "intro": "The air smells like rain and something frying. Probably a good sign.",
+      "phrase": "നമുക്ക് പോകാം",
+      "translation": "Let's go.",
+      "prompt": "Film 10 seconds of leaves moving after rain.",
+      "clip": null,
+      "still": null,
+      "colors": [
+        "#476e5a",
+        "#ddc999"
+      ]
+    },
+    {
+      "id": "kuwait",
+      "name": "Kuwait",
+      "x": 43,
+      "y": 40,
+      "gate": "stone",
+      "intro": "For an ordinary Kuwait evening that deserves to be remembered.",
+      "phrase": "സുഖമാണോ?",
+      "translation": "How are you?",
+      "prompt": "Film 10 seconds of the evening sky from your window.",
+      "clip": null,
+      "still": null,
+      "colors": [
+        "#b68572",
+        "#efd3a4"
+      ]
+    },
+    {
+      "id": "bangalore",
+      "name": "Bengaluru",
+      "x": 66,
+      "y": 60,
+      "gate": "wood",
+      "intro": "The familiar chaos, with a very good snack somewhere nearby.",
+      "phrase": "പതുക്കെ പോകാം",
+      "translation": "Let's take it slowly.",
+      "prompt": "Film 10 seconds of a street corner with its own rhythm.",
+      "clip": null,
+      "still": null,
+      "colors": [
+        "#667886",
+        "#e6bba3"
+      ]
+    },
+    {
+      "id": "munnar",
+      "name": "Munnar",
+      "x": 73,
+      "y": 77,
+      "gate": "wood",
+      "intro": "Clouds that behave like they own the tea estates.",
+      "phrase": "എന്തൊരു ഭംഗി!",
+      "translation": "How beautiful!",
+      "prompt": "Film 10 seconds of cloud drifting across the hills.",
+      "clip": null,
+      "still": null,
+      "colors": [
+        "#54836e",
+        "#d0dfa9"
+      ]
+    },
+    {
+      "id": "manali",
+      "name": "Manali",
+      "x": 74,
+      "y": 35,
+      "gate": "stone",
+      "intro": "A winding road. An excuse for another playlist.",
+      "phrase": "നല്ല തണുപ്പ്",
+      "translation": "Lovely and cold.",
+      "prompt": "Film 10 seconds of a mountain road or rolling mist.",
+      "clip": null,
+      "still": null,
+      "colors": [
+        "#6b8290",
+        "#d6dde4"
+      ]
+    },
+    {
+      "id": "ladakh",
+      "name": "Ladakh",
+      "x": 86,
+      "y": 23,
+      "gate": "stone",
+      "intro": "An enormous sky. A very small list of worries.",
+      "phrase": "പോകാം",
+      "translation": "Let's go.",
+      "prompt": "Film 10 seconds of a wide sky and changing light.",
+      "clip": null,
+      "still": null,
+      "colors": [
+        "#7b8290",
+        "#e3c6a6"
+      ]
+    }
+  ],
+  "futureSlots": [
+    {
+      "id": "add-1",
+      "name": "[PLACE TO ADD]",
+      "draft": true
+    },
+    {
+      "id": "add-2",
+      "name": "[PLACE TO ADD]",
+      "draft": true
+    },
+    {
+      "id": "add-3",
+      "name": "[PLACE TO ADD]",
+      "draft": true
+    },
+    {
+      "id": "add-4",
+      "name": "[PLACE TO ADD]",
+      "draft": true
+    },
+    {
+      "id": "add-5",
+      "name": "[PLACE TO ADD]",
+      "draft": true
+    },
+    {
+      "id": "add-6",
+      "name": "[PLACE TO ADD]",
+      "draft": true
+    }
+  ]
+}

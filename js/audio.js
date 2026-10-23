@@ -41,9 +41,9 @@ export function soundEffect(kind='tap') {
 export function initAudioUI() {
   updateButton();
   document.querySelector('#sound-toggle')?.addEventListener('click',()=>{
-    muted=!muted;store.set('muted',muted); updateButton();
+    muted=!muted;store.set('muted',muted); updateButton();document.dispatchEvent(new CustomEvent('maha:mutechange',{detail:{muted}}));
     if(muted){ if(master&&context)master.gain.setTargetAtTime(0,context.currentTime,0.05); }
-    else {if(!active)startSound();else if(master&&context)master.gain.setTargetAtTime(0.15,context.currentTime,0.15); soundEffect('tap');}
+    else {if(!active)startSound();else if(master&&context)master.gain.setTargetAtTime(ducked?.035:0.15,context.currentTime,0.15); soundEffect('tap');}
   });
   document.addEventListener('visibilitychange',()=>{if(!master||!context)return;master.gain.setTargetAtTime((document.hidden||muted)?0:0.15,context.currentTime,0.16);});
 }
@@ -57,4 +57,14 @@ export function setAudioPlace(place='room'){
  const root={room:196,paper:220,radio:164.81,cinema:146.83,travel:196,arcade:246.94,rest:174.61,garden:220}[currentPlace];
  const now=context.currentTime+.07;
  PLACE_INTERVALS[currentPlace].forEach((ratio,i)=>tone(root*ratio,now+i*.12,2.7,currentPlace==='rest'?.015:.025,'sine'));
+}
+
+/** Clip playback softens the locally synthesized pad; single-media arbiter owns pause. */
+let ducked=false;
+export function setAudioDucked(value){ducked=Boolean(value);if(master&&context&&!muted)master.gain.setTargetAtTime(ducked?.035:.15,context.currentTime,.12);}
+export function radioStatic(){
+ if(muted||!active||!context||!master||context.state!=='running')return;
+ const length=.18,sample=context.sampleRate,buffer=context.createBuffer(1,Math.floor(sample*length),sample),data=buffer.getChannelData(0);
+ for(let i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length);
+ const source=context.createBufferSource(),gain=context.createGain();source.buffer=buffer;gain.gain.value=.095;source.connect(gain).connect(master);source.start();source.onended=()=>{source.disconnect();gain.disconnect()};
 }

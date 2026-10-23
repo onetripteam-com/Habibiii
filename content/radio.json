@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "notice": "Bring your own recordings and licensed or CC0 ambience. Never commit copyrighted music.",
+  "stations": [
+    {
+      "id": "rain",
+      "name": "Rain Day",
+      "frequency": "88.3",
+      "tagline": "For an extremely ambitious rainy afternoon.",
+      "introCaption": "[YOUR VOICE NOTE: \"Rain outside. No hurry inside. Put the kettle on.\"]",
+      "introAudio": null,
+      "ambientAudio": null,
+      "spotify": null,
+      "youtube": null,
+      "colors": [
+        "#60817b",
+        "#d5d8c2"
+      ]
+    },
+    {
+      "id": "road",
+      "name": "Road Trip",
+      "frequency": "91.7",
+      "tagline": "Windows down, opinions up.",
+      "introCaption": "[YOUR VOICE NOTE: \"Today we take the long route. Obviously.\"]",
+      "introAudio": null,
+      "ambientAudio": null,
+      "spotify": null,
+      "youtube": null,
+      "colors": [
+        "#ac7967",
+        "#efd19d"
+      ]
+    },
+    {
+      "id": "malayalam",
+      "name": "Malayalam Comfort",
+      "frequency": "94.5",
+      "tagline": "A tiny bit of home on the frequency.",
+      "introCaption": "[YOUR VOICE NOTE: \"Veedu pole oru feel. That is the whole station.\"]",
+      "introAudio": null,
+      "ambientAudio": null,
+      "spotify": null,
+      "youtube": null,
+      "colors": [
+        "#64836a",
+        "#e9cba2"
+      ]
+    },
+    {
+      "id": "chai",
+      "name": "Morning Chai",
+      "frequency": "97.2",
+      "tagline": "Chaaya first. Opinions later.",
+      "introCaption": "[YOUR VOICE NOTE: \"Good morning, doctor. First, chaaya.\"]",
+      "introAudio": null,
+      "ambientAudio": null,
+      "spotify": null,
+      "youtube": null,
+      "colors": [
+        "#9b7963",
+        "#f0d4a8"
+      ]
+    },
+    {
+      "id": "night",
+      "name": "Late Night",
+      "frequency": "103.1",
+      "tagline": "For the hour when thoughts start a group chat.",
+      "introCaption": "[YOUR VOICE NOTE: \"The world is asleep. You do not need a to-do list.\"]",
+      "introAudio": null,
+      "ambientAudio": null,
+      "spotify": null,
+      "youtube": null,
+      "colors": [
+        "#58607e",
+        "#d1b7c8"
+      ]
+    }
+  ]
+}
