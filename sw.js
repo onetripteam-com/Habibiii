@@ -1,12 +1,13 @@
 /* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-opening-v1.6.0';
+const VERSION='maha-opening-v1.7.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
  './','./index.html','./css/style.css','./js/main.js','./js/hug.js','./js/flowers.js',
  './js/botanical.js','./js/room.js','./js/store.js','./js/time.js',
  './js/letters.js','./js/letter-unlocks.js','./content/letters.json','./content/config.json','./assets/letters/handwritten-placeholder.svg','./js/audio.js','./js/animation.js','./js/doors.js',
  './js/arcade.js','./js/games/common.js','./js/games/rules.js',
- './js/games/chai.js','./js/games/sadya.js','./js/games/baggage.js','./js/places.js','./js/portal.js',
+ './js/games/chai.js','./js/games/sadya.js','./js/games/baggage.js',
+ './js/games/phase2-rules.js','./js/games/doctor.js','./js/games/world.js','./js/games/vlog.js','./js/places.js','./js/portal.js',
  './content/hug.json','./content/flowers.json','./content/today.json',
  './assets/room-back.svg','./assets/room-front.svg','./assets/icon.svg',
  './assets/icon-192.png','./assets/icon-512.png','./assets/apple-touch-icon.png',

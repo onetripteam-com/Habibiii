@@ -125,3 +125,33 @@ A password or access layer gates the website, but it does not provide end-to-end
 The room's Games portal opens a swipeable collection of three hand-drawn arcade cabinets: **Chai Maker**, **Sadya Builder**, and **Airport Baggage**. All three contain working touch-first mechanics, pause/restart, local sound control, funny results, persistent local best scores, and winning passport stamps. The `{type:"game", id:"chai"}` Letter unlock rule is connected through `gameCompletions` in `store.js`. A loss never blocks another attempt. These three games require no image downloads; CSS/SVG contains the placeholders. Phase 2's Decode the Doctor, Where in the World, and Vlog Director are **not yet built**.
 
 See `ARCADE-PHASE-1-QA.md` for the exact replacement art brief, game instructions, design constraints, testing, and Kerala Sadya reference citations. Test with `npm test`; all game data remains local on her device. Do not commit personal photos, letters, or handwriting to this currently public repository.
+
+---
+
+## PROMPT C · Phase 2 complete — three more playable arcade cabinets
+
+The Games portal now contains **six playable cabinets** in a single swipeable carousel, without replacing the room or the existing Phase 1 Chai/Sadya/Baggage games. The three new standalone modules are:
+
+| Game | File | How it works |
+|---|---|---|
+| Decode the Doctor | `js/games/doctor.js` | Five **fictional, comic** handwritten scribbles. Choose one of three absurd translations; optional hints cost points. No real prescriptions, drugs, doses, advice, or medical claims. |
+| Where in the World? | `js/games/world.js` | Five animated, six-second painted travel clips: Kerala, Kuwait, Bengaluru, Munnar, Manali, and Ladakh rotate across plays. Choose one of three places; hints cost points. Works **offline**, no real video or map requests. |
+| Vlog Director | `js/games/vlog.js` | Rearrange wide, walking, close-up, food and sunset shots by dragging or tapping two to swap. Premiere a **20-second** animated short made from that order, with an opening title card. |
+
+The scorer, sample questions, scene metadata, and shot order are exported from `js/games/phase2-rules.js`, so they can be tested with Node. Each module exports `start(root,ctx)`, `stop()` and `result()` and obeys pause/restart, local game mute and iOS reduced-motion preferences. Scores and stamps remain local to the device; each win sets both `gameCompletions[id]` and `game:<id>:completed`, including compatibility with the Letter Box `{type:"game",id:"..."}` unlock rules.
+
+### Exactly which illustrations/media to replace later
+
+The current site works without external assets. Optional author-provided replacements (do **not** add private photos or footage to this public repository):
+
+1. **Cabinet marquees**: `DR. SQUIGGLE`, `POSTCARD HUNT`, and `DIRECTOR MAHA` — 3 hand-lettered transparent SVG/PNG signs, roughly 800×200px each.
+2. **Decode the Doctor**: five deliberately illegible **fictional** handwriting images, one per `DOCTOR_ROUNDS` case — 5 transparent ink-on-paper SVG images, roughly 700×250px each. Nothing resembling real clinical instructions.
+3. **Where in the World**: six **painted 16:9 location scenes** (Kerala backwaters, Kuwait Towers, Bengaluru city gardens, Munnar tea hills, Manali pine/snow valleys, Ladakh mountains) — 6 1280×720px SVG/WebP illustrations. Optionally replace each 6-second animation with actual licensed footage in `/assets/video/` after privacy and bandwidth review.
+4. **Vlog Director**: five **16:9 frame illustrations** (establishing wide, walking, close detail, food, sunset) — 5 SVG/WebP drawings, roughly 1280×720px each. Shot frames are intentionally generic: she is *not* depicted without reference photos.
+5. **FX** (optional): a pencil-on-paper flick, soft travel projector whirr, movie slate snap. Current synthesized audio works offline and honors mute.
+
+### Test
+
+Run `node --test tests/arcade-rules.test.mjs tests/arcade-phase2-rules.test.mjs tests/letter-unlocks.test.mjs` for the pure gameplay/unlock checks. The sandbox-safe isolated browser verification is `python tests/ui_phase2_isolated.py 393 852` (also tested at 402×874 and 360×740). It tests emulated touch/browser logic, **not** a physical iPhone; the harness swaps real-time tick advancement for faster UI coverage.
+
+Read `ARCADE-PHASE-2-QA.md` for the exact Safari checklist and the remaining manual checks. Phase 2 is the requested endpoint; no further phase is started automatically.

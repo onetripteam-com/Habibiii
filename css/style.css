@@ -859,3 +859,101 @@ button:disabled{cursor:default;opacity:.35}
 
 .suitcase-grid button.bag-preview:not(.packed){background:#f2e0a87a;border:2px solid #fff6d0;box-shadow:inset 0 0 0 1px #a27356}
 .suitcase-grid button.bag-preview.bag-preview-no{background:#de877080;border-color:#e28e82}
+
+/* PROMPT C · PHASE 2 / three distinctly themed arcade screens */
+.arcade-pips{gap:3px;max-width:100%}.arcade-pips button{min-width:34px;min-height:31px;font-size:17px}
+.arcade-stamps{gap:12px;flex-wrap:nowrap}
+.cabinet-monitor strong{max-width:93%;overflow-wrap:anywhere}
+/* DOCTOR: a fictional joke note with faux-ink writing. */
+.doctor-game{gap:7px;--dr-ink:#493e58}
+.doctor-game h2{font-style:italic;color:#56465b}
+.doctor-status{width:100%;display:flex;justify-content:space-around;background:#efdbd4;border:1px solid #ceaca6;border-radius:12px;padding:8px 4px;color:#584553;flex:none;font-size:10px;letter-spacing:.08em;font-weight:850}
+.doctor-status strong{font-size:13px}
+.doctor-paper{width:95%;height:36%;min-height:142px;max-height:205px;flex:none;background:repeating-linear-gradient(0deg,#fdf9ed 0 24px,#d7c7cd 25px 26px);border:1px solid #cbb9ac;box-shadow:2px 5px #80655748,0 10px 18px #745b4c25;transform:rotate(-1.5deg);padding:8px 13px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden}
+.doctor-fake{font-size:7px;font-weight:1000;letter-spacing:.19em;color:#be726f;text-align:right}
+.doctor-scribble{display:block;color:#474477;white-space:nowrap;overflow:hidden;text-overflow:clip;font:italic clamp(22px,8vw,39px)/1.2 'Bradley Hand','Marker Felt','Comic Sans MS',cursive;text-shadow:1px 1px #9d91ba6b;letter-spacing:-.05em;transform:rotate(-5deg) skewX(-9deg);padding:7px 0}
+.doctor-paper small{font:italic 11px/1.3 Georgia,serif;color:#786a6f}
+.doctor-sign{font:italic 11px Georgia,serif;color:#816d82;align-self:end}
+.doctor-message{font:italic 12px/1.35 Georgia,serif;min-height:32px;text-align:center;color:#785663;display:grid;place-items:center;max-width:340px}
+.doctor-answers{display:grid;grid-template-columns:1fr;gap:8px;width:100%;flex:1;min-height:0;grid-template-rows:repeat(3,minmax(0,1fr))}
+.doctor-answers button{display:flex;gap:12px;align-items:center;text-align:left;padding:6px 10px;border:1px solid #a993ae;border-radius:12px;background:#fff3e7;color:#594960;font:750 clamp(11px,3vw,13px)/1.17 var(--sans);box-shadow:0 3px #ab8aa365}
+.doctor-answers button span{display:grid;place-items:center;min-width:32px;height:32px;border-radius:9px;background:#786084;color:#fff7ef;font-weight:950}
+.doctor-answers button:active{transform:scale(.985)}
+.doctor-answers button.right{background:#d8ead3;border-color:#70947c}
+.doctor-answers button.wrong{background:#f5d6d0;border-color:#bb7a72}
+.doctor-answers button:disabled{opacity:.85}
+.doctor-hint{width:100%;min-height:39px;font-size:12px;background:#ead8de;flex:none}
+.doctor-footnote{font-size:9px;color:#846c79;text-align:center;flex:none}
+/* WORLD: cinematic travel picture postcards; parallax uses compositor transform only. */
+.world-game{gap:7px}
+.world-status{width:100%;display:flex;justify-content:space-between;align-items:center;background:#e8e3d3;border:1px solid #8faaa1;border-radius:10px;padding:7px 11px;font-size:10px;font-weight:900;letter-spacing:.08em;color:#4c716f;flex:none}
+.world-film{width:100%;height:37%;max-height:235px;min-height:160px;position:relative;flex:none;border:9px solid #384c57;border-radius:14px;overflow:hidden;background:#8eaeb1;box-shadow:0 7px 0 #6c554b66,inset 0 0 5px #172b34}
+.world-landscape,.world-paint{height:100%;width:100%;display:block}
+.world-parallax-back{animation:world-back 6s linear infinite alternate;transform-origin:50% 90%}
+.world-parallax-front{animation:world-front 6s ease-in-out infinite alternate;transform-origin:50% 100%}
+.world-film.clip-finished .world-parallax-back,.world-film.clip-finished .world-parallax-front{animation-play-state:paused}
+@keyframes world-back{from{transform:translateX(-3px) scale(1.01)}to{transform:translateX(6px) scale(1.025)}}
+@keyframes world-front{from{transform:translateX(4px) scale(1.02)}to{transform:translateX(-7px) scale(1.05)}}
+.world-grain{pointer-events:none;position:absolute;inset:0;opacity:.19;background:repeating-linear-gradient(0deg,#081c1e35 0 1px,transparent 1px 5px)}
+.world-camera{position:absolute;top:8px;left:11px;color:#fff8e5;background:#31424d7f;padding:5px 9px;font-size:8px;letter-spacing:.1em;font-weight:900;border-radius:5px}
+.world-countdown{position:absolute;right:9px;bottom:8px;width:46px;height:46px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff5de;background:#2d4855c7;border:1px solid #e6d4ae;border-radius:50%}
+.world-countdown span{font:26px/.9 Georgia,serif}.world-countdown small{font-size:5.5px;letter-spacing:.05em}
+.world-message{font:italic 12px/1.3 Georgia,serif;min-height:33px;display:grid;place-items:center;text-align:center;color:#536e6b;max-width:350px}
+.world-choices{display:grid;grid-template-columns:1fr;gap:8px;width:100%;flex:1;grid-template-rows:repeat(3,minmax(0,1fr));min-height:0}
+.world-choices button{background:#fff4e0;border:1px solid #82a39f;border-radius:10px;color:#395e5c;font:850 13px var(--sans);box-shadow:0 3px #7293977a;padding:4px 9px;text-align:left}
+.world-choices button:disabled{opacity:.5}
+.world-choices button.right{background:#d4ead9;border-color:#638569;opacity:1}
+.world-choices button.wrong{background:#f3d5d0;border-color:#a66d6b;opacity:1}
+.world-hint{width:100%;min-height:39px;font-size:12px;background:#dcece5;flex:none}
+.world-footnote{font-size:9px;color:#7a817b;text-align:center;flex:none}
+/* VLOG: editable strip of photographic storyboards; five panels, no external assets. */
+.vlog-game{gap:6px}
+.vlog-game h2{color:#6c4e67}
+.vlog-status{width:100%;display:flex;justify-content:space-between;padding:8px 10px;color:#6d5571;background:#ebd8d2;border:1px solid #b396aa;border-radius:10px;flex:none;font-size:10px;font-weight:800}
+.vlog-status strong{font-size:13px}
+.vlog-hint{font:italic 12px/1.3 Georgia,serif;color:#8e617a;text-align:center;margin:0;max-width:340px;flex:none}
+.vlog-storyboard{width:100%;flex:1;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));gap:7px;justify-items:stretch;align-items:stretch}
+.vlog-shot{position:relative;display:flex;flex-direction:column;align-items:stretch;justify-content:center;gap:2px;background:#fdf2e2;border:2px solid #bd9a9e;border-radius:11px;padding:5px 7px;overflow:hidden;min-height:0;touch-action:none;box-shadow:0 3px #9e7b8c66}
+.vlog-shot:last-child{grid-column:1/-1;max-width:55%;width:100%;justify-self:center}
+.vlog-order{position:absolute;top:7px;left:9px;z-index:2;background:#583f58c8;color:#fff3df;border-radius:50%;font:900 10px var(--sans);width:21px;height:21px;display:grid;place-items:center}
+.vlog-thumb{display:block;height:calc(100% - 18px);min-height:0;width:100%;border-radius:6px;overflow:hidden}
+.vlog-thumb svg{width:100%;height:100%;display:block;object-fit:cover}
+.vlog-shot-name{font:900 10px var(--sans);color:#735164;text-align:center;line-height:1.1}
+.vlog-shot.selected{border-color:#704964;background:#f3d5d7;outline:2px solid #f3ebde}
+.vlog-shot.dragging{opacity:.7;transform:scale(.95)}
+.vlog-editor-bottom{width:100%;display:flex;flex-direction:column;align-items:center;gap:5px;flex:none}
+.vlog-editor-bottom p{font:italic 11px/1.25 Georgia,serif;color:#865f76;min-height:20px;margin:2px 0;text-align:center}
+.vlog-editor-bottom .game-big-button{font-size:11px;min-height:48px;background:#70526d;box-shadow:0 4px #b88e9b}
+.vlog-cinema{width:100%;height:100%;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
+.vlog-frame{position:relative;width:100%;height:61%;max-height:360px;min-height:170px;background:#1e2633;border:10px solid #373342;border-radius:10px;overflow:hidden;box-shadow:0 7px #9d7b73}
+.vlog-film-image,.vlog-film-image svg{height:100%;width:100%;display:block}
+.vlog-film-image{animation:vlog-camera 4s ease-in-out infinite alternate;transform-origin:center}
+@keyframes vlog-camera{from{transform:scale(1.02) translateX(-2px)}to{transform:scale(1.13) translateX(2px)}}
+.vlog-title-card{position:absolute;top:16%;left:8%;right:8%;background:#252336c9;color:#fff5d2;padding:15px 7px;font:900 clamp(15px,5vw,25px)/1.2 Georgia,serif;text-align:center;letter-spacing:.09em;animation:vlog-title-leave 3.3s ease-out both}
+.vlog-title-card small{display:block;font:italic 11px Georgia,serif;margin-top:9px;letter-spacing:0}
+@keyframes vlog-title-leave{0%,50%{opacity:1}100%{opacity:0}}
+.vlog-shot-overlay{position:absolute;bottom:13px;left:12px;padding:7px 9px;color:#fff1d9;background:#393644b8;border-left:3px solid #d9b6ab;font:italic 13px Georgia,serif}
+.vlog-counter{width:100%;display:flex;justify-content:space-between;color:#75546d;font:900 11px var(--sans)}
+.vlog-film-track{width:100%;height:11px;border-radius:8px;background:#dec3bf;overflow:hidden}
+.vlog-film-track>div{height:100%;width:0;background:#816382}
+.vlog-cinema p{font:italic 13px Georgia,serif;color:#795e72;text-align:center}
+/* One-portrait-screen compactness, with all controls reachable on smaller phones. */
+@media(max-height:800px){
+ .doctor-game,.world-game,.vlog-game{gap:4px}
+ .doctor-paper{height:33%;min-height:119px}.doctor-message{min-height:24px;font-size:11px}
+ .doctor-hint,.world-hint{min-height:34px}.doctor-footnote,.world-footnote{font-size:8px}
+ .doctor-answers,.world-choices{gap:5px}
+ .world-film{height:34%;min-height:126px}.world-message{min-height:28px;font-size:11px}
+ .vlog-storyboard{gap:4px}.vlog-shot{padding:3px 5px}.vlog-editor-bottom .game-big-button{min-height:43px}
+}
+@media(max-height:690px){
+ .doctor-game h2,.world-game h2,.vlog-game h2{font-size:19px}
+ .doctor-paper{min-height:97px;max-height:120px}.doctor-scribble{font-size:22px;padding:0}.doctor-paper small{font-size:9px}
+ .doctor-answers button{font-size:10px;padding:3px 6px;gap:5px}.doctor-answers button span{min-width:24px;height:24px}
+ .world-film{min-height:107px;max-height:138px}.world-choices button{font-size:11px}
+ .vlog-hint{font-size:10px}.vlog-status{padding:4px 7px}.vlog-editor-bottom p{font-size:10px}
+ .vlog-thumb{height:calc(100% - 15px)}.vlog-shot-name{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){.world-parallax-back,.world-parallax-front,.vlog-film-image,.vlog-title-card{animation:none!important}}
+/* Critical portrait constraint: absolutized arcade content cannot grow past its safe-area bottom. */
+.portal-screen[data-place="games"] .portal-content{height:calc(100% - 76px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));min-height:0;box-sizing:border-box}
