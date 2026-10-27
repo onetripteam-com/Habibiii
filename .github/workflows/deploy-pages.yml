@@ -23,6 +23,15 @@ jobs:
     steps:
       - name: Check out the complete static website
         uses: actions/checkout@v4
+      - name: Set up Node for QA
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check JavaScript syntax
+        run: |
+          find js -name '*.js' -type f -print0 | xargs -0 -n1 node --check
+      - name: Run unit and content tests
+        run: npm test
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload website as a Pages artifact
