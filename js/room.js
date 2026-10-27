@@ -95,6 +95,7 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
  root.querySelectorAll('[data-pick-theme]').forEach(b=>b.addEventListener('click',()=>{
    roomTheme=b.dataset.pickTheme;store.set('roomTheme',roomTheme);
    root.querySelector('.room-scene').dataset.theme=roomTheme;
+    const illustration=root.querySelector('.director-illustration');if(illustration)illustration.src=roomTheme==='story'?'./assets/room-directors-cut.svg':`./assets/room-theme-${roomTheme}.svg`;
    themeSync();soundEffect('pick');
  }));
  root.querySelector('#theme-done').addEventListener('click',()=>{soundEffect('tap');themeClose();});

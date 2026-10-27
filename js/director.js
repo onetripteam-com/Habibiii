@@ -13,7 +13,7 @@ const iconMark=()=>{
  if(room!==lastRoom){lastRoom=room;helloShown=false;}
  if(!room.classList.contains('director-room')){
   const paint=room.querySelector('.room-paint');if(!paint)return;
-  const image=document.createElement('img');image.className='director-illustration';image.alt='';image.setAttribute('aria-hidden','true');image.src='./assets/room-directors-cut.svg';
+  const image=document.createElement('img');image.className='director-illustration';image.alt='';image.setAttribute('aria-hidden','true');image.src=room.dataset.theme==='story'?'./assets/room-directors-cut.svg':`./assets/room-theme-${room.dataset.theme}.svg`;
   image.addEventListener('error',()=>{room.classList.remove('director-room');image.remove()}, {once:true});
   paint.querySelector('.room-theme-accents')?.before(image);
   for(const cls of ['director-vignette','director-lightwash']){const el=document.createElement('div');el.className=cls;el.setAttribute('aria-hidden','true');paint.append(el);}

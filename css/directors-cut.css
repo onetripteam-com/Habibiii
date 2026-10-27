@@ -218,3 +218,20 @@ body{background:#cabca9}
 @keyframes bloom-join{from{opacity:.2;filter:blur(5px)}to{opacity:1;filter:blur(0)}}
 @media(max-width:390px){.flower-nav{flex-basis:25px;width:25px}.flower-browser .flower-rail{padding-left:4px;padding-right:4px}}
 @media(prefers-reduced-motion:reduce){.flower-browser .flower-rail{scroll-behavior:auto}.flower-option.flower-just-picked,.bouquet-bloom.bloom-new{animation:none}}
+
+/* Theme-specific illustrated worlds: each theme gets its own drawn environment. */
+.room-scene.director-room[data-theme="monsoon"] .director-illustration,
+.room-scene.director-room[data-theme="sunroom"] .director-illustration,
+.room-scene.director-room[data-theme="terracotta"] .director-illustration,
+.room-scene.director-room[data-theme="midnight"] .director-illustration,
+.room-scene.director-room[data-theme="cosmos"] .director-illustration{filter:none!important;transform:none!important;opacity:1!important}
+.room-scene.director-room[data-theme="monsoon"] .director-vignette,
+.room-scene.director-room[data-theme="sunroom"] .director-vignette,
+.room-scene.director-room[data-theme="terracotta"] .director-vignette,
+.room-scene.director-room[data-theme="midnight"] .director-vignette,
+.room-scene.director-room[data-theme="cosmos"] .director-vignette{mix-blend-mode:normal}
+.room-scene.director-room[data-theme="monsoon"] .director-vignette{opacity:.28}
+.room-scene.director-room[data-theme="sunroom"] .director-vignette{opacity:.15}
+.room-scene.director-room[data-theme="terracotta"] .director-vignette{opacity:.20}
+.room-scene.director-room[data-theme="midnight"] .director-vignette{opacity:.32}
+.room-scene.director-room[data-theme="cosmos"] .director-vignette{opacity:.22}
