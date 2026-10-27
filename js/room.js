@@ -8,7 +8,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;
 let weatherTimer;
 const weatherFor=(date)=>{const d=Math.floor(Date.parse(date+'T00:00:00Z')/86400000);return ['clouds','clear','clear','breeze','rain'][((d%5)+5)%5];};
 export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBouquet}){
- const THEMES=['story','monsoon','sunroom','terracotta'];
+ const THEMES=['story','monsoon','sunroom','terracotta','midnight','cosmos'];
  const savedTheme=store.get('roomTheme','story');
  let roomTheme=THEMES.includes(savedTheme)?savedTheme:'story';
  const now=new Date(),parts=kuwaitParts(now),light=lightOfDay(parts.hour),weather=weatherFor(parts.date);
@@ -58,6 +58,8 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
         <button type="button" class="theme-option" data-pick-theme="monsoon" aria-pressed="false"><span class="theme-swatch swatch-monsoon" aria-hidden="true"><i></i></span><span><strong>Kerala Rain</strong><small>Fern greens & rainy calm</small></span></button>
         <button type="button" class="theme-option" data-pick-theme="sunroom" aria-pressed="false"><span class="theme-swatch swatch-sunroom" aria-hidden="true"><i></i></span><span><strong>Sunlit Sunday</strong><small>Buttercream & peach light</small></span></button>
         <button type="button" class="theme-option" data-pick-theme="terracotta" aria-pressed="false"><span class="theme-swatch swatch-terracotta" aria-hidden="true"><i></i></span><span><strong>Terracotta Travels</strong><small>Spice, postcards & warm wood</small></span></button>
+        <button type="button" class="theme-option" data-pick-theme="midnight" aria-pressed="false"><span class="theme-swatch swatch-midnight" aria-hidden="true"><i></i></span><span><strong>After Hours</strong><small>Velvet midnight · neon nostalgia</small></span></button>
+        <button type="button" class="theme-option" data-pick-theme="cosmos" aria-pressed="false"><span class="theme-swatch swatch-cosmos" aria-hidden="true"><i></i></span><span><strong>Little Planetarium</strong><small>Indigo stars · dreamy constellations</small></span></button>
        </div>
        <button type="button" class="button button-primary theme-done" id="theme-done">This one. Keep it ♡</button>
       </div>

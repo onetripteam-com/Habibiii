@@ -155,3 +155,53 @@ body{background:#cabca9}
  .director-hello{animation:none;opacity:1;transform:translateX(-50%)}
  .director-frame,.director-frame *, .director-souvenir,.portal-screen .portal-content,.room-scene.director-room .room-object .object-hint{animation:none!important;transition:none!important}
 }
+/* SIX WORLDS / V3: distinct spatial language, not merely tint adjustments. */
+.room-scene{--world-ink:#344f48;--world-paper:#fff9eb}
+.room-scene.director-room .room-paint{isolation:isolate}
+.room-scene.director-room .director-illustration{transition:filter .9s ease,opacity .8s ease,transform 1.1s ease}
+.room-scene.director-room .room-greeting,.room-scene.director-room .today-card{transition:background .5s,color .5s,transform .65s,border-radius .65s}
+.room-scene.director-room[data-theme=story] .room-paint{background:radial-gradient(ellipse at 80% 7%,#ffeacb,#bfb49f 75%)}
+.room-scene.director-room[data-theme=monsoon] .room-paint{background:linear-gradient(165deg,#102f32,#436b66 48%,#a8b8a4)}
+.room-scene.director-room[data-theme=monsoon] .director-illustration{filter:brightness(.68) saturate(.66) hue-rotate(42deg);transform:scale(1.055)}
+.room-scene.director-room[data-theme=monsoon] .director-vignette{background:repeating-linear-gradient(107deg,transparent 0 21px,#c9f3f224 22px 23px,transparent 25px 45px),linear-gradient(#13384437,#113c446b)}
+.room-scene.director-room[data-theme=monsoon] .room-greeting{background:#e5f0e1eb;border-radius:2px 19px 2px 19px}
+.room-scene.director-room[data-theme=sunroom] .room-paint{background:radial-gradient(circle at 90% 14%,#fffce7 0,#ffe0a5 34%,#e2bcb0 88%)}
+.room-scene.director-room[data-theme=sunroom] .director-illustration{filter:brightness(1.20) sepia(.19) saturate(.72);transform:scale(1.07) translate(-1%,1%)}
+.room-scene.director-room[data-theme=sunroom] .director-lightwash{background:linear-gradient(133deg,#fff7d885 8%,transparent 61%)}
+.room-scene.director-room[data-theme=sunroom] .room-greeting{background:#fffbe8ef;border:2px solid #d4ac64;border-radius:25px 5px 25px 5px;transform:rotate(1.6deg)}
+.room-scene.director-room[data-theme=terracotta] .room-paint{background:radial-gradient(circle at 70% 30%,#dabc90,#975b43 80%)}
+.room-scene.director-room[data-theme=terracotta] .director-illustration{filter:sepia(.45) saturate(1.3) hue-rotate(-18deg) contrast(1.08);transform:scale(1.035)}
+.room-scene.director-room[data-theme=terracotta] .room-greeting{background:#ffeed8f2;border:2px dashed #ac694b;border-radius:0;transform:rotate(-5deg)}
+.room-scene.director-room[data-theme=terracotta] .today-card{background:#fce1b9f1;border-radius:0;transform:rotate(5deg)}
+.room-scene.director-room[data-theme=midnight] .room-paint{background:radial-gradient(ellipse at 69% 18%,#654178 0%,#201c36 64%,#11162c)}
+.room-scene.director-room[data-theme=midnight] .director-illustration{filter:brightness(.40) contrast(1.23) sepia(.22) hue-rotate(190deg);transform:scale(1.09)}
+.room-scene.director-room[data-theme=midnight] .director-vignette{background:linear-gradient(160deg,#150d3888,#291c5388),radial-gradient(circle at 86% 12%,#df81d64d,transparent 49%)}
+.room-scene.director-room[data-theme=midnight] .room-greeting{background:#24213de8;border:1px solid #e995d4;color:#ffdaf6;box-shadow:6px 7px 0 #ed8acb50;border-radius:12px;transform:rotate(0)}
+.room-scene.director-room[data-theme=midnight] .room-greeting *{color:inherit}
+.room-scene.director-room[data-theme=midnight] .today-card{background:#322848e8;border:1px solid #d99ccc;color:#ffe6fb;border-radius:15px;transform:rotate(-2deg)}
+.room-scene.director-room[data-theme=midnight] .today-card *{color:inherit}
+.room-scene.director-room[data-theme=cosmos] .room-paint{background:radial-gradient(ellipse at 50% 27%,#305c8b,#151f43 65%,#0c1429)}
+.room-scene.director-room[data-theme=cosmos] .director-illustration{filter:brightness(.52) saturate(.48) hue-rotate(150deg);opacity:.79;transform:scale(1.05)}
+.room-scene.director-room[data-theme=cosmos] .director-vignette{background-image:radial-gradient(1px 1px at 12% 17%,#fff 95%,transparent),radial-gradient(2px 2px at 80% 22%,#fff 95%,transparent),radial-gradient(2px 2px at 63% 61%,#fff 95%,transparent),radial-gradient(1px 1px at 32% 75%,#fff 95%,transparent),radial-gradient(1px 1px at 95% 83%,#fff 95%,transparent),radial-gradient(circle at 48% 21%,transparent,#141b4188);background-size:100% 100%;filter:drop-shadow(0 0 4px #a4d8ff)}
+.room-scene.director-room[data-theme=cosmos] .room-greeting{background:#162b4bdf;border:1px solid #a5d9ee;color:#e1f5ff;border-radius:20px 20px 8px 8px;transform:rotate(0)}
+.room-scene.director-room[data-theme=cosmos] .room-greeting *{color:inherit}
+.room-scene.director-room[data-theme=cosmos] .today-card{background:#1e3556e8;color:#ecf6ff;border-radius:25px;transform:rotate(-2deg)}
+.room-scene.director-room[data-theme=cosmos] .today-card *{color:inherit}
+.swatch-midnight{background:linear-gradient(130deg,#171b35,#a64f8e 65%,#feadd9)}
+.swatch-cosmos{background:radial-gradient(circle at 70% 18%,#9ce5ff 0 3%,transparent 5%),radial-gradient(circle at 21% 63%,#fff 0 1%,transparent 3%),linear-gradient(140deg,#0c132c,#31538a)}
+.theme-options{max-height:min(53vh,410px);overflow-y:auto;overscroll-behavior:contain;padding:5px;scrollbar-width:thin}
+.theme-option{min-height:76px}
+.flower-rail{scroll-snap-type:x proximity!important;touch-action:pan-x;overscroll-behavior-x:auto;padding-bottom:15px}
+.flower-option{scroll-snap-align:start!important;flex-shrink:0;touch-action:pan-x}
+.flower-option[aria-pressed=true] .picked-check{display:flex;align-items:center;justify-content:center;min-width:23px;padding:1px 5px;border-radius:14px;font-weight:800;background:#405e4c;color:white}
+.flower-option[aria-pressed=true]{opacity:1!important}
+@media(prefers-reduced-motion:reduce){.room-scene.director-room .director-illustration,.room-scene.director-room .room-greeting,.room-scene.director-room .today-card{transition:none!important}}
+
+.joy-game,.smile-game{padding:22px 16px;text-align:center;min-height:340px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#fff3e8;background:radial-gradient(circle at 50% 15%,#8c667b,#3c384f 78%);border-radius:18px}
+.joy-game h2,.smile-game h2{font:700 clamp(24px,6vw,32px) Georgia,serif;margin:0}
+.joy-game p,.smile-game p{margin:0;line-height:1.5;max-width:290px}
+.joy-stars{font-size:27px;letter-spacing:.09em;color:#ffe5a4}
+.joy-tap,.smile-choices button{border:1px solid #ffefceb9;background:#fff5e9;color:#604257;border-radius:16px;padding:14px 18px;font:600 14px system-ui;min-height:48px;box-shadow:0 5px 0 #26172a55}
+.joy-tap:active,.smile-choices button:active{transform:translateY(3px)}
+.smile-choices{display:grid;gap:9px;width:100%;max-width:290px}
+.smile-reveal,.joy-reveal{font:italic 15px Georgia,serif;color:#ffdcbd}

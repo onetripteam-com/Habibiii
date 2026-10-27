@@ -24,7 +24,7 @@ async function init(){
   store.set('lastVisit',Date.now());
  }
  const flowers=store.get('flowers',[]);
- const valid=Array.isArray(flowers)&&flowers.length===7&&new Set(flowers).size===7&&flowers.every(id=>flowerList.some(f=>f.id===id));
+ const valid=Array.isArray(flowers)&&flowers.length===7&&flowers.every(id=>flowerList.some(f=>f.id===id));
  if(store.get('completed')&&valid){sceneRoom(flowers);}else{sceneHug();}
  // User gesture only: never start audio from page load, visibility or SW.
  document.addEventListener('pointerdown',event=>{if(event.isTrusted)startSound();},{once:true,passive:true});

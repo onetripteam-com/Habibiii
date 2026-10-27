@@ -7,14 +7,14 @@ export function mountFlowers(root,flowers,onDone){
  let chosen=[],complete=false,disposed=false;
  root.innerHTML=`<section class="scene flowers-scene" aria-label="Choose seven flowers">
    <div class="flowers-top">
-     <div class="flower-intro"><span class="eyebrow">02 / THIS ONE'S FOR YOU</span><h1>Seven flowers.<br><em>Your rules.</em></h1><p id="flower-subtitle">Pick seven from the thirteen. A whole florist moment.</p></div>
+     <div class="flower-intro"><span class="eyebrow">02 / THIS ONE'S FOR YOU</span><h1>Seven flowers.<br><em>Your rules.</em></h1><p id="flower-subtitle">Pick any seven blooms. Yes, seven roses if you want. This florist minds her business.</p></div>
      <div class="flower-status-row">
        <div class="flower-counter" id="flower-counter" aria-live="polite"><strong>0 <span>of 7</span></strong><span class="counter-caption">picked by Maha</span></div>
-       <div class="flower-status-note"><span id="flower-instruction">Choose your flowers</span><small>undo and reset wait below</small></div>
+       <div class="flower-status-note"><span id="flower-instruction">Choose your flowers</span><small>Repeats welcome · swipe slowly</small></div>
      </div>
    </div>
    <div class="bouquet-display" id="bouquet-display"><span class="bouquet-hint" id="bouquet-hint">Your little bunch begins here <span aria-hidden="true">↘</span></span><div class="bouquet-growing" id="bouquet-growing"></div><div class="petals" aria-hidden="true"><i>✿</i><i>✿</i><i>✿</i><i>✿</i><i>✿</i></div></div>
-   <div class="flower-bottom" id="flower-bottom"><div class="shelf-heading"><span>Choose your flowers</span><span class="shelf-hint">SWIPE TO EXPLORE →</span></div><div id="flower-rail" class="flower-rail" role="group" aria-label="Thirteen flower choices"></div><div class="meaning-line" id="meaning-line" aria-live="polite">Thirteen little personalities. Like a very polite flower shop.</div><div class="flower-controls"><button class="text-button" id="undo-flower" disabled>↶ Undo</button><button class="text-button" id="reset-flowers" disabled>Reset ↺</button></div></div>
+   <div class="flower-bottom" id="flower-bottom"><div class="shelf-heading"><span>Choose your flowers</span><span class="shelf-hint">SWIPE OR TAP ANY FLOWER · REPEATS OK</span></div><div id="flower-rail" class="flower-rail" role="group" aria-label="Thirteen flower choices"></div><div class="meaning-line" id="meaning-line" aria-live="polite">Thirteen little personalities. Like a very polite flower shop.</div><div class="flower-controls"><button class="text-button" id="undo-flower" disabled>↶ Undo</button><button class="text-button" id="reset-flowers" disabled>Reset ↺</button></div></div>
    <div class="bouquet-final" id="bouquet-final" hidden><span class="eyebrow">HAND-PICKED. VERY OFFICIAL.</span><h2>For Maha. <span aria-hidden="true">♡</span></h2><p>Seven chosen by you. Which makes them the right seven.</p><div class="final-controls"><button class="button button-outline" id="save-bouquet">Save as picture ↓</button><button class="button button-primary" id="carry-bouquet">Take them in →</button></div><p class="export-hint" id="export-hint"></p></div>
  </section>`;
  const rail=root.querySelector('#flower-rail'),renderPlace=root.querySelector('#bouquet-growing'),display=root.querySelector('#bouquet-display');
@@ -26,13 +26,13 @@ export function mountFlowers(root,flowers,onDone){
  function update(){
   root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="counter-caption">picked by Maha</span>`;
   renderPlace.innerHTML=chosen.length?bouquetMarkup(chosen,{stage:complete?'final':'preview'}):'';
-  const list=new Set(chosen); rail.querySelectorAll('button').forEach(b=>{const picked=list.has(b.dataset.flower);b.setAttribute('aria-pressed',String(picked));b.disabled=complete||picked;});
+  rail.querySelectorAll('button').forEach(b=>{const count=chosen.filter(id=>id===b.dataset.flower).length;b.setAttribute('aria-pressed',String(count>0));b.disabled=complete;b.querySelector('.picked-check').textContent=count?`×${count}`:'';});
   root.querySelector('#undo-flower').disabled=!chosen.length||complete; root.querySelector('#reset-flowers').disabled=!chosen.length||complete;
   root.querySelector('#bouquet-hint').hidden=chosen.length>0;
  }
  function updateInstruction(text){root.querySelector('#flower-instruction').textContent=text;}
  function pick(f){
-  if(complete||chosen.includes(f.id)||chosen.length>=7) return;
+  if(complete||chosen.length>=7) return;
   chosen.push(f.id); soundEffect('pick'); update(); root.querySelector('#meaning-line').textContent=f.meaning;
   if(chosen.length===7) finish(); else updateInstruction(`${7-chosen.length} more to go`);
  }
