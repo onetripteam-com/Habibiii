@@ -5,7 +5,7 @@ export function mountHug(root,data,onDone){
   root.innerHTML=`<section class="scene hug-scene" aria-label="The virtual hug">
     <div class="hug-doodle" aria-hidden="true"><svg viewBox="0 0 280 238"><path d="M50 145c-15-11-20-39-8-52 16-17 39-3 51 9M231 145c15-11 20-39 8-52-16-17-39-3-51 9" stroke="#ba715c" stroke-width="7" stroke-linecap="round" fill="none" opacity=".8"/><path d="M90 85c21-13 46-6 50 8 7-23 38-21 51-7 26 27-11 57-51 86-42-30-77-64-50-87z" fill="#d87e70" opacity=".85" stroke="#b95e56" stroke-width="3"/><path d="M64 166c22 13 45 20 76 20s61-7 81-20" fill="none" stroke="#aa765e" stroke-width="4" stroke-linecap="round" stroke-dasharray="3 11"/></svg><span class="hug-doodle-caption">${escapeHTML(data.illustrationCaption)}</span></div>
     <div class="hug-content"><span class="eyebrow">${escapeHTML(data.eyebrow)}</span><h1>${escapeHTML(data.heroFirst)}<br>${escapeHTML(data.heroSecond)}<em>${escapeHTML(data.heroEmphasis)}</em></h1><div class="hug-lines" id="hug-lines"></div><div class="no-reply" id="no-reply" aria-live="polite"></div></div>
-    <div class="hug-actions" id="hug-actions"><div class="hug-action-question">${escapeHTML(data.actionQuestion)}</div><div class="button-row"><button class="button button-primary" id="hug-yes">${escapeHTML(data.yesButton)}</button><button class="button button-outline" id="hug-no">${escapeHTML(data.noButton)}</button></div><span class="tiny-footnote">${escapeHTML(data.footnote)}</span></div>
+    <div class="hug-actions" id="hug-actions"><div class="hug-action-question">${escapeHTML(data.actionQuestion)}</div><div class="button-row"><button class="button button-primary" id="hug-yes">${escapeHTML(data.yesButton)}</button><button class="button button-outline" id="hug-no">${escapeHTML(data.noButton)}</button></div><span class="tiny-footnote">${escapeHTML(data.footnote)}</span><button type="button" class="hug-skip" id="hug-skip">Continue without a hug →</button></div>
     <div class="hug-complete" id="hug-complete" hidden><span class="little-knot" aria-hidden="true">❧</span><p id="hug-result"></p><p class="next-line">${escapeHTML(data.next)}</p><button class="button button-primary" id="next-flowers">${escapeHTML(data.flowerButton)} <span aria-hidden="true">→</span></button></div>
     </section>`;
   const lines=root.querySelector('#hug-lines');
@@ -26,13 +26,8 @@ export function mountHug(root,data,onDone){
     root.querySelector('#next-flowers')?.focus({preventScroll:true});
   };
   root.querySelector('#hug-yes').addEventListener('click',()=>reveal(data.yes,true));
-  noButton.addEventListener('click',()=>{
-    if(finished)return;
-    startSound();soundEffect('tap');noCount++;
-    if(noCount<=data.no.length){response.textContent=data.no[noCount-1]; question.textContent=data.hugPrompt; noButton.classList.remove('wiggle');void noButton.offsetWidth;noButton.classList.add('wiggle');
-      if(noCount===data.no.length) {noButton.textContent=data.lastNoButton; question.textContent=data.finalQuestion;}
-    } else reveal(data.closing,false);
-  });
+  noButton.addEventListener('click',()=>reveal(data.closing,false));
+  root.querySelector('#hug-skip').addEventListener('click',()=>{disposed=true;onDone();});
   root.querySelector('#next-flowers').addEventListener('click',()=>{disposed=true;onDone();});
   return ()=>{disposed=true;};
 }

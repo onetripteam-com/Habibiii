@@ -1,5 +1,5 @@
 /* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-opening-v1.9.0';
+const VERSION='maha-opening-v2.0.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
  './','./index.html','./css/style.css','./js/main.js','./js/hug.js','./js/flowers.js',
@@ -17,6 +17,8 @@ const FILES=[
  './content/hug.json','./content/flowers.json','./content/today.json',
  './assets/room-back.svg','./assets/room-front.svg','./assets/icon.svg',
  './assets/icon-192.png','./assets/icon-512.png','./assets/apple-touch-icon.png',
+ './js/director.js','./js/painted-worlds.js','./js/fm-atmosphere.js',
+ './css/directors-cut.css','./assets/room-directors-cut.svg',
  './manifest.json'
 ];
 self.addEventListener('install',event=>{

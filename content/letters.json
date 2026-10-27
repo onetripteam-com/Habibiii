@@ -3,352 +3,305 @@
   "letters": [
     {
       "id": "hello-from-here",
-      "section": "inbox",
-      "kind": "typed",
       "title": "An envelope with your name on it",
-      "date": "2026-10-23",
-      "preview": "Look, actual mail. Sort of.",
-      "draft": true,
+      "kind": "typed",
+      "section": "inbox",
+      "preview": "Yes, someone built a mailbox instead of sending a text.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "Okay, yes, I built a whole post office to tell you something I could have texted. That is exactly the level of sensible you should expect from me.",
-        "I wanted one place where a message could wait for you, without a blue tick or a reply deadline. Open it after a messy day, or three random Tuesdays from now. Nothing here is checking attendance.",
-        "[ADD A SMALL, REAL MEMORY THAT MAKES HER LAUGH.]"
-      ],
-      "ps": "The stamp department is one person and the management is terrible.",
-      "malayalam": "ശരി, that's enough drama for one envelope."
+        "Okay, here's the situation. I could have sent a message. A normal person would have sent a message. Instead, there's a mailbox, a flower shop and a suspiciously enthusiastic suitcase.",
+        "It's not because every day needs a grand gesture. Mostly, I wanted you to have somewhere to wander into when you feel like it. On a good day, a strange day, or a day when you have exactly zero interesting things to report.",
+        "You don't have to do anything here. Even opening this letter counts as excellent use of the facilities. — Your friend on the other side of the map."
+      ]
     },
     {
       "id": "ordinary-tuesday",
-      "section": "inbox",
-      "kind": "typed",
       "title": "In defence of ordinary Tuesdays",
-      "date": "2026-10-23",
-      "preview": "An important, completely unofficial opinion.",
-      "draft": true,
+      "kind": "typed",
+      "section": "inbox",
+      "preview": "Big days have photographers, cake, and people making speeches. Ordinary Tuesdays.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "I think normal days are underrated. Everyone makes a big deal about birthdays and big milestones, but what about an average Tuesday where nothing exploded and you found a good snack?",
-        "This is an official letter saying you don't have to turn every week into a highlight reel. [ADD THE EVERYDAY THING SHE ALWAYS DOES THAT YOU ADMIRE.] Even on ordinary days, that's worth noticing."
-      ],
-      "ps": "You are not required to write back. This office has extremely relaxed rules."
+        "Big days have photographers, cake, and people making speeches. Ordinary Tuesdays have traffic, unanswered messages and maybe one decent cup of tea. Unfair, really.",
+        "But I like the ordinary stuff. A ridiculous thing you noticed. A random photo. A conversation that begins with 'you won't believe this' and turns out to be about absolutely nothing.",
+        "If nothing extraordinary happened today, you can still tell me about it."
+      ]
     },
     {
       "id": "five-visits",
-      "section": "inbox",
-      "kind": "typed",
       "title": "The fifth time? Suspicious.",
-      "date": "2026-10-23",
-      "preview": "There may be a reward for returning.",
-      "draft": true,
+      "kind": "typed",
+      "section": "inbox",
+      "preview": "Five visits. I had not prepared an award ceremony for this, which is deeply unpro.",
       "unlock": {
         "type": "visits",
         "n": 5
       },
       "pages": [
-        "Five visits? Either you're curious or you are checking whether I have fixed all my bugs. Both reasons are fair.",
-        "I kept this little note here because the best part of a place like this is coming back without needing an occasion. [ADD A TINY INSIDE JOKE ABOUT REPEATING SOMETHING.]"
-      ],
-      "ps": "The unofficial loyalty scheme is one smile. Terms and conditions: none."
+        "Five visits. I had not prepared an award ceremony for this, which is deeply unprofessional of me.",
+        "I hope something in this room felt familiar the second or third time. Maybe you kept a postcard. Maybe you made a catastrophically bad cup of digital chai. Maybe you just visited the flowers.",
+        "Either way, you're always welcome back. There is, tragically, still no actual cake."
+      ]
     },
     {
       "id": "handwritten-thirty",
+      "title": "A page that deserves real handwriting",
+      "kind": "typed",
       "section": "inbox",
-      "kind": "handwritten",
-      "title": "A page from my notebook",
-      "date": "2026-10-23",
-      "preview": "One piece of paper, kept for later.",
-      "draft": true,
+      "preview": "I originally wanted to put a handwritten page here. A proper one, with crossing-o.",
       "unlock": {
         "type": "daysAfterFirstVisit",
         "n": 30
       },
-      "images": [
-        "./assets/letters/handwritten-placeholder.svg"
-      ],
-      "transcriptionPages": [
-        "[ADD A PHOTO OR SCAN OF YOUR OWN HANDWRITING TO /assets/letters/.]",
-        "[REPLACE THIS WITH YOUR REAL HANDWRITTEN TEXT SO READ AS TEXT IS USEFUL.]"
-      ],
-      "ps": "The placeholder artwork is intentionally not pretend handwriting."
+      "pages": [
+        "I originally wanted to put a handwritten page here. A proper one, with crossing-outs and all the untidy bits that make handwriting human.",
+        "That part deserves to be real, not a computer pretending to hold a pen. Until I can put an actual handwritten letter in the mailbox, consider this one a promise of better stationery."
+      ]
     },
     {
       "id": "a-day-in-2027",
-      "section": "inbox",
-      "kind": "typed",
       "title": "A letter for later-later",
-      "date": "2026-10-23",
-      "preview": "Sealed until its date arrives.",
-      "draft": true,
+      "kind": "typed",
+      "section": "inbox",
+      "preview": "Oh, hello from the future. 2027 sounded far away when I started building this. Th.",
       "unlock": {
         "type": "date",
         "on": "2027-07-07"
       },
       "pages": [
-        "Well, look at the calendar. The future arrived with absolutely no warning.",
-        "I hope you have collected a few good stories between then and now. [ADD A REAL REFERENCE TO SOMETHING SHE HOPES TO DO.] If plans changed, that's allowed too."
-      ],
-      "ps": "I wrote this earlier. I remain excellent at overthinking stationery."
+        "Oh, hello from the future. 2027 sounded far away when I started building this. Then calendars did their usual trick.",
+        "I don't know what your world looks like now, or which cities you've crossed off your wish list. I hope there have been new places, wonderful unexpected days, and people who make you laugh at the worst possible moments.",
+        "And I hope this old room still makes sense to open sometimes."
+      ]
     },
     {
       "id": "when-tired",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When your battery is at 3%",
-      "date": "2026-10-23",
-      "preview": "When everything has asked for a piece of your day.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "If you're tired, I'm not going to turn this into a five-step improvement plan. Yo.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "Have you tried turning the whole day off and on again? Kidding. Sort of.",
-        "You don’t need a clever comeback, a full to-do list, or a plan right now. Sit for a minute. Get some water. Find something soft to lean against. One thing can wait. Probably seven things.",
-        "[ADD HER FAVOURITE SMALL COMFORT—FOOD, SONG, OR HABIT.]"
-      ],
-      "ps": "ശരി, that’s all from the very unofficial rest department."
+        "If you're tired, I'm not going to turn this into a five-step improvement plan. You probably have enough people explaining how to optimise a day.",
+        "Find something comfortable. Ignore an unnecessary notification. Let something wait until tomorrow if it can.",
+        "You can leave this letter half-read. I won't report you to the stationery authorities."
+      ]
     },
     {
       "id": "when-miss-home",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When you miss home",
-      "date": "2026-10-23",
-      "preview": "A small piece of Kerala in an envelope.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "Rain, distance and the bits of home a map cannot hold.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "Some places have an unfair ability to sit inside your chest, don’t they? A smell from the kitchen, a particular rain, or someone shouting from another room. Suddenly you’re somewhere else.",
-        "I can’t pack Kerala into a letter, unfortunately. International shipping would be a nightmare. But I can remind you of [ADD A SPECIFIC HOME MEMORY OR PLACE]. Missing a place and building a life elsewhere can both be true."
-      ],
-      "ps": "അയ്യോ, now I want proper snacks too."
+        "There are some things a map can't fit: the sound of a particular house, a smell from a kitchen, the way Kerala rain changes everything for an hour.",
+        "Being away doesn't make those things smaller. And missing one place doesn't mean you can't build a good life somewhere else.",
+        "If you feel like talking about home, even the completely ordinary parts, I'm listening."
+      ]
     },
     {
       "id": "when-great-news",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When you have great news",
-      "date": "2026-10-23",
-      "preview": "Yes, this calls for noise.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "Stop reading and tell me everything.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "First of all: WHAT. Tell me everything. I need the full version, including the unnecessary background details and the dramatic pause.",
-        "I hope you let yourself enjoy it before turning it into the next target. [ADD THE KIND OF GOOD NEWS YOU HOPE SHE GETS.] If this news deserves a snack, order the fancy one."
-      ],
-      "ps": "I will be accepting a full voice-note briefing."
+        "Excuse me. You have GOOD NEWS and you're reading a letter instead of telling me? An investigation will be launched.",
+        "I want the whole story. The unnecessary introduction, the moment you found out, the reaction that made absolutely no sense and whatever came next.",
+        "Seriously, I'm glad something good found you."
+      ]
     },
     {
       "id": "when-nervous",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When something big is tomorrow",
-      "date": "2026-10-23",
-      "preview": "For the night before.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "The night before something important is a ridiculous time. Suddenly the clock get.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "The night before a big thing always makes ordinary objects look suspiciously important. Even the clock becomes a personal enemy.",
-        "You can be nervous and still turn up. Check what you need, set an alarm, and stop rehearsing every possible universe. [ADD A MEMORY OF HER HANDLING SOMETHING HARD.] One step at a time is a perfectly respectable plan."
-      ],
-      "ps": "ശരി. Tomorrow does not need a trailer tonight."
+        "The night before something important is a ridiculous time. Suddenly the clock gets loud, every decision feels permanent, and your brain asks questions at 1:43 a.m.",
+        "I can't tell you how tomorrow will go. I can tell you that you don't have to solve every possibility tonight.",
+        "Keep what you need nearby. Ask questions if you have them. I'll be rooting for you without making a big speech about it."
+      ]
     },
     {
       "id": "when-cant-sleep",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When sleep is avoiding you",
-      "date": "2026-10-23",
-      "preview": "This letter has no bedtime lecture.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "So your brain has opened a conference when everybody else has gone home. Very inc.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "If your brain has scheduled a surprise conference at 2 a.m., I would like to formally complain.",
-        "There is nothing you have to solve just because it got quiet. Maybe put the screen down after this, unclench your shoulders, or imagine us arguing about [ADD A RIDICULOUS SHARED TOPIC]. If you’re still awake, the night is just being slow; no need to fight the clock."
-      ],
-      "ps": "This post office is also terrible at keeping office hours."
+        "So your brain has opened a conference when everybody else has gone home. Very inconsiderate management.",
+        "I won't tell you to 'just sleep', because that is spectacularly useless advice. Maybe lower the brightness, listen to some rain, or read something wonderfully boring.",
+        "There is no need to reply. I'm only leaving the light on in this corner of the internet."
+      ]
     },
     {
       "id": "when-overthinking",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When your brain opens 47 tabs",
-      "date": "2026-10-23",
-      "preview": "The committee can adjourn now.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "I've been informed there's a committee meeting in your head, and the agenda has f.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "I know, I know. What if this, what if that, and what if the other thing that has not happened and probably has no plans to.",
-        "You don’t have to decide the entire future from one uncomfortable moment. Write down the one thing you can actually do, and let the remaining tabs wait. [ADD A PRIVATE JOKE ABOUT HER OVERTHINKING IF SHE WOULD ENJOY IT.]"
-      ],
-      "ps": "Minutes of the meeting: absolutely no decisions required."
+        "I've been informed there's a committee meeting in your head, and the agenda has forty-seven items.",
+        "Not all of them need a decision today. Especially the imaginary conversations where you predict everyone's exact reaction. Those are frankly exhausting even as a spectator.",
+        "If you want to explain the chaos out loud sometime, I'll bring tea and appropriately unhelpful jokes."
+      ]
     },
     {
       "id": "when-laugh",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When you need a laugh",
-      "date": "2026-10-23",
-      "preview": "A low-budget comedy department.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "Congratulations. You've been appointed head of a completely fictional airport. Ev.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "Breaking news: the Ministry of Unnecessary Drama has appointed you Head of Eye-Rolling. Salary: one imaginary jhumka and unlimited sarcasm.",
-        "A highly trained pigeon has been sent to deliver this letter. It got distracted by a samosa and is currently negotiating compensation. [REPLACE WITH YOUR ACTUAL INSIDE JOKE.]"
-      ],
-      "ps": "Please do not report this office to management. I am management."
+        "Congratulations. You've been appointed head of a completely fictional airport. Every flight is delayed because a passenger has packed three extra opinions and a suitcase full of snacks.",
+        "The only employee is a tired pigeon named Suresh. He has submitted his resignation twice but cannot work the printer.",
+        "I know this story makes no sense. That's exactly why the pigeon has a pension."
+      ]
     },
     {
       "id": "when-stuck",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When you feel stuck",
-      "date": "2026-10-23",
-      "preview": "No motivational poster inside.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "People say 'take the next step' as if steps come with helpful glowing arrows pain.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "People love saying “just take the next step.” Very helpful, thank you, mysterious poster on the internet.",
-        "Maybe you don’t know what the next step is yet. That’s fine. Try a small experiment, ask one person, or just leave the question on the table for a little while. [ADD A TIME SHE FIGURED OUT A DETOUR.] Not every pause is a failure."
-      ],
-      "ps": "If anyone says “hustle harder,” I will hide their calendar."
+        "People say 'take the next step' as if steps come with helpful glowing arrows painted on them.",
+        "Sometimes you don't know what the next step is. Sometimes you know and don't feel like taking it. Both situations are embarrassingly human.",
+        "You don't have to turn every quiet patch into a breakthrough. I can keep you company in the middle bit."
+      ]
     },
     {
       "id": "when-finished-big",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When you finish something big",
-      "date": "2026-10-23",
-      "preview": "Please accept this extremely official applause.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "Hold on. You finished it? Whatever the thing was, I hope you gave yourself a mome.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "Hold on. You finished it? That deserves a proper moment. Not the “okay, what next?” version. The actual sit-back-and-look-at-it version.",
-        "I wish I could hand you a ridiculous certificate with [ADD HER FUNNIEST NICKNAME]. Since I cannot, this letter must do. I’m glad you saw it through, whatever the road there looked like."
-      ],
-      "ps": "Certificate pending. Printer has gone for tea."
+        "Hold on. You finished it? Whatever the thing was, I hope you gave yourself a moment before immediately looking for the next task.",
+        "I'm picturing a very serious award being presented by a very small and unqualified committee. The certificate is written on the back of a grocery receipt.",
+        "For real, I'm happy for you. Tell me how it went."
+      ]
     },
     {
       "id": "when-raining",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When it is raining",
-      "date": "2026-10-23",
-      "preview": "A weather report from someone unqualified.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "Rain in Kerala has a very different personality from rain elsewhere. Sometimes it.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "Some rain asks for a window seat and absolutely no important plans. Other rain soaks your shoes and ruins your hair. Both have excellent dramatic timing.",
-        "If you can, steal a quiet minute and listen to it. Then remember [ADD A MONSOON MEMORY OR A KERALA PLACE]. It doesn’t have to mean anything profound. Rain can just be rain."
-      ],
-      "ps": "ചായ? This letter votes yes, but the kettle has its own opinion."
+        "Rain in Kerala has a very different personality from rain elsewhere. Sometimes it feels like the whole neighbourhood has stopped to listen.",
+        "There is a rainy window in the Quiet Corner if you want one. No dramatic soundtrack required.",
+        "If you're standing near an actual window, though, the original is usually better."
+      ]
     },
     {
       "id": "when-birthday",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When it is your birthday",
-      "date": "2026-10-23",
-      "preview": "An extremely unofficial birthday dispatch.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "Happy birthday, Maha. I considered writing something elegant and mature, but I kn.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "Happy birthday! I considered writing something mature and dignified. Then I remembered who would be reading it.",
-        "I hope today gives you at least one moment that feels completely yours. [ADD HER BIRTHDAY TRADITION OR A FUNNY PAST BIRTHDAY MEMORY.] Whatever the year ahead brings, I hope you get room to choose things you like."
-      ],
-      "ps": "Age is classified information. Enquiries will be ignored."
+        "Happy birthday, Maha. I considered writing something elegant and mature, but I know neither of us would trust that version.",
+        "I hope there is good food, at least one absurd conversation, and a photo you will later insist is terrible even though everyone else likes it.",
+        "Most of all, I hope the day is yours, not some performance for everybody else."
+      ]
     },
     {
       "id": "when-first-vlog",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When you post your first vlog",
-      "date": "2026-10-23",
-      "preview": "The director has entered the chat.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "You posted your first travel vlog? Wait. This is an event. Where is the premiere?.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "You actually pressed publish. I’m impressed and also ready to be insufferably supportive.",
-        "Please send me the link before I start pretending to be your PR manager. [ADD THE TRAVEL PLACE OR FIRST VIDEO IDEA YOU TWO DISCUSSED.] The first version doesn’t have to look like the hundredth. You made a thing and put it out there."
-      ],
-      "ps": "Autographs will be collected in the lobby."
+        "You posted your first travel vlog? Wait. This is an event. Where is the premiere? Who approved the poster? Is there a badly designed fan club I can join?",
+        "I hope you kept the parts that felt like you: the awkward cut, the unexpected detour, the beautiful thing you almost forgot to film.",
+        "You did the hard part. You actually started. Now please send me the link so I can become insufferable about it."
+      ]
     },
     {
       "id": "when-forgot-yourself",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When you forget who you are",
-      "date": "2026-10-23",
-      "preview": "A few facts, not a pep talk.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "I could list a hundred grand things I think about you, but I suspect you'd roll y.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "I won’t write a dramatic list claiming to know every version of you. People change. That’s the whole point.",
-        "But I do remember [ADD A REAL EXAMPLE OF HER KINDNESS], [ADD SOMETHING SHE FINDS HILARIOUS], and how you handled [ADD A SMALL TRUE MOMENT]. Those happened. They count. You can take your time figuring out the rest."
-      ],
-      "ps": "No inspirational background music was harmed in this letter."
+        "I could list a hundred grand things I think about you, but I suspect you'd roll your eyes before number four.",
+        "So here's something smaller. You're allowed to change, get things wrong, want something different, and still be the same person I like hearing from.",
+        "You don't owe the world a perfect explanation of who you're becoming."
+      ]
     },
     {
       "id": "when-missing-me",
-      "section": "openWhen",
-      "kind": "openWhen",
       "title": "When you miss me",
-      "date": "2026-10-23",
-      "preview": "A suspiciously convenient envelope.",
-      "draft": true,
+      "kind": "openWhen",
+      "section": "openWhen",
+      "preview": "Oh? You miss me? I will need this remarkable statement signed and witnessed. A sc.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "Excuse me? You miss me? I’ll need this statement in writing, signed and witnessed.",
-        "Jokes aside, I miss the silly little conversations—the ones that start nowhere and somehow take twenty minutes. [ADD A REAL MEMORY FROM A CALL OR AN OLD DAY IN BANGALORE.] If you want to send a message, send one. No perfect opening line needed."
-      ],
-      "ps": "ശരി, enough. My ego has already grown three sizes."
+        "Oh? You miss me? I will need this remarkable statement signed and witnessed. A screenshot is acceptable.",
+        "I'm joking. Mostly. Distance is strange that way: sometimes everything feels normal, and sometimes one silly thing happens and you wish the other person were there to laugh at it.",
+        "You can send me the silly thing. I'll probably have an even sillier response."
+      ]
     },
     {
       "id": "for-a-big-day",
-      "section": "quiet",
-      "kind": "typed",
       "title": "For a big day",
-      "date": "2026-10-23",
-      "preview": "A small note, exactly when it belongs here.",
-      "draft": true,
+      "kind": "typed",
+      "section": "quiet",
+      "preview": "Just a note for a day that matters. Keep the practical things close: what you nee.",
       "unlock": {
         "type": "always"
       },
       "pages": [
-        "A quick note before a big day: put the useful things where you can find them. Charge your phone. Drink some water. Ask what you need to ask.",
-        "You don’t have to make the day meaningful or brave or anything with a dramatic soundtrack. Just take it as it comes, one ordinary step at a time. [ADD ONE TRUE, GENTLE LINE YOU WOULD SAY TO HER.]"
-      ],
-      "ps": "You can open this again tomorrow. Or not. No attendance register."
+        "Just a note for a day that matters. Keep the practical things close: what you need, whom to ask, and the questions you want answered.",
+        "You don't have to be brave for anyone watching. You can be nervous, quiet, annoyed, or all three in the same hour.",
+        "Wishing you an easier day and good people around you. I'll be thinking of you."
+      ]
     }
   ]
 }

@@ -44,7 +44,11 @@ export function mountLetters(host,{visits=1,lastVisit=null,onPlay=()=>{},onKeep=
   return `<div class="mail-keepsakes"><p class="mail-section-caption">THE ONES YOU DECIDED TO KEEP</p>${selected.length?selected.map(itemMarkup).join(''):'<p class="mail-keepsake-empty">No saved letters yet. Read one, tap ♡, and it will find its way here.</p>'}
    <div class="future-note"><span class="future-note-pin">✿</span><h2>A note to future me</h2><p>This one stays on this device. No sending, no postmarks.</p><label class="sr-only" for="future-note-text">Write a note to your future self</label><textarea id="future-note-text" rows="5" placeholder="Dear future Maha, remember…">${esc(store.get('futureNote',''))}</textarea><span class="future-save-indicator" role="status">Saved privately on this device</span></div></div>`;
  }
- function footer(){const active=Boolean(config.senderEmail&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.senderEmail));return `<div class="mail-footer"><button type="button" class="mail-writeback" data-writeback>✍ Write back ↗</button><span>${active?'Opens your email app':'[MY EMAIL] not configured yet'}</span></div>`;}
+ // Hide unfinished email settings; enable the button only when there is a real address.
+ function footer(){
+  const active=Boolean(config.senderEmail&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.senderEmail));
+  return active?`<div class="mail-footer"><button type="button" class="mail-writeback" data-writeback>✍ Write back ↗</button></div>`:'';
+ }
  function renderList(){
   current=null;
   host.innerHTML=`<div class="letterbox-app">${header()}${tabs()}<div class="mail-scroll" id="mail-scroll">${activeTab==='inbox'?inbox():activeTab==='openWhen'?openWhen():keepsakes()}</div>${footer()}</div>`;

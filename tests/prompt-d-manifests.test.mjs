@@ -17,7 +17,7 @@ test('four films have UTF-8 English and Malayalam VTT cues within timeline',()=>
 });
 test('radio has five uniquely tuned stations with no copyrighted hosted streams',()=>{
  assert.equal(radio.length,5);assert.equal(new Set(radio.map(x=>x.frequency)).size,5);
- for(const s of radio){assert.equal(s.introAudio,null);assert.equal(s.ambientAudio,null);assert.equal(s.spotify,null);assert.equal(s.youtube,null);assert.match(s.introCaption,/\[YOUR VOICE NOTE/)}
+ for(const s of radio){assert.equal(s.introAudio,null);assert.equal(s.ambientAudio,null);assert.equal(s.spotify,null);assert.equal(s.youtube,null);assert.doesNotMatch(s.introCaption,/\[[^\]]+\]/)}
 });
 test('travel has six initial postcards and six editable destination placeholders',()=>{
  assert.equal(places.places.length,6);assert.equal(places.futureSlots.length,6);
