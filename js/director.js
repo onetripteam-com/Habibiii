@@ -68,7 +68,7 @@ function images(){
  root.querySelectorAll('.atlas-postcard .postcard-art').forEach(el=>{
   if(el.querySelector('.director-frame'))return;
   const name=el.closest('.atlas-card-front')?.querySelector('h2')?.textContent?.toLowerCase()||'';
-  const type=name.includes('kerala')?'palms':name.includes('kuwait')?'sun':name.includes('bengaluru')?'city':name.includes('munnar')?'hills':name.includes('manali')||name.includes('ladakh')?'mountains':'lake';
+  const type=name.includes('kerala')?'palms':name.includes('kuwait')?'sun':name.includes('bengaluru')?'city':name.includes('munnar')?'hills':name.includes('manali')||name.includes('ladakh')||name.includes('nepal')?'mountains':'lake';
   el.insertAdjacentHTML('afterbegin',paintedWorld(type));
  });
 }

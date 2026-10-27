@@ -103,6 +103,23 @@
         "#7b8290",
         "#e3c6a6"
       ]
+    },
+    {
+      "id": "nepal",
+      "name": "Nepal",
+      "x": 83,
+      "y": 47,
+      "gate": "stone",
+      "intro": "A road bends around the mountain and makes you look up again. One day, perhaps, with a camera in your hand.",
+      "phrase": "നമുക്ക് മലകളിലേക്ക് പോകാം",
+      "translation": "Let's go to the mountains.",
+      "prompt": "Film 10 seconds of clouds drifting across a mountain view.",
+      "clip": null,
+      "still": null,
+      "colors": [
+        "#617b86",
+        "#e5d7b4"
+      ]
     }
   ],
   "futureSlots": [

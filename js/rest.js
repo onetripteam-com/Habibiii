@@ -5,7 +5,7 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const PHASES=[['Inhale',4000],['Hold',4000],['Exhale',6000]];
-const fallback={shows:['[Add a comfort show]'],snacks:['[Add her favourite snack]'],songs:['[Add a familiar song]'],voice:{src:'',caption:'[Your voice note belongs here. No rush to add it.]'},rain:{src:'',licence:'Original Web Audio-generated noise, no recording or sample used.'}};
+const fallback={shows:['A favourite episode you already know by heart.'],snacks:['Something warm, easy, and good.'],songs:['A song you have loved for years.'],voice:{src:'',caption:''},rain:{src:'',licence:'Original local sound.'}};
 export function mountRest(host,{onPlay=()=>{}}={}){
  let disposed=false,runningBreath=false,breathStart=0,breathPaused=0,raf=0,visibilityPaused=false;
  let audioContext=null,noiseSource=null,noiseGain=null,voice=null,voiceBusy=false,rainVolume=0.36,rainArmed=false;
@@ -17,7 +17,7 @@ export function mountRest(host,{onPlay=()=>{}}={}){
  <div class="rr-dials"><label>☼ Lamp glow <input id="rr-brightness" type="range" min="0" max="100" value="72" aria-label="Lamp brightness"><output id="rr-lamp-value">72%</output></label><label>☂ Rain volume <input id="rr-volume" type="range" min="0" max="100" value="36" aria-label="Rain sound volume"><output id="rr-volume-value">36%</output></label></div><button type="button" id="rr-rain-toggle" class="rr-rain-toggle">☂ Start the rain sound ↗</button>
  <div class="rr-lower"><section class="rr-breath-card"><div class="rr-breath-header"><span>A SMALL BREATHING CIRCLE</span><button type="button" id="rr-breath-toggle">Start ↗</button></div><div class="rr-breath-display"><div class="rr-breath-orb" id="rr-breath-orb" aria-hidden="true"><span>◌</span></div><div class="rr-breath-copy" aria-live="off"><strong id="rr-breath-stage">Whenever you like</strong><small id="rr-breath-timer">In 4 · Hold 4 · Out 6</small></div></div><p>Optional. No counts to keep, nothing to achieve.</p></section>
  <section class="rr-comfort"><span class="rr-section-kicker">THE COMFORT SHELF</span><div class="rr-comfort-tabs" role="group" aria-label="Comfort ideas"><button data-comfort="shows" aria-pressed="true">Shows</button><button data-comfort="snacks" aria-pressed="false">Snacks</button><button data-comfort="songs" aria-pressed="false">Songs</button></div><ul id="rr-comfort-list"></ul></section></div>
- <div class="rr-foot"><button id="rr-voice" type="button">▶ Press to hear me</button><button id="rr-bored" type="button">✦ Bored in bed?</button></div><p class="rr-voice-caption" id="rr-voice-caption">${esc(fallback.voice.caption)}</p><p class="rr-copyright">Rain is generated locally. No tracking, no medical promises.</p>
+ <div class="rr-foot"><button id="rr-voice" type="button" hidden>▶ Press to hear me</button><button id="rr-bored" type="button">✦ Bored in bed?</button></div><p class="rr-voice-caption" id="rr-voice-caption" hidden>${esc(fallback.voice.caption)}</p><p class="rr-copyright">No tasks to finish. You can stay a moment.</p>
  </section>`;
  const canvas=host.querySelector('#rr-rain-canvas'),ctx=canvas.getContext('2d'),windowEl=host.querySelector('#rr-window');
  const glow=host.querySelector('#rr-lamp-light'),brightOut=host.querySelector('#rr-lamp-value'),volOut=host.querySelector('#rr-volume-value');
@@ -81,6 +81,6 @@ export function mountRest(host,{onPlay=()=>{}}={}){
  host.querySelector('#rr-bored').addEventListener('click',()=>{stopVoice();stopRain();onPlay()});
  document.addEventListener('maha:mutechange',mute);document.addEventListener('visibilitychange',onVisibility);window.addEventListener('resize',resize);
  resize();glowValue();renderComfort('shows');raf=requestAnimationFrame(tick);
- fetch('./content/comfort.json').then(r=>{if(!r.ok)throw Error('No comfort JSON');return r.json()}).then(c=>{if(!disposed){comfort={...fallback,...c};renderComfort('shows');voiceCaption.textContent=comfort.voice?.caption||fallback.voice.caption}}).catch(()=>{});
+ fetch('./content/comfort.json').then(r=>{if(!r.ok)throw Error('No comfort JSON');return r.json()}).then(c=>{if(!disposed){comfort={...fallback,...c};renderComfort('shows');voiceCaption.textContent=comfort.voice?.caption||fallback.voice.caption;voiceButton.hidden=!comfort.voice?.src;voiceCaption.hidden=!comfort.voice?.src}}).catch(()=>{});
  return ()=>{disposed=true;cancelAnimationFrame(raf);stopRain();stopVoice();audioContext?.close().catch(()=>{});document.removeEventListener('maha:mutechange',mute);document.removeEventListener('visibilitychange',onVisibility);window.removeEventListener('resize',resize);host.innerHTML='';host.classList.remove('rest-host')};
 }

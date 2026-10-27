@@ -9,7 +9,7 @@ An illustrated room that accumulates souvenirs, not a home screen full of apps. 
 - Fully redrawn layered bedroom stage, preserving the real Kuwait-local lighting and existing room hotspots.
 - Four existing atmospheres given distinct colour grading.
 - Softer editorial opening/florist scene typography, tactile objects, readable hover/focus clues, and a first-time room invitation.
-- Original code-drawn illustrated cinema scenes and individual travel postcard art; animated with CSS and respecting reduced motion. These are **illustrated motion cards, not recorded video footage**.
+- Original code-drawn illustrated cinema scenes and individual travel postcard art, including Nepal; animated with CSS and respecting reduced motion. These are **illustrated motion cards, not recorded video footage**.
 - Original, local, interactive, low-level atmospheric synthesis for all five FM stations. No commercial tracks or recorded voices are bundled.
 - Realistic copy refresh: twenty letters rewritten without invented shared events, no template brackets; forty daily notes and five radio station introductions; resting-shelf draft replacements.
 - Visible room souvenirs driven from her kept letters, postcards, games, gardening and travel dream pins.

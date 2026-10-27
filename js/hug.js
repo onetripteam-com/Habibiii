@@ -18,7 +18,7 @@ export function mountHug(root,data,onDone){
   const reveal=async(reply,isYes)=>{
     if(finished)return;finished=true;startSound();soundEffect('complete');
     actions.classList.add('leaving'); response.textContent='';
-    const heart=root.querySelector('.hug-doodle');heart.classList.add('hug-given');
+    const heart=root.querySelector('.hug-doodle');if(isYes)heart.classList.add('hug-given');
     if(isYes) await delay(1300); else await delay(600);
     if(disposed)return;
     actions.hidden=true;done.hidden=false;root.querySelector('#hug-result').textContent=reply;
