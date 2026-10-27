@@ -1,5 +1,5 @@
 /* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-opening-v3.0.0';
+const VERSION='maha-opening-v3.1.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
  './','./index.html','./css/style.css','./js/main.js','./js/hug.js','./js/flowers.js',

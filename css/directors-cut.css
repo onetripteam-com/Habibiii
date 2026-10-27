@@ -205,3 +205,16 @@ body{background:#cabca9}
 .joy-tap:active,.smile-choices button:active{transform:translateY(3px)}
 .smile-choices{display:grid;gap:9px;width:100%;max-width:290px}
 .smile-reveal,.joy-reveal{font:italic 15px Georgia,serif;color:#ffdcbd}
+
+/* Florist v3.1: obvious, reachable controls; no forced snap and no surprise jump. */
+.flower-browser{display:flex;align-items:center;gap:2px;min-width:0;position:relative}
+.flower-browser .flower-rail{flex:1;min-width:0;padding-left:8px;padding-right:8px;scroll-snap-type:none!important;scroll-behavior:smooth}
+.flower-nav{appearance:none;flex:0 0 29px;width:29px;height:60px;border:1px solid #bba98e;background:#f8efdfdf;color:#5b6452;border-radius:18px;font:700 28px Georgia,serif;box-shadow:0 2px 5px #6d5a4430;z-index:2}
+.flower-nav:focus-visible{outline:2px solid #466c59;outline-offset:2px}
+.flower-option{transition:transform .24s cubic-bezier(.15,.84,.3,1),box-shadow .3s,background .3s}
+.flower-option.flower-just-picked{animation:flower-celebrate .56s cubic-bezier(.2,.8,.2,1) both}
+.bouquet-bloom.bloom-new{animation:bloom-join .78s cubic-bezier(.14,.78,.21,1.15) both;transform-origin:center}
+@keyframes flower-celebrate{0%{transform:scale(1)}38%{transform:translateY(-9px) scale(1.07)}100%{transform:scale(1)}}
+@keyframes bloom-join{from{opacity:.2;filter:blur(5px)}to{opacity:1;filter:blur(0)}}
+@media(max-width:390px){.flower-nav{flex-basis:25px;width:25px}.flower-browser .flower-rail{padding-left:4px;padding-right:4px}}
+@media(prefers-reduced-motion:reduce){.flower-browser .flower-rail{scroll-behavior:auto}.flower-option.flower-just-picked,.bouquet-bloom.bloom-new{animation:none}}
