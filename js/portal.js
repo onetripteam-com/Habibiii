@@ -47,7 +47,7 @@ export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
   } else if(place.id==='garden'){
    unmountPlace=mountGarden(portal.querySelector('.portal-content'));
   } else if(place.id==='rest'){
-   unmountPlace=mountRest(portal.querySelector('.portal-content'),{onPlay:()=>{const choices=['chai','sadya','baggage','doctor','world','vlog'];nextArcadeId=choices[Math.floor(Math.random()*choices.length)];navigate('games')}});
+   unmountPlace=mountRest(portal.querySelector('.portal-content'),{onPlay:()=>{const choices=['spark','lettersmile','baggage','doctor','world','vlog'];nextArcadeId=choices[Math.floor(Math.random()*choices.length)];navigate('games')}});
   } else {
    portal.querySelectorAll('[data-action]').forEach(button=>button.addEventListener('click',()=>action(button)));
   }
