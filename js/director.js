@@ -81,7 +81,7 @@ function radio(){
   ambient.dataset.director='ready';ambient.textContent='▶ Hear this atmosphere';ambient.setAttribute('aria-pressed','false');
  }
  const voice=app.querySelector('[data-audio]');if(voice&&!voice.textContent.includes('Hear my introduction'))voice.hidden=true;
- const note=app.querySelector('.radio-audio-state');if(note&&!app.querySelector('[data-audio]:not([hidden])'))note.textContent='The station has an original little atmosphere. No outside links, no interruptions.';
+ const note=app.querySelector('.radio-audio-state');const caption='The station has an original little atmosphere. No outside links, no interruptions.';if(note&&!app.querySelector('[data-audio]:not([hidden])')&&note.textContent!==caption)note.textContent=caption;
  if(currentRadio!==station){if(radioSound){radioSound.stop();radioSound=null}currentRadio=station;}
 }
 function scan(){scheduled=false;if(!root)return;iconMark();images();radio();}
