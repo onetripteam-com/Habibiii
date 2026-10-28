@@ -52,6 +52,7 @@ async function check(browser,engine,w,h){
  await page.locator('[data-studio-door="letters"]').click();
  await page.locator('.portal-screen:not([hidden])').waitFor({timeout:15000});
  await page.locator('.portal-back').click();
+ await page.locator('#portal-screen').waitFor({state:'hidden',timeout:15000});
  await page.locator('.room-scene:not(.room-portal-away)').waitFor({timeout:15000});
  const trigger=page.locator('#theme-trigger');
  if(w<760){await page.locator('.guide-toggle').click();}
