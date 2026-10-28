@@ -14,7 +14,7 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
  let roomTheme=THEMES.includes(savedTheme)?savedTheme:'story';
  const now=new Date(),parts=kuwaitParts(now),light=lightOfDay(parts.hour),weather=weatherFor(parts.date);
  root.innerHTML=`<section class="scene room-scene light-${light}" data-theme="${roomTheme}" aria-label="Maha's little room">
-   <div class="room-canvas">
+   <div class="room-canvas"><div class="theme-world-detail" aria-hidden="true"><span class="theme-world-sun"></span><span class="theme-world-horizon"></span><span class="theme-world-ornament"></span></div>
    <div class="room-paint" aria-hidden="true"><img class="room-background" src="./assets/room-back.svg" alt=""><div class="window-sky light-${light} weather-${weather}" id="window-sky"><div class="weather-sun"></div><div class="weather-cloud cloud-one"></div><div class="weather-cloud cloud-two"></div><div class="weather-rain"></div><div class="window-landscape"><svg viewBox="0 0 180 200" preserveAspectRatio="none"><path d="M0 161q26-40 49-15t55-18t76 15v65H0Z" fill="#769988" opacity=".65"/><path d="M0 177q50-38 91-1t89-22v48H0Z" fill="#63857b" opacity=".85"/><path d="M0 194q40-22 97-5t83-9v20H0Z" fill="#607968"/><path d="M127 170v-28m-7 11 7-14 8 14" stroke="#365f59" stroke-width="3" fill="none"/></svg></div></div><img class="room-front" src="./assets/room-front.svg" alt=""><div class="room-theme-accents"><svg class="room-theme-art" viewBox="0 0 400 780" preserveAspectRatio="none" aria-hidden="true">
  <g class="theme-monsoon" fill="none" stroke-linecap="round">
   <path d="M185 46Q175 94 181 145Q188 166 182 203" stroke="#50795b" stroke-width="4" opacity=".63"/>
@@ -56,14 +56,14 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
       <div class="theme-panel" role="dialog" aria-modal="true" aria-labelledby="theme-panel-title">
        <span class="eyebrow">A LITTLE REDECORATING</span>
        <h2 id="theme-panel-title">Which room feels like today?</h2>
-       <p class="theme-intro">Same little escape. Your kind of cosy. The window still follows Kuwait time.</p>
+       <p class="theme-intro">Six different little universes. Try each one — the room remembers your favourite.</p>
        <div class="theme-options" role="group" aria-label="Room appearance">
-        <button type="button" class="theme-option" data-pick-theme="story" aria-pressed="false"><span class="theme-swatch swatch-story" aria-hidden="true"><i></i></span><span><strong>The Little Hideaway</strong><small>Our familiar travel room</small></span></button>
-        <button type="button" class="theme-option" data-pick-theme="monsoon" aria-pressed="false"><span class="theme-swatch swatch-monsoon" aria-hidden="true"><i></i></span><span><strong>Kerala Rain</strong><small>Fern greens & rainy calm</small></span></button>
-        <button type="button" class="theme-option" data-pick-theme="sunroom" aria-pressed="false"><span class="theme-swatch swatch-sunroom" aria-hidden="true"><i></i></span><span><strong>Sunlit Sunday</strong><small>Buttercream & peach light</small></span></button>
-        <button type="button" class="theme-option" data-pick-theme="terracotta" aria-pressed="false"><span class="theme-swatch swatch-terracotta" aria-hidden="true"><i></i></span><span><strong>Terracotta Travels</strong><small>Spice, postcards & warm wood</small></span></button>
-        <button type="button" class="theme-option" data-pick-theme="midnight" aria-pressed="false"><span class="theme-swatch swatch-midnight" aria-hidden="true"><i></i></span><span><strong>After Hours</strong><small>Velvet midnight · neon nostalgia</small></span></button>
-        <button type="button" class="theme-option" data-pick-theme="cosmos" aria-pressed="false"><span class="theme-swatch swatch-cosmos" aria-hidden="true"><i></i></span><span><strong>Little Planetarium</strong><small>Indigo stars · dreamy constellations</small></span></button>
+        <button type="button" class="theme-option" data-pick-theme="story" aria-pressed="false"><span class="theme-swatch swatch-story" aria-hidden="true"><i></i></span><span><strong>The Little Hideaway</strong><small>Vintage illustrated travel diary</small></span></button>
+        <button type="button" class="theme-option" data-pick-theme="monsoon" aria-pressed="false"><span class="theme-swatch swatch-monsoon" aria-hidden="true"><i></i></span><span><strong>Kerala Rain</strong><small>Misty greenhouse in the rain</small></span></button>
+        <button type="button" class="theme-option" data-pick-theme="sunroom" aria-pressed="false"><span class="theme-swatch swatch-sunroom" aria-hidden="true"><i></i></span><span><strong>Sunlit Sunday</strong><small>Bright mid-century artist studio</small></span></button>
+        <button type="button" class="theme-option" data-pick-theme="terracotta" aria-pressed="false"><span class="theme-swatch swatch-terracotta" aria-hidden="true"><i></i></span><span><strong>Terracotta Travels</strong><small>Warm Mediterranean postcard house</small></span></button>
+        <button type="button" class="theme-option" data-pick-theme="midnight" aria-pressed="false"><span class="theme-swatch swatch-midnight" aria-hidden="true"><i></i></span><span><strong>After Hours</strong><small>Neon after-hours city apartment</small></span></button>
+        <button type="button" class="theme-option" data-pick-theme="cosmos" aria-pressed="false"><span class="theme-swatch swatch-cosmos" aria-hidden="true"><i></i></span><span><strong>Little Planetarium</strong><small>Celestial observatory among stars</small></span></button>
        </div>
        <button type="button" class="button button-primary theme-done" id="theme-done">This one. Keep it ♡</button>
       </div>

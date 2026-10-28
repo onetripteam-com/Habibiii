@@ -1,11 +1,11 @@
 /** PROMPT C / Phase 1 — the room's one-cabinet-at-a-time arcade. */
 import {store} from './store.js';
 import {startSound,soundEffect} from './audio.js';
-const MODULES={spark:()=>import('./games/spark.js'),lettersmile:()=>import('./games/lettersmile.js'),baggage:()=>import('./games/baggage.js'),doctor:()=>import('./games/doctor.js'),world:()=>import('./games/world.js'),vlog:()=>import('./games/vlog.js')};
+const MODULES={spark:()=>import('./games/spark.js'),lettersmile:()=>import('./games/lettersmile.js'),softlanding:()=>import('./games/softlanding.js'),doctor:()=>import('./games/doctor.js'),world:()=>import('./games/world.js'),vlog:()=>import('./games/vlog.js')};
 const CABINETS=[
  {id:'spark',name:'Tiny Joys',marquee:'TINY JOYS CLUB',subtitle:'Tap little sparks · no timer',colour:'#d98f86',screen:'#533949',icon:'✦',accent:'#ffe2a9',blurb:'Collect tiny good things. No losing, no rushing. Just a cheerful little moment.'},
  {id:'lettersmile',name:'Compliment Heist',marquee:'STEAL A SMILE',subtitle:'Pick ridiculous compliments',colour:'#8b7fb5',screen:'#373353',icon:'♡',accent:'#fae2ff',blurb:'A highly suspicious operation to steal three smiles. Absolutely no performance review.'},
- {id:'baggage',name:'Airport Baggage',marquee:'KWI BAGGAGE',subtitle:'Only fourteen kilos of dreams',colour:'#687c9d',screen:'#263f60',icon:'✈',accent:'#f2bc83',blurb:'Pack smart. Customs has questions.'},
+ {id:'softlanding',name:'Pocket Sunshine',marquee:'POCKET SUNSHINE',subtitle:'Pick what you need, not what you should feel',colour:'#f1b87a',screen:'#453d57',icon:'☼',accent:'#ffe2a9',blurb:'A tiny choose-your-own comfort game. No wrong answers, no timer, no fixing required.'},
  {id:'doctor',name:'Decode the Doctor',marquee:'DR. SQUIGGLE',subtitle:'Certified handwriting chaos',colour:'#9c738c',screen:'#323753',icon:'✎',accent:'#f7c3de',blurb:'Five fake scribbles. A PharmD degree cannot save this pen.'},
  {id:'world',name:'Where in the World?',marquee:'POSTCARD HUNT',subtitle:'Five six-second travel mysteries',colour:'#6a9a98',screen:'#284e54',icon:'⌖',accent:'#f4dea5',blurb:'Watch painted travel clues, then guess the destination.'},
  {id:'vlog',name:'Vlog Director',marquee:'DIRECTOR MAHA',subtitle:'Five shots · Twenty seconds',colour:'#b68475',screen:'#423c5a',icon:'▣',accent:'#e7d1fa',blurb:'Rearrange the story. Premiere your cinematic masterpiece.'}

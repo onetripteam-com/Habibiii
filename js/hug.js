@@ -26,12 +26,12 @@ export function mountHug(root,data,onDone){
     root.querySelector('#next-flowers')?.focus({preventScroll:true});
   };
   root.querySelector('#hug-yes').addEventListener('click',()=>reveal(data.yes,true));
-  const gentleNo=["Not today? Fair. Shall I leave a tiny hug at the door?","Okay, no hugs. What about an aggressively polite high-five?","Final offer: a small smile, with no paperwork.","No worries. You can just come in. ♡"];
+  const gentleNo=["Not today? Got it. What about one microscopic high-five?","Fair enough. Sending a hug to your doorstep. You can ignore the parcel.","Okay okay. One very dignified eyebrow raise instead?","No means no. Flowers are still yours, obviously. ♡"];
   noButton.addEventListener('click',()=>{
     if(finished)return;
     noCount++;soundEffect('tap');
     response.textContent=gentleNo[Math.min(noCount-1,gentleNo.length-1)];
-    question.textContent=noCount>2?'No pressure, promise.':"One more tiny offer?";
+    question.textContent=noCount>2?'I respect the committee’s decision.':'One tiny counter-offer?';
     noButton.textContent=noCount>2?'No thanks, continue →':'Not today';
     if(noCount>=4)reveal("No hugs required. You still get the flowers, obviously.",false);
   });

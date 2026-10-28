@@ -1,12 +1,12 @@
 /* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-studio-v4.0.3';
+const VERSION='maha-studio-v5.0.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
- './','./index.html','./css/style.css','./js/main.js','./js/hug.js','./js/flowers.js',
+ './','./index.html','./css/style.css','./css/refresh.css','./js/main.js','./js/hug.js','./js/flowers.js',
  './js/botanical.js','./js/room.js','./js/room-studio.js','./js/store.js','./js/time.js',
  './js/letters.js','./js/letter-unlocks.js','./content/letters.json','./content/config.json','./assets/letters/handwritten-placeholder.svg','./js/audio.js','./js/animation.js','./js/doors.js',
  './js/arcade.js','./js/games/common.js','./js/games/rules.js',
- './js/games/spark.js','./js/games/lettersmile.js','./js/games/baggage.js',
+ './js/games/softlanding.js','./js/games/spark.js','./js/games/lettersmile.js','./js/games/baggage.js',
  './js/games/phase2-rules.js','./js/games/doctor.js','./js/games/world.js','./js/games/vlog.js','./js/places.js','./js/portal.js',
  './js/media-control.js','./js/cinema.js','./js/radio.js','./js/travel.js','./js/garden.js','./js/rest.js','./content/comfort.json',
  './content/movies.json','./content/radio.json','./content/places.json',
