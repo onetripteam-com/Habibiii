@@ -17,7 +17,7 @@
 .new-home[data-theme=midnight]{--world-bg:#211e39;--world-ink:#fff0e0;--world-text:#d9c7dd;--world-faded:#bda0c9;--world-paper:#352942;--world-border:#8d688f;--world-halo:#5c406e;--world-accent:#f3abc8}
 .new-home[data-theme=cosmos]{--world-bg:#172d4c;--world-ink:#e7f6f2;--world-text:#a5d3db;--world-faded:#7bacc7;--world-paper:#283e62;--world-border:#6d9cb8;--world-halo:#476d94;--world-accent:#a4e3e6}
 .new-home:before,.new-home:after{content:'';position:absolute;pointer-events:none;z-index:0}
-.new-home:before{left:-9%;right:-9%;top:-160px;height:1000px;background:
+.new-home:before{left:0;right:0;top:-160px;height:1000px;background:
  radial-gradient(ellipse at 72% 30%,var(--world-halo) 0,transparent 43%),
  radial-gradient(ellipse at 18% 70%,color-mix(in srgb,var(--world-paper) 42%,transparent),transparent 52%);opacity:.62}
 .new-home:after{left:0;right:0;top:0;height:100%;opacity:.17;background-image:repeating-linear-gradient(128deg,transparent 0 35px,var(--world-border) 36px,transparent 37px 78px);mix-blend-mode:soft-light}
