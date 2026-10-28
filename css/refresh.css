@@ -65,3 +65,13 @@
 
 /* Pocket Sunshine: simple tap-first three-step micro-experience */
 .pocket-game{padding:12px 14px 26px;text-align:center;color:#f8e9e9}.pocket-step,.pocket-small{font-size:10px;letter-spacing:.11em;opacity:.76}.pocket-sky{font-size:37px;margin:21px auto 14px}.pocket-game h2{font:400 clamp(25px,6vw,37px)/1.1 Georgia,serif;margin:0 auto 11px;max-width:310px}.pocket-game p{font-size:13px;line-height:1.5;opacity:.85}.pocket-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:22px auto;max-width:380px}.pocket-choices button{min-height:92px;background:#fff4e5;color:#4b4255;border:2px solid #eccfbb;border-radius:18px;padding:10px 6px;font-size:12px;font-weight:700;line-height:1.35}.pocket-choices button span{display:block;font-size:29px;margin-bottom:4px}.pocket-choices button:active{transform:scale(.96)}
+
+/* Explicit vertical shelf sizing: mobile Safari must have a real scrolling box. */
+.flowers-scene .flower-bottom{height:clamp(255px,41%,355px);min-height:0;display:flex;flex-direction:column}
+.flowers-scene .shelf-heading{flex:0 0 auto;margin-bottom:6px;gap:8px}
+.flowers-scene .shelf-hint{font-size:8px;text-align:right}
+.flowers-scene .flower-browser-v2{display:flex;flex:1 1 auto;min-height:0;overflow:hidden}
+.flowers-scene .flower-rail{height:100%!important;max-height:none!important;flex:1 1 auto;min-height:0}
+.flowers-scene .flower-option{height:115px!important}
+.flowers-scene .meaning-line,.flowers-scene .flower-controls{flex:0 0 auto}
+@media(max-height:730px){.flowers-scene .flower-bottom{height:43%}.flowers-scene .flower-option{height:100px!important}.flowers-scene .option-art{height:60px}}
