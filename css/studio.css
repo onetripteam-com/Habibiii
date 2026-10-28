@@ -251,7 +251,7 @@
 @media(min-width:760px) and (max-width:1179px) and (min-height:570px){
  .room-scene{grid-template-columns:minmax(0,1fr) minmax(300px,.92fr);gap:clamp(14px,2.2vw,27px);padding:16px}
  .room-editorial{display:none}
-  .room-canvas{grid-column:1;height:100%;max-width:100%}
+  .room-canvas{grid-column:1;height:auto;max-width:100%}
  .room-guide{grid-column:2}
  .room-guide .guide-heading{padding-top:16px}
  .room-guide .studio-door{min-height:clamp(46px,6.8vh,60px)}
