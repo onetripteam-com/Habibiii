@@ -1,0 +1,36 @@
+name: MAHA responsive browser QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'css/studio.css'
+      - 'js/room.js'
+      - 'js/room-studio.js'
+      - 'index.html'
+      - 'qa/**'
+      - '.github/workflows/responsive-visual-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test browsers
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium webkit
+      - name: Exercise phone, tablet and desktop layouts
+        run: node qa/responsive.mjs
+      - name: Save visual snapshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maha-responsive-screenshots
+          path: qa/screenshots/
+          retention-days: 7
