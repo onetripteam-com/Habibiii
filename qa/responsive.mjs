@@ -44,7 +44,7 @@ async function check(browser,engine,w,h){
    assert.ok(await toggle.isVisible(),'mobile explore control missing');
    assert.equal(await toggle.getAttribute('aria-expanded'),'false');
    await toggle.click();assert.equal(await toggle.getAttribute('aria-expanded'),'true');
-   assert.ok(await page.locator('[data-studio-door="letters"]').isVisible());
+   await page.locator('[data-studio-door="letters"]').waitFor({state:'visible',timeout:5000});
  }
  const art=await page.locator('.director-illustration').evaluate(img=>img.complete&&img.naturalWidth>0);
  assert.ok(art,'room illustration did not load');
