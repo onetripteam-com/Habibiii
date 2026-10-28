@@ -9,7 +9,7 @@ let radioSound=null,currentRadio=null;
 const safeRead=(key,fallback)=>{try{const s=localStorage.getItem('maha.escape.v1.'+key);return s===null?fallback:JSON.parse(s)}catch{return fallback}};
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const iconMark=()=>{
- const room=root?.querySelector('.room-scene');if(!room)return;
+ const room=root?.querySelector('.room-scene');if(!room||room.classList.contains('new-home'))return;
  if(room!==lastRoom){lastRoom=room;helloShown=false;}
  if(!room.classList.contains('director-room')){
   const paint=room.querySelector('.room-paint');if(!paint)return;

@@ -1,7 +1,7 @@
 import {store,beginVisit} from './store.js';
 import {mountHug} from './hug.js';
 import {mountFlowers} from './flowers.js';
-import {mountRoom} from './room.js';
+import {mountRoom} from './new-home.js';
 import {initAudioUI,startSound} from './audio.js';
 import {move} from './animation.js';
 const root=document.querySelector('#scene-root'),frame=document.querySelector('#app');

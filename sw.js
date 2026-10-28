@@ -1,9 +1,9 @@
 /* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-studio-v5.0.0';
+const VERSION='maha-worlds-v6.0.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
- './','./index.html','./css/style.css','./css/refresh.css','./js/main.js','./js/hug.js','./js/flowers.js',
- './js/botanical.js','./js/room.js','./js/room-studio.js','./js/store.js','./js/time.js',
+ './','./index.html','./css/style.css','./css/refresh.css','./css/new-home.css','./js/main.js','./js/hug.js','./js/flowers.js',
+ './js/botanical.js','./js/room.js','./js/new-home.js','./js/home-art.js','./js/room-studio.js','./js/store.js','./js/time.js',
  './js/letters.js','./js/letter-unlocks.js','./content/letters.json','./content/config.json','./assets/letters/handwritten-placeholder.svg','./js/audio.js','./js/animation.js','./js/doors.js',
  './js/arcade.js','./js/games/common.js','./js/games/rules.js',
  './js/games/softlanding.js','./js/games/spark.js','./js/games/lettersmile.js','./js/games/baggage.js',
@@ -24,7 +24,7 @@ const FILES=[
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{const c=await caches.open(VERSION);await c.addAll(FILES.map(path=>new URL(path,BASE)));await self.skipWaiting();})());
 });
-self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>(k.startsWith('maha-opening-')||k.startsWith('maha-studio-'))&&k!==VERSION).map(k=>caches.delete(k)));await self.clients.claim();})());});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>(k.startsWith('maha-opening-')||k.startsWith('maha-studio-')||k.startsWith('maha-worlds-'))&&k!==VERSION).map(k=>caches.delete(k)));await self.clients.claim();})());});
 self.addEventListener('fetch',event=>{
  if(event.request.method!=='GET')return;
  const u=new URL(event.request.url);
