@@ -1,9 +1,9 @@
 /* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-opening-v3.2.0';
+const VERSION='maha-studio-v4.0.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
  './','./index.html','./css/style.css','./js/main.js','./js/hug.js','./js/flowers.js',
- './js/botanical.js','./js/room.js','./js/store.js','./js/time.js',
+ './js/botanical.js','./js/room.js','./js/room-studio.js','./js/store.js','./js/time.js',
  './js/letters.js','./js/letter-unlocks.js','./content/letters.json','./content/config.json','./assets/letters/handwritten-placeholder.svg','./js/audio.js','./js/animation.js','./js/doors.js',
  './js/arcade.js','./js/games/common.js','./js/games/rules.js',
  './js/games/spark.js','./js/games/lettersmile.js','./js/games/baggage.js',
@@ -18,13 +18,13 @@ const FILES=[
  './assets/room-back.svg','./assets/room-front.svg','./assets/room-theme-monsoon.svg','./assets/room-theme-sunroom.svg','./assets/room-theme-terracotta.svg','./assets/room-theme-midnight.svg','./assets/room-theme-cosmos.svg','./assets/icon.svg',
  './assets/icon-192.png','./assets/icon-512.png','./assets/apple-touch-icon.png',
  './js/director.js','./js/painted-worlds.js','./js/fm-atmosphere.js',
- './css/directors-cut.css','./assets/room-directors-cut.svg',
+ './css/directors-cut.css','./css/studio.css','./assets/room-directors-cut.svg',
  './manifest.json'
 ];
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{const c=await caches.open(VERSION);await c.addAll(FILES.map(path=>new URL(path,BASE)));await self.skipWaiting();})());
 });
-self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('maha-opening-')&&k!==VERSION).map(k=>caches.delete(k)));await self.clients.claim();})());});
+self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>(k.startsWith('maha-opening-')||k.startsWith('maha-studio-'))&&k!==VERSION).map(k=>caches.delete(k)));await self.clients.claim();})());});
 self.addEventListener('fetch',event=>{
  if(event.request.method!=='GET')return;
  const u=new URL(event.request.url);

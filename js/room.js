@@ -4,6 +4,7 @@ import {kuwaitParts,lightOfDay,dailyLine,greeting} from './time.js';
 import {PLACES,isUnlocked,isNew} from './places.js';
 import {makePortalSystem} from './portal.js';
 import {soundEffect,startSound} from './audio.js';
+import {roomStudioMarkup,mountRoomStudio} from './room-studio.js';
 const esc=s=>String(s).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 let weatherTimer;
 const weatherFor=(date)=>{const d=Math.floor(Date.parse(date+'T00:00:00Z')/86400000);return ['clouds','clear','clear','breeze','rain'][((d%5)+5)%5];};
@@ -13,6 +14,7 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
  let roomTheme=THEMES.includes(savedTheme)?savedTheme:'story';
  const now=new Date(),parts=kuwaitParts(now),light=lightOfDay(parts.hour),weather=weatherFor(parts.date);
  root.innerHTML=`<section class="scene room-scene light-${light}" data-theme="${roomTheme}" aria-label="Maha's little room">
+   <div class="room-canvas">
    <div class="room-paint" aria-hidden="true"><img class="room-background" src="./assets/room-back.svg" alt=""><div class="window-sky light-${light} weather-${weather}" id="window-sky"><div class="weather-sun"></div><div class="weather-cloud cloud-one"></div><div class="weather-cloud cloud-two"></div><div class="weather-rain"></div><div class="window-landscape"><svg viewBox="0 0 180 200" preserveAspectRatio="none"><path d="M0 161q26-40 49-15t55-18t76 15v65H0Z" fill="#769988" opacity=".65"/><path d="M0 177q50-38 91-1t89-22v48H0Z" fill="#63857b" opacity=".85"/><path d="M0 194q40-22 97-5t83-9v20H0Z" fill="#607968"/><path d="M127 170v-28m-7 11 7-14 8 14" stroke="#365f59" stroke-width="3" fill="none"/></svg></div></div><img class="room-front" src="./assets/room-front.svg" alt=""><div class="room-theme-accents"><svg class="room-theme-art" viewBox="0 0 400 780" preserveAspectRatio="none" aria-hidden="true">
  <g class="theme-monsoon" fill="none" stroke-linecap="round">
   <path d="M185 46Q175 94 181 145Q188 166 182 203" stroke="#50795b" stroke-width="4" opacity=".63"/>
@@ -48,6 +50,8 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
      <div class="room-bottom-label">tap something curious <span aria-hidden="true">↗</span></div>
      <button type="button" class="replay-opening" id="replay-opening">↶ replay the opening</button><button type="button" class="theme-trigger" id="theme-trigger" aria-label="Change the room theme">✎ Make it yours</button>
    </div>
+   </div>
+   ${roomStudioMarkup()}
    <div class="theme-backdrop" id="theme-backdrop" hidden>
       <div class="theme-panel" role="dialog" aria-modal="true" aria-labelledby="theme-panel-title">
        <span class="eyebrow">A LITTLE REDECORATING</span>
@@ -98,6 +102,7 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
     const illustration=root.querySelector('.director-illustration');if(illustration)illustration.src=roomTheme==='story'?'./assets/room-directors-cut.svg':`./assets/room-theme-${roomTheme}.svg`;
    themeSync();soundEffect('pick');
  }));
+ const disposeStudio=mountRoomStudio({root,portal,onReplay,onNewBouquet,onTheme:()=>themeTrigger.click()});
  root.querySelector('#theme-done').addEventListener('click',()=>{soundEffect('tap');themeClose();});
  themeBackdrop.addEventListener('click',e=>{if(e.target===themeBackdrop)themeClose();});
  const onEscape=e=>{
@@ -134,5 +139,5 @@ export function mountRoom(root,{flowers,chosen,lastVisit,visits,onReplay,onNewBo
    store.set('installShown',true);const n=root.querySelector('#install-nudge');n.hidden=false;
    root.querySelector('#nudge-close').addEventListener('click',()=>{n.hidden=true;store.set('installDismissed',true);});
  }
- return ()=>{portal.destroy();clearInterval(weatherTimer);document.removeEventListener('keydown',onEscape);};
+ return ()=>{disposeStudio();portal.destroy();clearInterval(weatherTimer);document.removeEventListener('keydown',onEscape);};
 }
