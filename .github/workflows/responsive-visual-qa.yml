@@ -6,6 +6,7 @@ on:
       - 'css/studio.css'
       - 'js/room.js'
       - 'js/room-studio.js'
+      - 'js/portal.js'
       - 'index.html'
       - 'qa/**'
       - '.github/workflows/responsive-visual-qa.yml'
