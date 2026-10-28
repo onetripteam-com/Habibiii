@@ -18,7 +18,7 @@ function animate(el,frames,options){if(!el?.animate)return Promise.resolve();con
 function gsapTween(el,props,duration){return new Promise(resolve=>window.gsap.to(el,{...props,duration:duration/1000,ease:'power3.inOut',onComplete:resolve}));}
 
 export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
- let active=null,busy=false,destroyed=false,lastSource=null,lastFocus=null,unmountPlace=()=>{},nextArcadeId=null;
+ let active=null,busy=false,pendingClose=false,destroyed=false,lastSource=null,lastFocus=null,unmountPlace=()=>{},nextArcadeId=null;
  const portal=document.createElement('section');portal.className='portal-screen';portal.id='portal-screen';portal.hidden=true;portal.setAttribute('aria-label','A different place');
  portal.innerHTML='<div class="portal-surface" id="portal-surface"></div>';
  frame.append(portal);
@@ -102,7 +102,7 @@ export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
  }
  async function open(id,source){
   if(destroyed||busy||active||!PLACES[id]||!source)return;
-  busy=true;active=id;lastSource=source;lastFocus=document.activeElement;
+  busy=true;pendingClose=false;active=id;lastSource=source;lastFocus=document.activeElement;
   const place=PLACES[id],locked=!isUnlocked(id,visits);
   startSound();soundEffect('door');writeScreen(place,locked);
   source.classList.add('portal-selected');
@@ -113,9 +113,12 @@ export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
   portal.querySelector('.portal-back')?.focus({preventScroll:true});
   animateArrival(id);
   busy=false;
+  // Back can be tapped before the opening transition finishes.
+  if(pendingClose){pendingClose=false;void close();}
  }
  async function close(){
-  if(!active||busy||destroyed)return;
+  if(!active||destroyed)return;
+  if(busy){pendingClose=true;return;}
   busy=true;
   const target=lastSource;
   portal.classList.remove('portal-arrived');
