@@ -58,11 +58,12 @@ export function mountFlowers(root,flowers,onDone){
   await delay(250); if(disposed) return;
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:false,stage:'gather'});
   display.classList.add('bouquet-gathering');
-  await delay(1650); if(disposed) return;
+  await delay(650); if(disposed) return;
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:true,stage:'final'});
   display.classList.remove('bouquet-gathering');
   display.classList.add('bouquet-wrapping');
-  await delay(3400); if(disposed) return;
+  await delay(650); if(disposed) return;
+  updateInstruction('All seven, ready to go.');
   root.querySelector('#flower-bottom').hidden=true;
   root.querySelector('#bouquet-final').hidden=false;
   await move(root.querySelector('#bouquet-final'),{opacity:0,transform:'translateY(15px)'},{opacity:1,transform:'translateY(0)'},500);

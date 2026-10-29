@@ -100,11 +100,12 @@ export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
   animate(target,[{opacity:.45,transform:from},{opacity:1,transform:'none'}],{duration:reduce()?100:245,easing:'cubic-bezier(.2,.9,.3,1)'});
   portal.classList.add('portal-arrived');
  }
- async function open(id,source){
+ async function open(id,source,intent){
   if(destroyed||busy||active||!PLACES[id]||!source)return;
-  busy=true;pendingClose=false;active=id;lastSource=source;lastFocus=document.activeElement;
+  room.inert=true;busy=true;pendingClose=false;active=id;lastSource=source;lastFocus=document.activeElement;
   const place=PLACES[id],locked=!isUnlocked(id,visits);
   startSound();soundEffect('door');writeScreen(place,locked);
+  if(intent){const note=document.createElement('p');note.className='portal-intent';note.textContent=intent;surface.querySelector('.portal-place').prepend(note);}
   source.classList.add('portal-selected');
   const native=canView();
   try{if(native)await viewTransition(true,source);else await morphFallback(true,source);}catch(e){console.warn('Portal transition fallback',e);room.classList.add('room-portal-away');portal.hidden=false;}
@@ -125,7 +126,7 @@ export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
   try{if(canView())await viewTransition(false,target);else await morphFallback(false,target);}catch(e){console.warn('Reverse transition fallback',e);room.classList.remove('room-portal-away');portal.hidden=true;}
   unmountPlace();unmountPlace=()=>{};
   setAudioPlace('room');
-  const old=active;active=null;busy=false;onReturn?.(old);lastFocus?.focus({preventScroll:true});
+  room.inert=false;const old=active;active=null;busy=false;onReturn?.(old);lastFocus?.focus({preventScroll:true});
  }
  async function navigate(placeId){
   if(!active||busy)return;

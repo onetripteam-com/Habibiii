@@ -34,7 +34,7 @@ async function run(engine,launcher,w,h){
  try{
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
   await page.locator('.room-scene.new-home').waitFor({timeout:16000});
-  assert.ok(await page.locator('.home-hero h1').isVisible());
+  assert.ok(await page.locator('.room-heading h1').isVisible());
   assert.equal(await page.locator('[data-door]').count(),7);
   assert.equal(await page.locator('.home-feature-art').count(),7); // 1 hero + 6 preview thumbnails
   const overflow=await page.locator('.new-home').evaluate(el=>el.scrollWidth-el.clientWidth);
@@ -51,7 +51,8 @@ async function run(engine,launcher,w,h){
   await page.locator('#portal-screen').waitFor({state:'visible'});
   await page.locator('.portal-back').click();
   await page.locator('#portal-screen').waitFor({state:'hidden',timeout:16000});
-  await page.locator('.home-places').scrollIntoViewIfNeeded();
+  await page.locator('.remembering-home:not([inert])').waitFor();
+  await page.locator('.inhabited-room').scrollIntoViewIfNeeded();
   await page.screenshot({path:join(OUT,key+'-doors.png'),animations:'disabled'});
   if(w===393){
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();

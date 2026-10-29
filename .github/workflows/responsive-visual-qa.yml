@@ -9,6 +9,8 @@ on:
       - 'js/new-home.js'
       - 'js/home-art.js'
       - 'css/new-home.css'
+      - 'css/remembering-home.css'
+      - 'js/memory.js'
       - 'js/portal.js'
       - 'index.html'
       - 'qa/**'

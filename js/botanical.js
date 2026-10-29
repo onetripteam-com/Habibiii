@@ -88,7 +88,7 @@ function bloom(id,uid){
  case 'marigold':
   s+=ring(22,13,27,10,uid,0,4)+ring(18,8,21,10,uid,1,11)+ring(15,4,15,9,uid,2,19)+center(uid,6,14);break;
  case 'jasmine':
-  s+=ring(6,5,37,15,uid,0,4)+ring(5,4,29,13,uid,1,23)+center(uid,7,12);break;
+  s+=ring(8,7,36,13,uid,0,4)+ring(7,4,28,12,uid,1,19)+ring(5,2,17,9,uid,2,37)+center(uid,4,12);s+=`<g fill="#fffde9" stroke="#aaa98a" stroke-width="1"><ellipse cx="34" cy="27" rx="6" ry="10" transform="rotate(30 34 27)"/><ellipse cx="-30" cy="22" rx="5" ry="9" transform="rotate(-25 -30 22)"/></g>`;break;
  case 'lavender':
   s+=`<path d="M0 28Q-4-25 2-64" stroke="#769074" stroke-width="3.3" fill="none"/>`;
   for(let j=0;j<11;j++){const y=19-j*8,r=14-j*.45;s+=`<ellipse cx="${n(-r/2)}" cy="${y}" rx="${n(r*.8)}" ry="${n(5.8+j*.07)}" fill="${j%2?c[1]:c[0]}" stroke="${c[3]}" stroke-opacity=".3" transform="rotate(-35 ${n(-r/2)} ${y})"/><ellipse cx="${n(r/2)}" cy="${y-3}" rx="${n(r*.8)}" ry="${n(5.8+j*.07)}" fill="${j%2?c[0]:c[1]}" stroke="${c[3]}" stroke-opacity=".3" transform="rotate(35 ${n(r/2)} ${y-3})"/>`;}break;

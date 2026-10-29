@@ -8,4 +8,4 @@ export function takeMedia(element){
 export function releaseMedia(element){
  if(!element||current===element){if(current){try{current.pause()}catch{}}current=null;setAudioDucked(false)}
 }
-export function isMediaMuted(){try{return JSON.parse(localStorage.getItem('maha.escape.v1.muted')||'false')===true}catch{return false}}
+export function isMediaMuted(){try{return JSON.parse(localStorage.getItem('maha.escape.v1.muted')||'true')===true}catch{return false}}

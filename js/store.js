@@ -5,12 +5,12 @@ function storage() { try { const s = window.localStorage; const k = PREFIX+'prob
 const local = storage();
 export const store = {
   get(key, fallbackValue = null) {
-    try { const raw = local ? local.getItem(PREFIX+key) : fallback.get(key); return raw == null ? fallbackValue : JSON.parse(raw); }
+    try { const raw = fallback.has(key) ? fallback.get(key) : (local ? local.getItem(PREFIX+key) : null); return raw == null ? fallbackValue : JSON.parse(raw); }
     catch { return fallbackValue; }
   },
   set(key, value) {
     const raw = JSON.stringify(value);
-    try { if(local) { local.setItem(PREFIX+key, raw); return true; } } catch { /* private browsing/quota */ }
+    try { if(local) { local.setItem(PREFIX+key, raw); fallback.delete(key); return true; } } catch { /* private browsing/quota */ }
     fallback.set(key, raw); return false;
   },
   remove(key) { try { local?.removeItem(PREFIX+key); } catch {} fallback.delete(key); },
