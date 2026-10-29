@@ -42,7 +42,7 @@ async function run(engine,launcher,w,h){
   const targets=await page.locator('[data-door]').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {w:r.width,h:r.height,x:r.x,y:r.y,bottom:r.bottom,right:r.right}}));
   for(const r of targets){assert.ok(r.w>=44&&r.h>=44,'comfortable touch target');assert.ok(r.x>=0&&r.y>=0&&r.right<=w+1&&r.bottom<=h+1,'all objects fit on screen')}
   const frame=await page.locator('#app').boundingBox();
-  assert.ok(Math.abs(frame.width-w)<2&&Math.abs(frame.height-h)<2,'home fills viewport');
+  assert.ok(Math.abs(frame.width-w)<2&&Math.abs(frame.height-h)<2,'home fills viewport: '+JSON.stringify({frame,w,h}));
   if(w>=760){const room=await page.locator('.inhabited-room').boundingBox();assert.ok(room.x<1&&room.y<1&&Math.abs(room.width-w)<2&&Math.abs(room.height-h)<2,'desktop room has no inner panel')}
 
   await page.screenshot({path:join(OUT,key+'-home.png'),animations:'disabled'});

@@ -80,3 +80,5 @@
 @media(max-width:759px){.inhabited-room{top:calc(205px + env(safe-area-inset-top,0px))}.room-heading h1{font-size:30px}.room-heading p{max-width:220px}.room-address{top:0}}
 .app-frame[data-scene=room]:has(.remembering-home[data-theme=midnight]) .app-header{color:#fff0db}
 .remembering-home[data-theme=midnight] .room-address{color:#fff0db}
+/* Pin the desktop canvas to the layout viewport, including WebKit's initial layout. */
+@media(min-width:760px){.app-frame[data-scene=room]{position:fixed;inset:0;height:100%!important}}
