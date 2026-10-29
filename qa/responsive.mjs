@@ -39,6 +39,12 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.home-feature-art').count(),7); // 1 hero + 6 preview thumbnails
   const overflow=await page.locator('.new-home').evaluate(el=>el.scrollWidth-el.clientWidth);
   assert.ok(overflow<=5,'horizontal scroll overflow: '+overflow);
+  const targets=await page.locator('[data-door]').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {w:r.width,h:r.height,x:r.x,y:r.y,bottom:r.bottom,right:r.right}}));
+  for(const r of targets){assert.ok(r.w>=44&&r.h>=44,'comfortable touch target');assert.ok(r.x>=0&&r.y>=0&&r.right<=w+1&&r.bottom<=h+1,'all objects fit on screen')}
+  const frame=await page.locator('#app').boundingBox();
+  assert.ok(Math.abs(frame.width-w)<2&&Math.abs(frame.height-h)<2,'home fills viewport');
+  if(w>=760){const room=await page.locator('.inhabited-room').boundingBox();assert.ok(room.x<1&&room.y<1&&Math.abs(room.width-w)<2&&Math.abs(room.height-h)<2,'desktop room has no inner panel')}
+
   await page.screenshot({path:join(OUT,key+'-home.png'),animations:'disabled'});
   await page.locator('#theme-trigger').click();
   await page.locator('#home-world-overlay').waitFor({state:'visible'});

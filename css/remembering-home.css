@@ -12,3 +12,71 @@
 .portal-intent{margin:0;padding:14px 22px;background:#f8eddb;color:#455646;font:italic 17px/1.5 Georgia;text-align:center}
 .remembering-home:before,.remembering-home:after{display:none!important}
 .trace-postcard{left:24%!important;top:16%!important;max-width:17%!important}.trace-star{left:61%!important;top:59%!important}
+
+/* Immersive room: the viewport is the room, with no website frame. */
+.app-frame[data-scene=room]{width:100%!important;max-width:none!important;height:100dvh!important;min-height:0!important;max-height:none!important;margin:0!important;border:0!important;border-radius:0!important;outline:0!important;box-shadow:none!important}
+.app-frame[data-scene=room] .app-header{position:absolute;inset:0 0 auto;height:54px;min-height:54px;padding:8px 30px;background:transparent!important;pointer-events:none;color:#414b3c}
+.app-frame[data-scene=room] .app-header button{pointer-events:auto;background:#fff6e5d9;border:1px solid #a28b69}
+.app-frame[data-scene=room] .header-edition{display:none}
+.app-frame[data-scene=room] .scene-root{height:100%;flex:1}
+.remembering-home{overflow:hidden!important;background:var(--wall-top)!important}
+.home-shell{position:relative;width:100%;height:100%;max-width:none;margin:0;padding:0;isolation:isolate}
+.room-heading{position:absolute;top:72px;left:40px;right:88px;z-index:7;margin:0;align-items:start;pointer-events:none}
+.room-heading button{pointer-events:auto;background:#fff7e7d9;backdrop-filter:blur(12px)}
+.room-heading h1{font:400 clamp(29px,3.4vw,52px)/1.04 Georgia;margin:10px 0 12px;letter-spacing:-.04em}
+.room-heading p{font-size:12px}.room-heading .room-eyebrow{font-size:9px;letter-spacing:.2em}
+.inhabited-room{position:absolute;inset:0;aspect-ratio:auto;border:0;border-radius:0;box-shadow:none;overflow:hidden}
+.portrait-room-art,.wide-room-art{position:absolute;inset:0}.portrait-room-art{display:none}
+.room-address{top:auto;bottom:25px;left:32px;right:auto;text-align:left;font-size:9px;color:#fff7e4;text-shadow:0 1px 4px #463726}
+.living-object{width:14%;height:19%}.living-object .object-drawing{min-height:0;flex:1;height:0;filter:drop-shadow(0 12px 7px #49352835)}
+.object-label{font-size:11px;padding:7px 12px;background:#fff7e7e8;backdrop-filter:blur(8px)}
+.object-letters{left:14%;top:42%;width:16%;height:19%}
+.object-music{left:77%;top:36%;width:15%;height:20%}
+.object-movies{left:79%;top:17%;width:13%;height:18%}
+.object-travel{left:17%;top:70%;width:16%;height:20%}
+.object-games{left:44%;top:65%;width:12%;height:15%}
+.object-garden{left:3%;top:24%;width:14%;height:23%}
+.object-rest{left:75%;top:61%;width:17%;height:25%}
+.table-bouquet{left:43%;top:34%;width:14%;height:24%}
+.table-bouquet span{bottom:0;font-size:10px;left:10%;right:10%;padding:6px}
+.trace-postcard{left:23%!important;top:23%!important;max-width:8%!important}.trace-letter{left:16%;top:65%}.trace-tag{left:18%;top:89%}.trace-star{left:60%!important;top:76%!important}
+.room-traces button{min-height:44px;min-width:44px;max-width:16%;font-size:10px}
+.room-dock{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:8;display:flex;align-items:center;gap:20px;padding:6px 6px 6px 22px;border:1px solid #e3d3b29c;border-radius:40px;background:#fff5dfdf;box-shadow:0 8px 30px #4a35222b;backdrop-filter:blur(16px);white-space:nowrap}
+.room-invitation{font:italic 14px Georgia;color:#62543d}
+.room-dock button{min-height:44px;padding:12px 20px;border:0;border-radius:28px;background:#465c4b;color:#fff9e9;font-size:12px}
+.home-menu .room-shortcuts{margin:24px 0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.home-menu .room-shortcuts button{background:#fff6e5;font-size:13px;text-align:left;padding:14px}
+.home-menu .room-footer p{font-size:22px}.home-menu .room-margin{padding-top:20px}.home-menu .room-footer{gap:12px}
+.remembering-home[data-theme=midnight] .room-heading{color:#fff0db}.remembering-home[data-theme=midnight] .room-heading em{color:#f3cca9}
+@media(max-width:759px){
+ .app-frame[data-scene=room] .app-header{height:calc(49px + env(safe-area-inset-top,0px));min-height:0;padding:calc(5px + env(safe-area-inset-top,0px)) 18px 5px}
+ .room-heading{top:calc(65px + env(safe-area-inset-top,0px));left:22px;right:20px;gap:12px}
+ .room-heading h1{font-size:32px;max-width:240px;margin:9px 0}.room-heading p{font-size:11px;max-width:215px;line-height:1.5}
+ .room-heading .room-eyebrow{font-size:7px;letter-spacing:.15em}.room-heading button{font-size:10px;max-width:94px;padding:8px 10px}
+ .inhabited-room{inset:calc(167px + env(safe-area-inset-top,0px)) 0 73px;overflow:visible}
+ .wide-room-art{display:none}.portrait-room-art{display:block}
+ #home-art{inset:0}#home-art:before{content:'';position:absolute;left:0;right:0;top:-190px;height:191px;background:var(--wall-top)}
+ #home-art:after{content:'';position:absolute;left:0;right:0;bottom:-74px;height:75px;background:var(--floor)}
+ .object-garden{left:2%;top:8%;width:21%;height:24%}
+ .object-movies{left:73%;top:12%;width:24%;height:20%}
+ .object-letters{left:5%;top:37%;width:25%;height:20%}
+ .object-music{left:71%;top:37%;width:26%;height:20%}
+ .object-travel{left:7%;top:71%;width:25%;height:24%}
+ .object-games{left:40%;top:54%;width:21%;height:17%}
+ .object-rest{left:70%;top:64%;width:27%;height:27%}
+ .object-label{font-size:10px;padding:7px 9px}.object-label i{display:none}
+ .table-bouquet{left:36%;top:26%;width:29%;height:29%}.table-bouquet span{font-size:8px;left:0;right:0}
+ .room-address{top:2%;bottom:auto;left:0;right:0;text-align:center;font-size:7px;color:#515744;text-shadow:none}
+ .room-dock{bottom:calc(12px + env(safe-area-inset-bottom,0px));gap:0;padding:5px;max-width:calc(100% - 32px)}
+ .room-invitation{display:none}.room-dock button{padding:12px 27px}
+ .trace-postcard{left:25%!important;top:17%!important;max-width:15%!important;font-size:8px!important}
+ .trace-letter{left:8%;top:60%;max-width:22%!important;font-size:8px!important}
+ .trace-tag{left:29%;top:87%;max-width:24%!important;font-size:8px!important}.trace-star{left:60%!important;top:76%!important}
+ .home-menu .room-footer{align-items:stretch}.home-menu .room-margin p{font-size:15px}
+}
+@media(max-height:650px) and (max-width:759px){.home-shell{min-height:650px}.remembering-home{overflow-y:auto!important}}
+@media(min-width:760px) and (max-height:650px){.room-heading{top:56px}.room-heading h1{font-size:30px}.room-heading p{display:none}.room-dock{bottom:8px}.room-address{bottom:16px}}
+.remembering-home{padding:0!important}
+@media(max-width:759px){.inhabited-room{top:calc(205px + env(safe-area-inset-top,0px))}.room-heading h1{font-size:30px}.room-heading p{max-width:220px}.room-address{top:0}}
+.app-frame[data-scene=room]:has(.remembering-home[data-theme=midnight]) .app-header{color:#fff0db}
+.remembering-home[data-theme=midnight] .room-address{color:#fff0db}

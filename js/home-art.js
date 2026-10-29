@@ -35,7 +35,7 @@ export function worldIllustration(theme='story'){
  ${theme==='monsoon'?'<g stroke="#d5e6de" opacity=".65"><path d="m340 130-14 39m70-58-14 39m83-30-14 39m82 45-14 39m-156 4-14 39m85-26-14 39m98-19-14 39"/></g>':''}
  <path d="M451 68v300M309 218h284" stroke="#eee0bf" stroke-width="9"/><path d="M290 377h325" stroke="#79604b" stroke-width="16"/>
  <path d="M264 55q-16 152 0 340l55-17q-28-185 1-323Zm369 0q16 152 0 340l-55-17q28-185-1-323Z" fill="var(--curtain,#859b83)"/><path d="M276 69q-10 139 0 285m345-285q10 139 0 285" stroke="#fff5dc" stroke-width="4" opacity=".25"/>
- <rect x="58" y="112" width="162" height="156" rx="5" fill="#95714f" stroke="#705640" stroke-width="9"/><rect x="70" y="124" width="138" height="131" fill="#c4ac7d"/><path d="m90 142 83 9-5 63-83-9Z" fill="#eee0bb"/><path d="m139 182 51-5 5 48-51 5Z" fill="#eee6d2"/><circle cx="103" cy="149" r="4" fill="#a15f4e"/>
+ <g transform="translate(155 -35) scale(.72)"><rect x="58" y="112" width="162" height="156" rx="5" fill="#95714f" stroke="#705640" stroke-width="9"/><rect x="70" y="124" width="138" height="131" fill="#c4ac7d"/><path d="m90 142 83 9-5 63-83-9Z" fill="#eee0bb"/><path d="m139 182 51-5 5 48-51 5Z" fill="#eee6d2"/><circle cx="103" cy="149" r="4" fill="#a15f4e"/></g>
  <rect x="57" y="445" width="239" height="17" rx="4" fill="#826047"/><path d="M77 464v139m194-139v139" stroke="#70533f" stroke-width="13"/>
  <rect x="628" y="442" width="218" height="17" rx="4" fill="#826047"/><path d="M646 462v136m179-136v136" stroke="#70533f" stroke-width="13"/>
  <path d="M335 590q-19-75 32-77h152q55 0 35 77l-24 41H359Z" fill="var(--chair,#af7864)" stroke="#855e4d" stroke-width="6"/><path d="M367 545q79-16 152 0v45H367Z" fill="#e4c4a0"/><path d="m372 627-9 35m162-35 9 35" stroke="#73523f" stroke-width="10"/>
@@ -54,3 +54,34 @@ const doors={
  rest:`<g transform="translate(120 77)"><path d="M-85 35Q-18-44 82 28l-18 53H-64Z" fill="#b0bbc0" stroke="#7c9a9b" stroke-width="5"/><path d="M-66 17Q-19-28 49 18" fill="none" stroke="#f9f1df" stroke-width="8"/><circle cx="53" cy="-29" r="29" fill="#f7e0ac"/><circle cx="63" cy="-38" r="28" fill="#aec9cc"/><path d="M-29-26v24m-12-12h24" stroke="#fff4cf" stroke-width="4"/></g>`
 };
 export function doorIllustration(id){return `<svg class="home-door-art" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 155" aria-hidden="true" focusable="false">${defs}${doors[id]||doors.letters}</svg>`;}
+/* Landscape has its own furniture composition; objects stay as real buttons. */
+export function wideRoomIllustration(theme='story'){
+ const id='wide-'+(++interiorSerial);
+ const night=['midnight','cosmos'].includes(theme);
+ const sky=night?'#595c7b':theme==='monsoon'?'#8caaa1':'#b9d2c0';
+ return `<svg viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><defs>
+ <linearGradient id="${id}-wall" x2="0" y2="1"><stop stop-color="var(--wall-top)"/><stop offset="1" stop-color="var(--wall-bottom)"/></linearGradient>
+ <linearGradient id="${id}-sky" x2="0" y2="1"><stop stop-color="${sky}"/><stop offset="1" stop-color="${night?'#dfa98d':'#ebd9af'}"/></linearGradient>
+ <radialGradient id="${id}-light"><stop stop-color="#ffefc5" stop-opacity=".45"/><stop offset="1" stop-color="#ffefc5" stop-opacity="0"/></radialGradient>
+ <pattern id="${id}-paper" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M0 0v48" stroke="#715d49" opacity=".045"/></pattern></defs>
+ <path fill="url(#${id}-wall)" d="M0 0h1440v900H0z"/><path fill="url(#${id}-paper)" d="M0 0h1440v680H0z"/>
+ <path d="M0 681h1440v219H0z" fill="var(--floor)"/><path d="M0 678h1440" stroke="#80654f" stroke-width="10"/><path d="M0 690h1440" stroke="#f0d9b5" stroke-width="3"/>
+ <path d="M0 900 180 690m60 210 120-210m120 210 60-210m180 210V690m240 210-60-210m300 210-120-210m300 210-180-210" stroke="#70523e" opacity=".23" stroke-width="2"/>
+ <path d="M0 0h1440v24H0z" fill="#806c52" opacity=".15"/><path d="M0 32h1440" stroke="#fff4db" opacity=".6" stroke-width="3"/>
+ <path d="M542 394V156q0-64 64-64h220q64 0 64 64v238z" fill="url(#${id}-sky)" stroke="#806951" stroke-width="16"/>
+ <circle cx="817" cy="171" r="31" fill="#ffe5b2"/><path d="M550 330q105-72 173-20t159-28v104H550" fill="#779687"/><path d="M550 365q100-40 191-14t141-25v60H550" fill="#4d766b"/>
+ ${theme==='cosmos'?'<path d="M600 345V249h28v96m35 0V220h35v125m75 0v-76h27v76m34 0V235h25v110" fill="#66637a"/>':''}
+ ${theme==='monsoon'?'<path d="m581 177-15 42m76-79-15 42m101-39-15 42m98 30-15 42m-180 1-15 42m122-37-15 42" stroke="#edf6e9" stroke-width="2" opacity=".7"/>':''}
+ <path d="M716 99v295M549 252h333" stroke="#f3e4c5" stroke-width="10"/><path d="M524 402h386" stroke="#7c6049" stroke-width="16"/>
+ <path d="M506 79q-22 171 0 352l62-27q-32-154 5-325zm419 0q22 171 0 352l-62-27q32-154-5-325z" fill="var(--curtain)"/><path d="M521 91q-18 155 0 301m388-301q18 155 0 301" stroke="#fff1d5" stroke-width="5" opacity=".2"/>
+ <ellipse cx="720" cy="754" rx="360" ry="75" fill="var(--rug)"/><ellipse cx="720" cy="754" rx="330" ry="59" stroke="#f2dabb" stroke-width="4" fill="none"/>
+ <rect x="165" y="542" width="305" height="25" rx="4" fill="#88674d"/><path d="M189 567v118m258-118v118" stroke="#74533d" stroke-width="16"/><path d="M186 577h263v62H186z" fill="#b39168"/><circle cx="319" cy="607" r="5" fill="#ead4a5"/>
+ <rect x="1060" y="491" width="281" height="24" rx="4" fill="#89674c"/><path d="M1085 515v163m234-163v163" stroke="#74533d" stroke-width="16"/><path d="M1080 549h243v22h-243" fill="#ad8d67"/>
+ <path d="M1047 294h295" stroke="#88684d" stroke-width="15"/><path d="M1077 300v26m230-26v26" stroke="#73553f" stroke-width="7"/>
+ <path d="M568 661v-67q0-50 46-50h214q46 0 46 50v67" fill="var(--chair)" stroke="#8a6654" stroke-width="6"/><rect x="557" y="618" width="328" height="68" rx="22" fill="var(--chair)" stroke="#8a6654" stroke-width="5"/><path d="m585 684-12 36m281-36 12 36" stroke="#71523f" stroke-width="11"/><path d="M607 565h93v61h-93zM741 565h87v61h-87z" fill="#e9ccaa"/>
+ <ellipse cx="719" cy="504" rx="100" ry="19" fill="#ad8763"/><path d="M633 505v53m171-53v53" stroke="#77573f" stroke-width="10"/>
+ <ellipse cx="1208" cy="671" rx="160" ry="153" fill="url(#${id}-light)"/>
+ <path d="M300 190h140v140H300z" fill="#aa8b61" stroke="#775e47" stroke-width="10"/><path d="m317 206 101 7-5 91-101-7z" fill="#eadab9"/><path d="m334 246 27-21 20 33 19-17 10 44-83-6z" fill="#8aa28a"/><circle cx="393" cy="232" r="10" fill="#ddb36c"/>
+ <path d="M64 396h138" stroke="#826248" stroke-width="11"/>
+ </svg>`;
+}
