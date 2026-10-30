@@ -1,8 +1,8 @@
 /* MAHA offline shell. Network-first for code/content prevents stale design after a deploy; local cache remains available offline. */
-const VERSION='maha-worlds-v9.5.0';
+const VERSION='maha-worlds-v9.6.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
- './js/memory.js','./css/remembering-home.css','./css/atelier.css','./js/atelier-art.js','./js/atelier-life.js','./js/cinematic-home.js','./css/cinematic-room.css','./css/physical-room.css','./css/worlds-director.css','./js/physical-room-objects.js','./js/pocket-peek.js','./js/original-room-art.js',
+ './js/memory.js','./css/remembering-home.css','./css/atelier.css','./js/atelier-art.js','./js/atelier-life.js','./js/cinematic-home.js','./css/cinematic-room.css','./css/physical-room.css','./css/worlds-director.css','./js/physical-room-objects.js','./js/botanical-miniatures.js','./js/pocket-peek.js','./js/original-room-art.js',
  './assets/rooms/originals/manifest.json',
  './assets/rooms/story.webp','./assets/rooms/monsoon.webp','./assets/rooms/sunroom.webp','./assets/rooms/terracotta.webp','./assets/rooms/midnight.webp','./assets/rooms/cosmos.webp','./','./index.html','./css/style.css','./css/refresh.css','./css/new-home.css','./js/main.js','./js/hug.js','./js/flowers.js',
  './js/botanical.js','./js/room.js','./js/new-home.js','./js/home-art.js','./js/room-studio.js','./js/store.js','./js/time.js',
