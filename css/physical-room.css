@@ -165,3 +165,24 @@
 .cinematic-room .table-bouquet svg.physical-object-art{
  display:block!important;
 }
+
+/* When original GPT scene photography has been generated, use it only from this
+   repository's own assets/rooms/originals directory, not a third-party CDN. */
+.cinematic-room[data-original-art="true"] .cinematic-photo{
+ background-image:var(--original-scene-photo)!important;
+}
+@media(max-width:759px){
+ .cinematic-room[data-original-art="true"] .cinematic-photo{
+   background-size:cover!important;
+   background-position:calc(50% + var(--peek-offset,0px)) center!important;
+ }
+}
+/* The generated scene itself contains its real objects. Avoid drawing them
+   twice. The vase is different: the user's seven chosen flowers stay live. */
+.cinematic-room[data-original-art="true"] .room-object .object-drawing{
+ opacity:0!important;
+}
+.cinematic-room[data-original-art="true"] .room-object:is(:hover,:focus-visible) .object-drawing{opacity:.22!important}
+.cinematic-room[data-original-art="true"] .table-bouquet>.physical-object-art{
+ display:block!important;opacity:1!important
+}
