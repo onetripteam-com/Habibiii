@@ -76,7 +76,7 @@ const shapes={
  <path d="M109 112Q122 100 144 108" fill="none" stroke="#e4bd92" stroke-width="3" opacity=".7"/>`
 };
 const flowerHues={
- rose:['#ac4459','#dc8189'],peony:['#e2a1a4','#f5c7bb'],sunflower:['#d69b2d','#f9d36b'],tulip:['#b2566c','#eb8490'],lily:['#efdfb9','#fff1d1'],orchid:['#9f7aaa','#d7b3d6'],hibiscus:['#ce5862','#fa8a73'],lotus:['#d393a2','#efccd3'],jasmine:['#e7dfba','#fff6df'],marigold:['#da873b','#f1c35c'],daisy:['#e7d9b8','#f4f3e5'],lavender:['#8478a6','#b9acd9'],chrysanthemum:['#bc8172','#efbcb0']
+ rose:['#ac4459','#dc8189'],peony:['#e2a1a4','#f5c7bb'],sunflower:['#d69b2d','#f9d36b'],tulip:['#b2566c','#eb8490'],lily:['#efdfb9','#fff1d1'],orchid:['#9f7aaa','#d7b3d6'],hibiscus:['#ce5862','#fa8a73'],lotus:['#d393a2','#efccd3'],jasmine:['#e7dfba','#fff6df'],marigold:['#da873b','#f1c35c'],daisy:['#e7d9b8','#f4f3e5'],lavender:['#8478a6','#b9acd9'],iris:['#536b9d','#a3afdc']
 };
 export function bouquetObjectMarkup(chosen=[]){
  const safe=Array.isArray(chosen)?chosen.slice(0,7):[];
