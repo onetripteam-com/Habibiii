@@ -93,12 +93,12 @@ export function bouquetObjectMarkup(chosen=[]){
   return stem+`<g>${ring}<circle cx="${x}" cy="${y}" r="4" fill="#e6af6a"/><circle cx="${x-1}" cy="${y-1}" r="1.3" fill="#fff5ca"/></g>`;
  }).join('');
  return `<svg class="physical-object-art real-vase" viewBox="0 0 165 150" aria-hidden="true" focusable="false">${G(id)}
- <ellipse cx="84" cy="140" rx="44" ry="5" fill="#080d0e" opacity=".42" filter="url(#${id}shadow)"/>${petals}
+ <ellipse cx="84" cy="140" rx="44" ry="5" fill="#080d0e" opacity=".42" filter="url(#${id}shadow)"/><g class="live-flowers">${petals}</g><g class="vase-glass">
  <path d="M60 84Q57 105 64 134Q83 148 105 134Q111 102 106 84Z" fill="url(#${id}glass)" stroke="#dbe8da" stroke-opacity=".85" stroke-width="1.5"/>
  <ellipse cx="83" cy="85" rx="23" ry="5" fill="#d4e1dc" fill-opacity=".55" stroke="#ecf5dc" stroke-width="1.5"/>
  <path d="M70 92Q65 118 73 132" stroke="#f0ffeb" stroke-width="3" opacity=".48" fill="none"/>
  <path d="M98 96Q102 118 97 134" stroke="#385b55" stroke-width="4" opacity=".28" fill="none"/>
- </svg>`;
+ </g></svg>`;
 }
 export function physicalObjectMarkup(type){
  const id='physical-'+E(type)+'-';
