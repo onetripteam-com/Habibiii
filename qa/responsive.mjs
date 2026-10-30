@@ -38,6 +38,23 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('[data-door]').count(),7);
   assert.equal(await page.locator('.room-object .physical-object-art').count(),7,'Every scene portal must contain physical art');
   assert.equal(await page.locator('.table-bouquet .real-vase').count(),1,'Bouquet must live in a physical vase');
+  assert.ok(await page.locator('.object-movies .physical-object-art').isVisible(),'Physical cinema screen must be RENDERED, not hidden by CSS');
+  assert.ok(await page.locator('.table-bouquet .real-vase').isVisible(),'Vase must be rendered, not a hidden SVG');
+  const actualArt=await page.locator('.object-drawing').first().evaluate(el=>({
+    display:getComputedStyle(el).display,
+    svg:getComputedStyle(el.querySelector('svg')).display,
+    area:el.getBoundingClientRect().width*el.getBoundingClientRect().height
+  }));
+  assert.ok(actualArt.display!=='none'&&actualArt.svg!=='none'&&actualArt.area>100,'Actual foreground props must occupy visible pixels');
+  if(w<760){
+    assert.ok(await page.locator('#room-peek').isVisible(),'The phone room needs a discoverable peek control');
+    await page.locator('#room-peek').click();
+    assert.equal(await page.locator('.cinematic-room').getAttribute('data-peek'),'2');
+    await page.locator('#room-peek').click();
+    assert.equal(await page.locator('.cinematic-room').getAttribute('data-peek'),'0');
+    await page.locator('#room-peek').click();
+  }
+
   assert.equal(await page.locator('.real-vase ellipse[fill]').count()>0,true,'Vase needs drawn blooms');
   assert.equal(await page.locator('.physical-movies').count(),1,'Cinema portal must be an actual screen');
 
