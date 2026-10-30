@@ -20,17 +20,17 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/maha-photos assets/rooms
           declare -A PHOTO=(
-            [story]=kTmbtvbvuM8
-            [monsoon]=Te4ydsYZTKs
-            [sunroom]=wluBK3L6bl0
-            [terracotta]=hkCXcR2mcds
-            [midnight]=CSIRdYtKQTM
-            [cosmos]=C_wFwGMhqEw
+            [story]=photo-1782346056252-c3699920bf19
+            [monsoon]=photo-1598632023082-0431ae33cbfe
+            [sunroom]=photo-1600607687939-ce8a6c25118c
+            [terracotta]=photo-1618221195710-dd6b41faaea6
+            [midnight]=photo-1600210492486-724fe5c67fb0
+            [cosmos]=photo-1616594039964-ae9021a400a0
           )
           for key in "${!PHOTO[@]}"; do
             echo "Downloading ${key} via Unsplash free photo download"
             curl --fail --location --silent --show-error --retry 3 --max-time 60 -A 'Mozilla/5.0 (compatible; personal noncommercial art project)' \
-              "https://unsplash.com/photos/${PHOTO[$key]}/download?force=true&w=2200" -o "/tmp/maha-photos/${key}"
+              "https://images.unsplash.com/${PHOTO[$key]}?auto=format&fit=crop&w=2200&q=88" -o "/tmp/maha-photos/${key}"
             test "$(stat -c%s "/tmp/maha-photos/${key}")" -gt 50000
             file "/tmp/maha-photos/${key}"
           done
