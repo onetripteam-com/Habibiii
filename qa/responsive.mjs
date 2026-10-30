@@ -135,7 +135,7 @@ async function run(engine,launcher,w,h){
      await door.click();
      await page.locator('#portal-screen[data-place="'+scene+'"]').waitFor({state:'visible'});
      await page.locator('#portal-screen.portal-arrived').waitFor({state:'visible',timeout:15000});
-     const worldRoot=${JSON.stringify(app)}[scene];
+     const worldRoot=({letters:".mail-heading",music:".fm-app",movies:".cinema-app",travel:".atlas-app",games:".arcade-app",garden:".wordgarden",rest:".restroom"})[scene];
      await page.locator(worldRoot).waitFor({state:'visible',timeout:15000});
      const content=page.locator('#portal-screen .portal-content');
      await content.locator(':scope > *').first().waitFor({state:'visible',timeout:10000});
