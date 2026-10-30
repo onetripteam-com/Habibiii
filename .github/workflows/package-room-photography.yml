@@ -1,0 +1,56 @@
+name: Package licensed room photography
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/package-room-photography.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Download six credited Unsplash originals
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/maha-photos assets/rooms
+          declare -A PHOTO=(
+            [story]=kTmbtvbvuM8
+            [monsoon]=Te4ydsYZTKs
+            [sunroom]=wluBK3L6bl0
+            [terracotta]=hkCXcR2mcds
+            [midnight]=CSIRdYtKQTM
+            [cosmos]=C_wFwGMhqEw
+          )
+          for key in "${!PHOTO[@]}"; do
+            echo "Downloading ${key} via Unsplash free photo download"
+            curl --fail --location --silent --show-error --retry 3 --max-time 60 -A 'Mozilla/5.0 (compatible; personal noncommercial art project)' \
+              "https://unsplash.com/photos/${PHOTO[$key]}/download?force=true&w=2200" -o "/tmp/maha-photos/${key}"
+            test "$(stat -c%s "/tmp/maha-photos/${key}")" -gt 50000
+            file "/tmp/maha-photos/${key}"
+          done
+      - name: Optimize source photographs to local WebP assets
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from PIL import Image, ImageOps
+          from pathlib import Path
+          for p in Path('/tmp/maha-photos').iterdir():
+              with Image.open(p) as im:
+                  im=ImageOps.exif_transpose(im).convert('RGB')
+                  im.thumbnail((2048,1536), Image.Resampling.LANCZOS)
+                  target=Path('assets/rooms')/(p.name+'.webp')
+                  im.save(target,'WEBP',quality=82,method=6)
+                  print(target,im.size,target.stat().st_size)
+          PY
+      - name: Commit local assets
+        run: |
+          git config user.name "MAHA design bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/rooms/*.webp
+          if ! git diff --cached --quiet; then git commit -m "Bundle locally hosted licensed photography for the cinematic room"; git push; fi
