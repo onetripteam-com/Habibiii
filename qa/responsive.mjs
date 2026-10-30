@@ -36,6 +36,11 @@ async function run(engine,launcher,w,h){
   await page.locator('.room-scene.new-home').waitFor({timeout:16000});
   assert.ok(await page.locator('.room-heading h1').isVisible());
   assert.equal(await page.locator('[data-door]').count(),7);
+  assert.equal(await page.locator('.room-object .physical-object-art').count(),7,'Every scene portal must contain physical art');
+  assert.equal(await page.locator('.table-bouquet .real-vase').count(),1,'Bouquet must live in a physical vase');
+  assert.equal(await page.locator('.real-vase ellipse[fill]').count()>0,true,'Vase needs drawn blooms');
+  assert.equal(await page.locator('.physical-movies').count(),1,'Cinema portal must be an actual screen');
+
   assert.ok(await page.locator('.atelier-home').isVisible(),'Atelier should be active');
   assert.equal(await page.locator('.atelier-illustration').count(),2,'mobile and desktop scenes should both exist');
   assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
