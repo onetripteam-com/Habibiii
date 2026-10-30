@@ -82,3 +82,6 @@
 .remembering-home[data-theme=midnight] .room-address{color:#fff0db}
 /* Pin the desktop canvas to the layout viewport, including WebKit's initial layout. */
 @media(min-width:760px){.app-frame[data-scene=room]{position:fixed;inset:0;height:100%!important}}
+/* Keep the outer canvas stable across opening, flowers and home. WebKit must
+   not resize the app when the asynchronous scene attribute first changes. */
+.app-frame{position:fixed!important;inset:0!important;width:100%!important;max-width:none!important;height:100%!important;min-height:0!important;max-height:none!important;margin:0!important;border:0!important;border-radius:0!important;outline:0!important;box-shadow:none!important}

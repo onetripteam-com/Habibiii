@@ -1,5 +1,5 @@
 /* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-worlds-v7.1.1';
+const VERSION='maha-worlds-v7.1.2';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
  './js/memory.js','./css/remembering-home.css','./','./index.html','./css/style.css','./css/refresh.css','./css/new-home.css','./js/main.js','./js/hug.js','./js/flowers.js',
