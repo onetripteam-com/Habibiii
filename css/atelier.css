@@ -139,3 +139,25 @@
 @media (prefers-reduced-motion:reduce){
  .atelier-home *,.atelier-home *:before,.atelier-home *:after{animation:none!important;transition-duration:.01ms!important}
 }
+
+/* Final composition polish: readable welcome, a tappable window, and living weather. */
+.atelier-home .window-whisper{position:absolute;z-index:7;top:31%;left:47%;width:6.5%;height:7%;min-width:48px;min-height:48px;display:grid;place-items:center;border:1px solid #fff7de82;border-radius:999px;background:#263c3066;color:#fff7dc;backdrop-filter:blur(6px);opacity:.25;cursor:pointer;transition:opacity .25s,transform .25s,background .25s;touch-action:manipulation}
+.atelier-home .window-whisper span{font:600 10px/1.1 system-ui,sans-serif;letter-spacing:.01em;text-align:center;white-space:nowrap}
+.atelier-home .window-whisper:is(:hover,:focus-visible){opacity:1;transform:translateY(-3px);background:#263c30b9}
+.atelier-home[data-sky="rain"]{--sky-top:#5d7783;--sky-bottom:#a5bdb7;--hill-a:#648a7d;--hill-b:#405f59;--sun:#cfdbd5}
+.atelier-home[data-sky="rain"] .atelier-rain{display:block;animation:atelier-drizzle 3s ease-in-out infinite alternate}
+.atelier-home[data-sky="night"]{--sky-top:#1c2943;--sky-bottom:#6c688d;--hill-a:#4b5770;--hill-b:#2a364f;--sun:#f7dec8}
+.atelier-home[data-sky="night"] .atelier-starfield{display:block;animation:atelier-twinkle 5s ease-in-out infinite alternate}
+@keyframes atelier-drizzle{from{opacity:.45;transform:translateY(-4px)}to{opacity:.8;transform:translateY(6px)}}
+@keyframes atelier-twinkle{from{opacity:.55}to{opacity:1}}
+.atelier-home[data-theme="monsoon"] .atelier-rain{animation:atelier-drizzle 3.5s ease-in-out infinite alternate}
+.atelier-home[data-theme="cosmos"] .atelier-starfield,.atelier-home[data-theme="midnight"] .atelier-starfield{animation:atelier-twinkle 7s ease-in-out infinite alternate}
+.atelier-home .room-heading h1{text-shadow:0 2px 14px #fff0cf1c}
+@media(max-width:759px){
+ .atelier-home .room-heading{top:calc(65px + env(safe-area-inset-top,0px))!important}
+ .atelier-home .room-heading h1{margin:6px 0 7px!important}
+ .atelier-home .room-heading p{font-size:11px!important;max-width:275px}
+ .atelier-home .window-whisper{left:43%;top:31%;height:6%;width:14%;min-height:44px;min-width:44px;opacity:.46}
+ .atelier-home .window-whisper span{font-size:9px}
+}
+@media (prefers-reduced-motion:reduce){.atelier-home .atelier-rain,.atelier-home .atelier-starfield{animation:none!important}}
