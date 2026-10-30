@@ -379,3 +379,13 @@
   .cinematic-room .living-object:before,.cinematic-room .living-object:after{transition:none!important}
   .cinematic-room .living-object .object-label{transition:none!important}
 }
+
+/* Desktop-first experiment must not introduce stray content into the phone set. */
+@media(max-width:759px){
+  .cinematic-room .cinematic-photo,
+  .cinematic-room .cinematic-grain,
+  .cinematic-room .cinematic-lens,
+  .cinematic-room .cinematic-note,
+  .cinematic-room .cinematic-discovery,
+  .cinematic-room .cinematic-issue{display:none!important}
+}
