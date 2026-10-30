@@ -116,6 +116,7 @@ async function run(engine,launcher,w,h){
   await page.locator('[data-door="letters"]').scrollIntoViewIfNeeded();
   await page.locator('[data-door="letters"]').click();
   await page.locator('#portal-screen').waitFor({state:'visible'});
+  await page.locator('#portal-screen.portal-arrived').waitFor({state:'visible',timeout:15000});
   await page.locator('.portal-back').click();
   await page.locator('#portal-screen').waitFor({state:'hidden',timeout:16000});
   await page.locator('.remembering-home:not([inert])').waitFor();
@@ -132,6 +133,9 @@ async function run(engine,launcher,w,h){
      const door=page.locator('[data-door="'+scene+'"]');
      await door.click();
      await page.locator('#portal-screen[data-place="'+scene+'"]').waitFor({state:'visible'});
+     await page.locator('#portal-screen.portal-arrived').waitFor({state:'visible',timeout:15000});
+     const worldRoot=${JSON.stringify(app)}[scene];
+     await page.locator(worldRoot).waitFor({state:'visible',timeout:15000});
      const content=page.locator('#portal-screen .portal-content');
      await content.locator(':scope > *').first().waitFor({state:'visible',timeout:10000});
      await page.screenshot({path:join(OUT,key+'-world-'+scene+'.png'),animations:'disabled'});
