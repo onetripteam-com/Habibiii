@@ -29,7 +29,12 @@ async function init(){
  // User gesture only: never start audio from page load, visibility or SW.
  document.addEventListener('pointerdown',event=>{if(event.isTrusted)startSound();},{once:true,passive:true});
  if('serviceWorker' in navigator && location.protocol.startsWith('http')){
-   window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(()=>{}),{once:true});
+   const registerOfflineShell=()=>navigator.serviceWorker.register('./sw.js',{scope:'./'}).catch(error=>{
+     console.warn('MAHA offline shell is unavailable:',error?.message||error);
+   });
+   // Initialization may finish AFTER window.load, especially on very fast pages.
+   if(document.readyState==='complete')registerOfflineShell();
+   else window.addEventListener('load',registerOfflineShell,{once:true});
  }
 }
 init().catch(err=>{
