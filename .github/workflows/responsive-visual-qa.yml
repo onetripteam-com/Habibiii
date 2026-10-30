@@ -18,6 +18,7 @@ on:
       - 'css/physical-room.css'
       - 'css/worlds-director.css'
       - 'js/physical-room-objects.js'
+      - 'js/botanical-miniatures.js'
       - 'js/pocket-peek.js'
       - 'js/original-room-art.js'
       - 'content/room-art-direction.json'
