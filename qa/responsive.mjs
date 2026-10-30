@@ -36,6 +36,14 @@ async function run(engine,launcher,w,h){
   await page.locator('.room-scene.new-home').waitFor({timeout:16000});
   assert.ok(await page.locator('.room-heading h1').isVisible());
   assert.equal(await page.locator('[data-door]').count(),7);
+  const artManifestResponse=await page.request.get(new URL('./assets/rooms/originals/manifest.json',BASE).href);
+  assert.equal(artManifestResponse.status(),200);
+  const artManifest=await artManifestResponse.json();
+  const variant=w<760?'portrait':'wide';
+  const original=artManifest?.scenes?.story?.[variant]===true;
+  if(original)await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.originalArt==='true',{timeout:15000});
+
+
   assert.equal(await page.locator('.room-object .physical-object-art').count(),7,'Every scene portal must contain physical art');
   assert.equal(await page.locator('.table-bouquet .real-vase').count(),1,'Bouquet must live in a physical vase');
   if(!original)assert.ok(await page.locator('.object-movies .physical-object-art').isVisible(),'Physical cinema screen must be RENDERED, not hidden by CSS');
@@ -62,13 +70,6 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.atelier-illustration').count(),2,'mobile and desktop scenes should both exist');
   assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
   assert.ok(await page.locator('.cinematic-photo').count()===1,'Photo stage should exist');
-  const artManifestResponse=await page.request.get(new URL('./assets/rooms/originals/manifest.json',BASE).href);
-  assert.equal(artManifestResponse.status(),200);
-  const artManifest=await artManifestResponse.json();
-  const variant=w<760?'portrait':'wide';
-  const original=artManifest?.scenes?.story?.[variant]===true;
-  if(original)await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.originalArt==='true',{timeout:15000});
-
   if(w<760){
     assert.ok(await page.locator('.cinematic-photo').isVisible(),'Mobile photo stage should be visible');
     const background=await page.locator('.cinematic-photo').evaluate(el=>getComputedStyle(el).backgroundImage);
