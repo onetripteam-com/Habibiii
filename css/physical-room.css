@@ -186,3 +186,29 @@
 .cinematic-room[data-original-art="true"] .table-bouquet>.physical-object-art{
  display:block!important;opacity:1!important
 }
+
+/* Final physical grounding: natural contact shadow, less toy-like saturation,
+   and precise furniture placements for the interim photographic room. */
+.cinematic-room .room-object.living-object:before{
+ display:block!important;content:''!important;
+ position:absolute!important;z-index:0!important;
+ top:auto!important;left:18%!important;bottom:7px!important;
+ width:66%!important;height:14px!important;
+ border:0!important;border-radius:100%!important;
+ background:#12130f!important;opacity:.49!important;
+ filter:blur(7px)!important;
+ box-shadow:none!important;
+ transform:none!important;pointer-events:none!important;
+}
+.cinematic-room .room-object .physical-object-art{
+ filter:saturate(.81) brightness(.9) contrast(1.06) drop-shadow(0 9px 8px #080a087d);
+}
+.cinematic-room .table-bouquet .physical-object-art{filter:saturate(.86) brightness(.91) drop-shadow(0 8px 6px #08100a86)}
+@media(min-width:760px){
+ .cinematic-room .object-garden{left:35%!important;top:48%!important}
+ .cinematic-room .object-rest{left:13%!important;top:64%!important}
+ .cinematic-room .object-music{left:57%!important;top:72%!important}
+ .cinematic-room .table-bouquet{left:64%!important;top:66%!important}
+ .cinematic-room .object-travel{left:78%!important;top:70%!important}
+ .cinematic-room .object-letters{left:27%!important;top:68%!important}
+}
