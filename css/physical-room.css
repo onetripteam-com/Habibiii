@@ -118,3 +118,33 @@
 @media(prefers-reduced-motion:reduce){
   .cinematic-room .physical-object-art{transition:none!important}
 }
+/* The native room's original subtle exploratory camera */
+.cinematic-room #room-peek{display:none}
+@media(max-width:759px){
+ .cinematic-room .cinematic-photo{
+   background-position:calc(50% + var(--peek-offset,0px)) center!important;
+   transition:background-position .9s cubic-bezier(.2,.74,.2,1),filter .55s ease!important;
+ }
+ .cinematic-room #room-peek{
+   display:grid;place-items:center;
+   position:absolute;z-index:15;
+   left:50%!important;top:27%!important;transform:translateX(-50%);
+   width:124px!important;min-height:36px!important;
+   padding:9px 10px!important;
+   border-radius:100px!important;
+   border:1px solid #fce3b294!important;
+   background:#182920c9!important;color:#ffefcd!important;
+   backdrop-filter:blur(13px);
+   box-shadow:0 8px 20px #0815106b;
+   font:700 9px/1.2 system-ui,sans-serif!important;
+   letter-spacing:.11em!important;
+   white-space:nowrap;
+ }
+ .cinematic-room #room-peek:focus-visible{outline:2px solid #fff4cd;outline-offset:4px}
+ .cinematic-room[data-peek="0"] .room-object .object-drawing{transform:translateX(4px)}
+ .cinematic-room[data-peek="2"] .room-object .object-drawing{transform:translateX(-4px)}
+}
+@media(max-width:759px) and (max-height:750px){
+ .cinematic-room #room-peek{top:26%!important}
+}
+@media(prefers-reduced-motion:reduce){.cinematic-room .cinematic-photo{transition:none!important}}
