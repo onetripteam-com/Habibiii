@@ -212,3 +212,7 @@
  .cinematic-room .object-travel{left:78%!important;top:70%!important}
  .cinematic-room .object-letters{left:27%!important;top:68%!important}
 }
+
+/* GPT architectural backgrounds deliberately include a real empty vase.
+   Keep her live selected blossoms, but don't double the glass vessel. */
+.cinematic-room[data-original-art="true"] .real-vase .vase-glass{display:none!important}
