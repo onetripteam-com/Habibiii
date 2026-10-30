@@ -21,6 +21,7 @@ on:
       - 'js/pocket-peek.js'
       - 'js/original-room-art.js'
       - 'content/room-art-direction.json'
+      - 'scripts/generate-original-rooms.py'
       - 'assets/rooms/originals/**'
       - 'assets/rooms/**'
       - 'js/memory.js'
@@ -40,6 +41,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Validate original art generator and twelve prompts (no API cost)
+        run: |
+          python3 -m py_compile scripts/generate-original-rooms.py
+          python3 scripts/generate-original-rooms.py --dry-run
       - name: Install test browsers
         run: |
           npm install --no-save playwright@1.56.1
