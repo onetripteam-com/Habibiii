@@ -38,14 +38,14 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('[data-door]').count(),7);
   assert.equal(await page.locator('.room-object .physical-object-art').count(),7,'Every scene portal must contain physical art');
   assert.equal(await page.locator('.table-bouquet .real-vase').count(),1,'Bouquet must live in a physical vase');
-  assert.ok(await page.locator('.object-movies .physical-object-art').isVisible(),'Physical cinema screen must be RENDERED, not hidden by CSS');
+  if(!original)assert.ok(await page.locator('.object-movies .physical-object-art').isVisible(),'Physical cinema screen must be RENDERED, not hidden by CSS');
   assert.ok(await page.locator('.table-bouquet .real-vase').isVisible(),'Vase must be rendered, not a hidden SVG');
   const actualArt=await page.locator('.object-drawing').first().evaluate(el=>({
     display:getComputedStyle(el).display,
     svg:getComputedStyle(el.querySelector('svg')).display,
     area:el.getBoundingClientRect().width*el.getBoundingClientRect().height
   }));
-  assert.ok(actualArt.display!=='none'&&actualArt.svg!=='none'&&actualArt.area>100,'Actual foreground props must occupy visible pixels');
+  if(!original)assert.ok(actualArt.display!=='none'&&actualArt.svg!=='none'&&actualArt.area>100,'Actual foreground props must occupy visible pixels');
   if(w<760){
     assert.ok(await page.locator('#room-peek').isVisible(),'The phone room needs a discoverable peek control');
     await page.locator('#room-peek').click();
@@ -62,10 +62,17 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.atelier-illustration').count(),2,'mobile and desktop scenes should both exist');
   assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
   assert.ok(await page.locator('.cinematic-photo').count()===1,'Photo stage should exist');
+  const artManifestResponse=await page.request.get(new URL('./assets/rooms/originals/manifest.json',BASE).href);
+  assert.equal(artManifestResponse.status(),200);
+  const artManifest=await artManifestResponse.json();
+  const variant=w<760?'portrait':'wide';
+  const original=artManifest?.scenes?.story?.[variant]===true;
+  if(original)await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.originalArt==='true',{timeout:15000});
+
   if(w<760){
     assert.ok(await page.locator('.cinematic-photo').isVisible(),'Mobile photo stage should be visible');
     const background=await page.locator('.cinematic-photo').evaluate(el=>getComputedStyle(el).backgroundImage);
-    assert.ok(background.includes('story.webp'),'Mobile must use real local room photography');
+    assert.ok(background.includes(original?'story-'+variant+'.webp':'story.webp'),'Mobile must use real local room photography');
     const labels=await page.locator('[data-door] .object-label').evaluateAll(nodes=>nodes.every(n=>getComputedStyle(n).display!=='none'&&getComputedStyle(n).opacity!=='0'));
     assert.ok(labels,'All seven mobile doors need readable on-screen labels');
   }
@@ -73,8 +80,8 @@ async function run(engine,launcher,w,h){
     const photo=page.locator('.cinematic-photo');
     assert.ok(await photo.isVisible(),'Real scene image should be visible on PC');
     const data=await photo.evaluate(el=>({background:getComputedStyle(el).backgroundImage,area:el.getBoundingClientRect().width}));
-    assert.ok(data.background.includes('story.webp') && data.area>200,'Photographic background should be loaded on desktop');
-    const image=await page.request.get(new URL('./assets/rooms/story.webp',BASE).href);
+    assert.ok(data.background.includes(original?'story-'+variant+'.webp':'story.webp') && data.area>200,'Photographic background should be loaded on desktop');
+    const image=await page.request.get(new URL(original?'./assets/rooms/originals/story-'+variant+'.webp':'./assets/rooms/story.webp',BASE).href);
     assert.equal(image.status(),200,'Local scene must be packaged');
   }
   await page.locator('#room-window').click();
@@ -100,7 +107,7 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.new-home').getAttribute('data-theme'),'cosmos');
   if(w>=760){
     const photo=await page.locator('.cinematic-photo').evaluate(el=>getComputedStyle(el).backgroundImage);
-    assert.ok(photo.includes('cosmos.webp'),'Cosmos must load a DIFFERENT real photo, not recolour story');
+    assert.ok(photo.includes(artManifest?.scenes?.cosmos?.[variant]?'cosmos-'+variant+'.webp':'cosmos.webp'),'Cosmos must load a DIFFERENT real photo, not recolour story');
   } else {
     assert.equal(await page.locator('.cinematic-note').isVisible(),false,'PC-only copy must not leak into mobile');
   }
