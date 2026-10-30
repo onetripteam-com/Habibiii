@@ -144,15 +144,17 @@ async function run(engine,launcher,w,h){
      await page.locator('#portal-screen').waitFor({state:'hidden',timeout:16000});
    }
   }
-  if(w===393){
+  if(w===393||w===402){
+   const flower=w===393?'rose':'iris';
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
    await page.locator('#room-bouquet').click();
    await page.locator('.flowers-scene').waitFor();
-   for(let i=0;i<7;i++)await page.locator('[data-flower="rose"]').click();
+   for(let i=0;i<7;i++)await page.locator('[data-flower="'+flower+'"]').click();
    await page.locator('#carry-bouquet').waitFor({state:'visible',timeout:18000});
    await page.locator('#carry-bouquet').click();
    await page.locator('.new-home').waitFor();
-   assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill('rose'));
+   assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill(flower));
+   assert.ok(await page.locator('.real-vase').isVisible(),'The new bouquet must be in the room vase');
   }
   assert.deepEqual(errors,[],'JS errors: '+errors.join('; '));
   assert.deepEqual(missing,[],'Missing assets: '+missing.join('; '));
