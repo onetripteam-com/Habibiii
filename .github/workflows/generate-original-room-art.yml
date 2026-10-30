@@ -1,0 +1,74 @@
+name: Generate original GPT room art
+on:
+  workflow_dispatch:
+    inputs:
+      theme:
+        description: 'Which original room world?'
+        required: true
+        type: choice
+        default: all
+        options: [all, story, monsoon, sunroom, terracotta, midnight, cosmos]
+      orientation:
+        description: 'Produce both wide desktop and original portrait phone images'
+        required: true
+        type: choice
+        default: both
+        options: [both, wide, portrait]
+      model:
+        description: 'OpenAI image model (costs API credits)'
+        required: true
+        default: 'gpt-image-2.5-flare'
+        type: string
+      replace_existing:
+        description: 'Pay again to regenerate existing images?'
+        required: false
+        default: false
+        type: boolean
+permissions:
+  contents: write
+concurrency:
+  group: original-gpt-room-art
+  cancel-in-progress: false
+jobs:
+  generate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 55
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      THEME: ${{ inputs.theme }}
+      ORIENTATION: ${{ inputs.orientation }}
+      MODEL: ${{ inputs.model }}
+      REPLACE_EXISTING: ${{ inputs.replace_existing }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify key exists without printing it
+        shell: bash
+        run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::Add the API key to Settings → Secrets and variables → Actions → OPENAI_API_KEY first. ChatGPT Plus does not include API credits."
+            exit 1
+          fi
+      - name: Install local art optimizer
+        run: python -m pip install --quiet "Pillow>=11,<13"
+      - name: Generate original assets (API-billed, manual dispatch only)
+        shell: bash
+        run: |
+          ARGS=(--theme "$THEME" --orientation "$ORIENTATION" --model "$MODEL")
+          if [ "$REPLACE_EXISTING" = "true" ]; then ARGS+=(--replace); fi
+          python scripts/generate-original-rooms.py "${ARGS[@]}"
+      - name: Commit finished images, manifest and offline cache version
+        shell: bash
+        run: |
+          git config user.name "MAHA original art build"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A assets/rooms css/cinematic-room.css sw.js assets/rooms/originals/manifest.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Replace scene photography with original GPT-generated wide and portrait worlds"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
+            echo "No new art to commit."
+          fi
