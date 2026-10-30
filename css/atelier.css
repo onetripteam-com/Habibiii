@@ -161,3 +161,18 @@
  .atelier-home .window-whisper span{font-size:9px}
 }
 @media (prefers-reduced-motion:reduce){.atelier-home .atelier-rain,.atelier-home .atelier-starfield{animation:none!important}}
+
+/* Soft responsive light: lives above the set, below all touch targets. */
+.atelier-home .atelier-followlight{--light-x:50%;--light-y:50%;position:absolute;inset:0;pointer-events:none;z-index:5;opacity:.58;background:radial-gradient(ellipse 310px 220px at var(--light-x) var(--light-y),#fff6da3a,transparent 90%);mix-blend-mode:soft-light}
+.atelier-home[data-theme="midnight"] .atelier-followlight,.atelier-home[data-theme="cosmos"] .atelier-followlight{background:radial-gradient(ellipse 300px 235px at var(--light-x) var(--light-y),#e2bbff3e,transparent 90%);mix-blend-mode:screen;opacity:.39}
+@keyframes atelier-breathe{0%,100%{transform:translate3d(0,0,0) rotate(0deg)}50%{transform:translate3d(0,-3px,0) rotate(1.4deg)}}
+@keyframes atelier-petal{0%,100%{transform:translate3d(0,0,0) rotate(-1deg)}50%{transform:translate3d(0,-4px,0) rotate(1.5deg)}}
+@media (prefers-reduced-motion:no-preference){
+ .atelier-home .object-garden .object-drawing{animation:atelier-breathe 6.2s ease-in-out infinite}
+ .atelier-home .object-movies .object-drawing{animation:atelier-breathe 9s ease-in-out infinite reverse}
+ .atelier-home .table-bouquet svg{animation:atelier-petal 8s ease-in-out infinite}
+ .atelier-home .living-object:is(:hover,:focus-visible) .object-drawing{animation:none}
+ .atelier-home .table-bouquet:is(:hover,:focus-visible) svg{animation:none}
+}
+@media(pointer:coarse){.atelier-home .atelier-followlight{display:none}}
+@media (prefers-reduced-motion:reduce){.atelier-home .atelier-followlight{display:none}}
