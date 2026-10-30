@@ -97,6 +97,9 @@ def remove_stock_when_complete(manifest):
         desktop = desktop.replace(stock, f"url('../assets/rooms/originals/{theme}-wide.webp')")
         mobile = mobile.replace(stock, f"url('../assets/rooms/originals/{theme}-portrait.webp')")
     CSS.write_text(desktop + mobile)
+    legacy_credits=ROOT / "ROOM-PHOTO-CREDITS.md"
+    if legacy_credits.exists():
+        legacy_credits.unlink()
     for theme in THEMES:
         p = STOCK_DIR / f"{theme}.webp"
         if p.exists():
