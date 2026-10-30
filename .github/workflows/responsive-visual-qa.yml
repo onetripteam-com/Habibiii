@@ -27,6 +27,8 @@ on:
       - 'js/memory.js'
       - 'js/portal.js'
       - 'index.html'
+      - 'sw.js'
+      - 'manifest.json'
       - 'qa/**'
       - '.github/workflows/responsive-visual-qa.yml'
   workflow_dispatch:
