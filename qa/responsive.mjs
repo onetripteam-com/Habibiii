@@ -65,6 +65,19 @@ async function run(engine,launcher,w,h){
 
   assert.equal(await page.locator('.real-vase ellipse[fill]').count()>0,true,'Vase needs drawn blooms');
   assert.equal(await page.locator('.physical-movies').count(),1,'Cinema portal must be an actual screen');
+  if(engine==='chromium'&&w===393){
+    const flora=await page.evaluate(async()=>{
+      const {bouquetObjectMarkup}=await import('./js/physical-room-objects.js');
+      const ids=['rose','daisy','sunflower','tulip','peony','lily','orchid','lavender','jasmine','marigold','hibiscus','iris','lotus'];
+      return ids.map(id=>{
+        const node=document.createElement('div');
+        node.innerHTML=bouquetObjectMarkup(Array(7).fill(id));
+        return {id,count:node.querySelectorAll('g[data-species="'+id+'"]').length};
+      });
+    });
+    assert.deepEqual(flora.map(x=>x.count),Array(13).fill(7),'All thirteen botanical species must draw seven distinct selected heads');
+  }
+
 
   assert.ok(await page.locator('.atelier-home').isVisible(),'Atelier should be active');
   assert.equal(await page.locator('.atelier-illustration').count(),0,'No invisible legacy cartoon room markup should be mounted');
