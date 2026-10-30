@@ -39,6 +39,12 @@ async function run(engine,launcher,w,h){
   assert.ok(await page.locator('.atelier-home').isVisible(),'Atelier should be active');
   assert.equal(await page.locator('.atelier-illustration').count(),2,'mobile and desktop scenes should both exist');
   assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
+  await page.locator('#room-window').click();
+  assert.equal(await page.locator('.atelier-home').getAttribute('data-sky'),'rain');
+  await page.locator('#room-window').click();
+  assert.equal(await page.locator('.atelier-home').getAttribute('data-sky'),'night');
+  await page.locator('#room-window').click();
+  assert.equal(await page.locator('.atelier-home').getAttribute('data-sky'),'natural');
   assert.equal(await page.locator('.home-feature-art').count(),7); // 1 hero + 6 preview thumbnails
   const overflow=await page.locator('.new-home').evaluate(el=>el.scrollWidth-el.clientWidth);
   assert.ok(overflow<=5,'horizontal scroll overflow: '+overflow);
