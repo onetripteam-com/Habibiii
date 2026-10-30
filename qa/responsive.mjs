@@ -69,6 +69,12 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('[data-world]').count(),6);
   await page.locator('[data-world="cosmos"]').click();
   assert.equal(await page.locator('.new-home').getAttribute('data-theme'),'cosmos');
+  if(w>=760){
+    const photo=await page.locator('.cinematic-photo').evaluate(el=>getComputedStyle(el).backgroundImage);
+    assert.ok(photo.includes('cosmos.webp'),'Cosmos must load a DIFFERENT real photo, not recolour story');
+  } else {
+    assert.equal(await page.locator('.cinematic-note').isVisible(),false,'PC-only copy must not leak into mobile');
+  }
   await page.screenshot({path:join(OUT,key+'-cosmos.png'),animations:'disabled'});
   await page.locator('[data-door="letters"]').scrollIntoViewIfNeeded();
   await page.locator('[data-door="letters"]').click();
