@@ -55,7 +55,7 @@ const wide = [
 '</svg>'
 ].join('');
 const portrait = [
-'<svg class="home-feature-art atelier-illustration atelier-portrait-art" viewBox="0 0 400 800" preserveAspectRatio="none" role="img" aria-label="An illustrated small room, filled with books, sunshine and little familiar things">',
+'<svg class="atelier-illustration atelier-portrait-art" viewBox="0 0 400 800" preserveAspectRatio="none" role="img" aria-label="An illustrated small room, filled with books, sunshine and little familiar things">',
 '<defs><linearGradient id="arp-wall" x2="0" y2="1"><stop stop-color="var(--wall-top)"/><stop offset="1" stop-color="var(--wall-bottom)"/></linearGradient>',
 '<linearGradient id="arp-sky" x2="0" y2="1"><stop stop-color="var(--sky-top)"/><stop offset="1" stop-color="var(--sky-bottom)"/></linearGradient>',
 '<linearGradient id="arp-floor" x2="0" y2="1"><stop stop-color="var(--floor)"/><stop offset="1" stop-color="var(--floor-dark)"/></linearGradient>',
