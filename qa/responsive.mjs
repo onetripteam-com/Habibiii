@@ -40,6 +40,13 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.atelier-illustration').count(),2,'mobile and desktop scenes should both exist');
   assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
   assert.ok(await page.locator('.cinematic-photo').count()===1,'Photo stage should exist');
+  if(w<760){
+    assert.ok(await page.locator('.cinematic-photo').isVisible(),'Mobile photo stage should be visible');
+    const background=await page.locator('.cinematic-photo').evaluate(el=>getComputedStyle(el).backgroundImage);
+    assert.ok(background.includes('story.webp'),'Mobile must use real local room photography');
+    const labels=await page.locator('[data-door] .object-label').evaluateAll(nodes=>nodes.every(n=>getComputedStyle(n).display!=='none'&&getComputedStyle(n).opacity!=='0'));
+    assert.ok(labels,'All seven mobile doors need readable on-screen labels');
+  }
   if(w>=760){
     const photo=page.locator('.cinematic-photo');
     assert.ok(await photo.isVisible(),'Real scene image should be visible on PC');
