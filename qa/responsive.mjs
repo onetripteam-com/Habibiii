@@ -67,7 +67,8 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.physical-movies').count(),1,'Cinema portal must be an actual screen');
 
   assert.ok(await page.locator('.atelier-home').isVisible(),'Atelier should be active');
-  assert.equal(await page.locator('.atelier-illustration').count(),2,'mobile and desktop scenes should both exist');
+  assert.equal(await page.locator('.atelier-illustration').count(),0,'No invisible legacy cartoon room markup should be mounted');
+  assert.equal(await page.locator('.theme-preview-art').count(),6,'All six themes should have real photographic previews');
   assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
   assert.ok(await page.locator('.cinematic-photo').count()===1,'Photo stage should exist');
   if(w<760){
@@ -91,7 +92,7 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.atelier-home').getAttribute('data-sky'),'night');
   await page.locator('#room-window').click();
   assert.equal(await page.locator('.atelier-home').getAttribute('data-sky'),'natural');
-  assert.equal(await page.locator('.home-feature-art').count(),7); // 1 hero + 6 preview thumbnails
+  assert.equal(await page.locator('.home-feature-art').count(),0,'No hidden thumbnail vector art should be in the new room');
   const overflow=await page.locator('.new-home').evaluate(el=>el.scrollWidth-el.clientWidth);
   assert.ok(overflow<=5,'horizontal scroll overflow: '+overflow);
   const targets=await page.locator('[data-door]').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {w:r.width,h:r.height,x:r.x,y:r.y,bottom:r.bottom,right:r.right}}));
