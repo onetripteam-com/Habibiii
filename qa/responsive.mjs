@@ -156,6 +156,19 @@ async function run(engine,launcher,w,h){
    assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill(flower));
    assert.ok(await page.locator('.real-vase').isVisible(),'The new bouquet must be in the room vase');
   }
+  // The installed experience must retain its room and saved bouquet offline.
+  // This is a real controlled service-worker reload, not only a mock cache read.
+  if(engine==='chromium'&&w===393){
+    await page.waitForFunction(()=>Boolean(navigator.serviceWorker?.controller),null,{timeout:16000});
+    await context.setOffline(true);
+    try{
+      await page.reload({waitUntil:'domcontentloaded'});
+      await page.locator('.room-scene.new-home').waitFor({state:'visible',timeout:12000});
+      assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill('rose'),'Offline reload must preserve her seven selected flowers');
+      assert.ok(await page.locator('.table-bouquet .real-vase').isVisible(),'Saved vase should work offline');
+      await page.screenshot({path:join(OUT,key+'-offline-home.png'),animations:'disabled'});
+    }finally{await context.setOffline(false);}
+  }
   assert.deepEqual(errors,[],'JS errors: '+errors.join('; '));
   assert.deepEqual(missing,[],'Missing assets: '+missing.join('; '));
   reports.push('PASS '+key);
