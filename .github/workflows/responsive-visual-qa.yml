@@ -16,6 +16,7 @@ on:
       - 'js/cinematic-home.js'
       - 'css/cinematic-room.css'
       - 'css/physical-room.css'
+      - 'css/worlds-director.css'
       - 'js/physical-room-objects.js'
       - 'js/pocket-peek.js'
       - 'js/original-room-art.js'
