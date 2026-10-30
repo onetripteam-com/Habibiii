@@ -127,6 +127,18 @@ async function run(engine,launcher,w,h){
   assert.ok(await page.locator('#portal-screen').getAttribute('data-place'));
   await page.locator('.portal-back').click();
   await page.locator('#portal-screen').waitFor({state:'hidden',timeout:16000});
+  if(w===393||w===1440){
+   for(const scene of ['letters','music','movies','travel','games','garden','rest']){
+     const door=page.locator('[data-door="'+scene+'"]');
+     await door.click();
+     await page.locator('#portal-screen[data-place="'+scene+'"]').waitFor({state:'visible'});
+     const content=page.locator('#portal-screen .portal-content');
+     await content.locator(':scope > *').first().waitFor({state:'visible',timeout:10000});
+     await page.screenshot({path:join(OUT,key+'-world-'+scene+'.png'),animations:'disabled'});
+     await page.locator('.portal-back').click();
+     await page.locator('#portal-screen').waitFor({state:'hidden',timeout:16000});
+   }
+  }
   if(w===393){
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
    await page.locator('#room-bouquet').click();
