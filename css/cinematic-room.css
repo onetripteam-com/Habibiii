@@ -22,7 +22,6 @@
     border-radius:50%;backdrop-filter:blur(20px);
   }
   .new-home.atelier-home.cinematic-room {
-    --scene-photo:url('../assets/rooms/story.webp');
     --scrim-left:rgba(17,20,21,.91);
     --scrim-top:rgba(15,16,17,.1);
     --cinematic-ink:#f5efe7;
@@ -258,19 +257,19 @@
     transform:translate3d(0,0,0)!important;opacity:1;
   }
   .cinematic-room .living-object .object-label i{display:none}
-  .cinematic-room .object-letters {left:38%!important;top:57%!important}
+  .cinematic-room .object-letters {left:63%!important;top:43%!important}
   .cinematic-room .object-garden {left:64%!important;top:23%!important}
   .cinematic-room .object-movies {left:87%!important;top:32%!important}
   .cinematic-room .object-music {left:71%!important;top:64%!important}
-  .cinematic-room .object-travel {left:43%!important;top:77%!important}
+  .cinematic-room .object-travel {left:49%!important;top:32%!important}
   .cinematic-room .object-games {left:57%!important;top:82%!important}
-  .cinematic-room .object-rest {left:79%!important;top:82%!important}
+  .cinematic-room .object-rest {left:27%!important;top:68%!important}
   .cinematic-room .object-movies .object-label,.cinematic-room .object-rest .object-label,.cinematic-room .object-music .object-label{
     left:auto;right:calc(100% + 6px);text-align:right;
   }
   .cinematic-room .table-bouquet{
     z-index:11;
-    left:57%!important;top:48%!important;
+    left:65%!important;top:77%!important;
     width:74px!important;height:76px!important;
     min-width:74px;min-height:76px;
     border:0;border-radius:50%!important;
@@ -305,13 +304,13 @@
   .cinematic-room .table-bouquet:is(:hover,:focus-visible):before{transform:scale(1.13) rotate(11deg)}
   .cinematic-room .table-bouquet:is(:hover,:focus-visible)>span{opacity:1;transform:translateX(0)}
   .cinematic-room .window-whisper{
-    left:57%;top:27%;opacity:.5;
-    width:52px;height:52px;min-width:52px;min-height:52px;
-    background:rgba(18,22,21,.38);color:#fff5e2;border-color:rgba(252,241,215,.38);
+    left:41%;top:37%;opacity:.7;
+    width:45px;height:45px;min-width:45px;min-height:45px;
+    background:rgba(18,22,21,.29);color:#fff5e2;border-color:rgba(252,241,215,.53);
     box-shadow:0 5px 25px rgba(0,0,0,.17);
   }
   .cinematic-room .window-whisper span{font-size:0!important}
-  .cinematic-room .window-whisper span:before{content:'☾';font:23px/1 Georgia,serif}
+  .cinematic-room .window-whisper span:before{content:'☾';font:19px/1 Georgia,serif}
   .cinematic-room .window-whisper:hover{opacity:1;background:rgba(18,20,20,.7)}
   .cinematic-room .room-dock{
     left:auto;right:clamp(36px,4vw,70px);
