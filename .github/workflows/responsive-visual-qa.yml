@@ -7,6 +7,7 @@ on:
       - 'js/room.js'
       - 'js/room-studio.js'
       - 'js/new-home.js'
+      - 'js/main.js'
       - 'js/home-art.js'
       - 'css/new-home.css'
       - 'css/remembering-home.css'
