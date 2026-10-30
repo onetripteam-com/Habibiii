@@ -85,8 +85,11 @@ export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
   try{await transition.finished;}catch{}finally{target.style.viewTransitionName='';destination.style.viewTransitionName='';delete portal.dataset.transition;}
  }
  function animateArrival(id){
+  // Arrival is a portal state, not dependent on a particular decorative element.
+  // Stateful destinations may replace their entry artwork with a real application.
+  portal.classList.add('portal-arrived');
   const target=portal.querySelector('.portal-entry');
-  if(!target)return;
+  if(!target||reduce())return;
   // Each metaphor has its own signature gesture; only compositor-friendly properties.
   const from={
    post:'translateY(-28px) rotate(-7deg) scale(.86)',
@@ -98,7 +101,6 @@ export function makePortalSystem({room,frame,visits,lastVisit,onReturn}){
    garden:'translateY(38px) scaleY(.28)'
   }[id]||'scale(.88)';
   animate(target,[{opacity:.45,transform:from},{opacity:1,transform:'none'}],{duration:reduce()?100:245,easing:'cubic-bezier(.2,.9,.3,1)'});
-  portal.classList.add('portal-arrived');
  }
  async function open(id,source,intent){
   if(destroyed||busy||active||!PLACES[id]||!source)return;
