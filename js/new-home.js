@@ -4,6 +4,7 @@ import {kuwaitParts} from './time.js';
 import {makePortalSystem} from './portal.js';
 import {worldIllustration,doorIllustration} from './home-art.js';
 import {atelierIllustration} from './atelier-art.js';
+import {mountAtelierLife} from './atelier-life.js';
 import {mountMemoryTools} from './memory.js';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const worlds=[['story','The little hideaway'],['monsoon','Kerala, when it rains'],['sunroom','A sunlit Sunday'],['terracotta','The courtyard home'],['midnight','The midnight home'],['cosmos','Kuwait after sunset']];
@@ -35,6 +36,6 @@ export function mountRoom(root,{chosen,visits,lastVisit,onReplay,onNewBouquet}){
  root.querySelector('#room-bouquet').onclick=onNewBouquet;root.querySelector('#replay-opening').onclick=()=>{menu.close();onReplay()};
  const picker=root.querySelector('#home-world-overlay');root.querySelector('#theme-trigger').onclick=()=>picker.showModal();
  root.querySelectorAll('[data-world]').forEach(b=>b.onclick=()=>{theme=b.dataset.world;store.set('roomTheme',theme);room.dataset.theme=theme;/* Inline atelier artwork takes theme colours from CSS; no DOM reset required. */root.querySelectorAll('[data-world]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));picker.close()});
- const disposeMemory=mountMemoryTools(root);const timer=setInterval(()=>{root.querySelector('#clock-value').textContent=kuwaitParts().clock},60000);
- return ()=>{clearInterval(timer);disposeMemory();portal.destroy()};
+ const disposeLife=mountAtelierLife(room);const disposeMemory=mountMemoryTools(root);const timer=setInterval(()=>{root.querySelector('#clock-value').textContent=kuwaitParts().clock},60000);
+ return ()=>{clearInterval(timer);disposeLife();disposeMemory();portal.destroy()};
 }
