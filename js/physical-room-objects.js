@@ -1,3 +1,4 @@
+import {renderBloomHead} from './botanical-miniatures.js';
 /** Original, code-drawn physical props: no icon library, stock images or image API.
  * Every object is actual illuminated, textured SVG artwork in the scene.
  * The vase reflects the seven flowers saved in this browser, including repeats.
@@ -86,11 +87,10 @@ export function bouquetObjectMarkup(chosen=[]){
   const [dark,light]=flowerHues[name]||flowerHues.rose;
   const x=30+i*16.1, y=51+Math.abs(3-i)*5+(i%2)*-5;
   const stem=`<path d="M88 122Q${x+4} 92 ${x} ${y+1}" fill="none" stroke="#4d7252" stroke-width="2.9"/>`;
-  const ring=Array.from({length:6},(_,j)=>{
-   const a=j*Math.PI/3, px=Math.cos(a)*8, py=Math.sin(a)*7;
-   return `<ellipse cx="${(x+px).toFixed(1)}" cy="${(y+py).toFixed(1)}" rx="6.4" ry="10" transform="rotate(${j*60} ${(x+px).toFixed(1)} ${(y+py).toFixed(1)})" fill="${j%2?dark:light}" stroke="${dark}" stroke-width=".6" opacity=".99"/>`;
-  }).join('');
-  return stem+`<g>${ring}<circle cx="${x}" cy="${y}" r="4" fill="#e6af6a"/><circle cx="${x-1}" cy="${y-1}" r="1.3" fill="#fff5ca"/></g>`;
+  const head=renderBloomHead(name,dark,light,i);
+  const leafY=94+(i%3)*2;
+  const leaf=`<path d="M${x+6} ${leafY}Q${x+15} ${leafY-12} ${x+21} ${leafY-16}Q${x+22} ${leafY-3} ${x+6} ${leafY}Z" fill="#60835b" stroke="#adc5a1" stroke-width=".65" opacity=".91"/>`;
+  return stem+leaf+`<g transform="translate(${x.toFixed(2)} ${y.toFixed(2)})">${head}</g>`;
  }).join('');
  return `<svg class="physical-object-art real-vase" viewBox="0 0 165 150" aria-hidden="true" focusable="false">${G(id)}
  <ellipse cx="84" cy="140" rx="44" ry="5" fill="#080d0e" opacity=".42" filter="url(#${id}shadow)"/><g class="live-flowers">${petals}</g><g class="vase-glass">
