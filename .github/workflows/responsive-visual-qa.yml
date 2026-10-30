@@ -10,6 +10,8 @@ on:
       - 'js/home-art.js'
       - 'css/new-home.css'
       - 'css/remembering-home.css'
+      - 'css/atelier.css'
+      - 'js/atelier-art.js'
       - 'js/memory.js'
       - 'js/portal.js'
       - 'index.html'
