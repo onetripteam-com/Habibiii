@@ -39,6 +39,15 @@ async function run(engine,launcher,w,h){
   assert.ok(await page.locator('.atelier-home').isVisible(),'Atelier should be active');
   assert.equal(await page.locator('.atelier-illustration').count(),2,'mobile and desktop scenes should both exist');
   assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
+  assert.ok(await page.locator('.cinematic-photo').count()===1,'Photo stage should exist');
+  if(w>=760){
+    const photo=page.locator('.cinematic-photo');
+    assert.ok(await photo.isVisible(),'Real scene image should be visible on PC');
+    const data=await photo.evaluate(el=>({background:getComputedStyle(el).backgroundImage,area:el.getBoundingClientRect().width}));
+    assert.ok(data.background.includes('story.webp') && data.area>200,'Photographic background should be loaded on desktop');
+    const image=await page.request.get(new URL('./assets/rooms/story.webp',BASE).href);
+    assert.equal(image.status(),200,'Local scene must be packaged');
+  }
   await page.locator('#room-window').click();
   assert.equal(await page.locator('.atelier-home').getAttribute('data-sky'),'rain');
   await page.locator('#room-window').click();
