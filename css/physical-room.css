@@ -148,3 +148,20 @@
  .cinematic-room #room-peek{top:26%!important}
 }
 @media(prefers-reduced-motion:reduce){.cinematic-room .cinematic-photo{transition:none!important}}
+
+/* Legacy cinematic styles hid the former cartoon drawings using a more specific
+   selector. These original props must win the cascade, not merely exist in DOM. */
+.cinematic-room .room-object.living-object .object-drawing{
+ display:block!important;visibility:visible!important;opacity:1!important;
+}
+.cinematic-room .room-object.living-object .object-drawing .physical-object-art{
+ display:block!important;visibility:visible!important;opacity:1!important;
+}
+.cinematic-room .table-bouquet>.physical-object-art.real-vase{
+ display:block!important;visibility:visible!important;opacity:1!important;
+}
+/* Old decoration selectors must not hide the real foreground flowers. */
+.cinematic-room .room-object .object-drawing svg,
+.cinematic-room .table-bouquet svg.physical-object-art{
+ display:block!important;
+}
