@@ -36,6 +36,9 @@ async function run(engine,launcher,w,h){
   await page.locator('.room-scene.new-home').waitFor({timeout:16000});
   assert.ok(await page.locator('.room-heading h1').isVisible());
   assert.equal(await page.locator('[data-door]').count(),7);
+  assert.ok(await page.locator('.atelier-home').isVisible(),'Atelier should be active');
+  assert.equal(await page.locator('.atelier-illustration').count(),2,'mobile and desktop scenes should both exist');
+  assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
   assert.equal(await page.locator('.home-feature-art').count(),7); // 1 hero + 6 preview thumbnails
   const overflow=await page.locator('.new-home').evaluate(el=>el.scrollWidth-el.clientWidth);
   assert.ok(overflow<=5,'horizontal scroll overflow: '+overflow);
@@ -60,6 +63,12 @@ async function run(engine,launcher,w,h){
   await page.locator('.remembering-home:not([inert])').waitFor();
   await page.locator('.inhabited-room').scrollIntoViewIfNeeded();
   await page.screenshot({path:join(OUT,key+'-doors.png'),animations:'disabled'});
+  // A real DOM portal tap, not a test-name assertion or static markup check.
+  await page.locator('#take-me-anywhere').click();
+  await page.locator('#portal-screen').waitFor({state:'visible'});
+  assert.ok(await page.locator('#portal-screen').getAttribute('data-place'));
+  await page.locator('.portal-back').click();
+  await page.locator('#portal-screen').waitFor({state:'hidden',timeout:16000});
   if(w===393){
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
    await page.locator('#room-bouquet').click();
