@@ -1,5 +1,5 @@
-/* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-worlds-v9.4.0';
+/* MAHA offline shell. Network-first for code/content prevents stale design after a deploy; local cache remains available offline. */
+const VERSION='maha-worlds-v9.5.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
  './js/memory.js','./css/remembering-home.css','./css/atelier.css','./js/atelier-art.js','./js/atelier-life.js','./js/cinematic-home.js','./css/cinematic-room.css','./css/physical-room.css','./css/worlds-director.css','./js/physical-room-objects.js','./js/pocket-peek.js','./js/original-room-art.js',
@@ -29,13 +29,32 @@ self.addEventListener('install',event=>{
 self.addEventListener('activate',event=>{event.waitUntil((async()=>{const keys=await caches.keys();await Promise.all(keys.filter(k=>(k.startsWith('maha-opening-')||k.startsWith('maha-studio-')||k.startsWith('maha-worlds-'))&&k!==VERSION).map(k=>caches.delete(k)));await self.clients.claim();})());});
 self.addEventListener('fetch',event=>{
  if(event.request.method!=='GET')return;
- const u=new URL(event.request.url);
- if(u.origin!==self.location.origin)return; // GSAP is optional; animation fallbacks are local.
- if(!u.href.startsWith(BASE))return;
+ const url=new URL(event.request.url);
+ if(url.origin!==self.location.origin||!url.href.startsWith(BASE))return;
  event.respondWith((async()=>{
-  const cache=await caches.open(VERSION);const cached=await cache.match(event.request,{ignoreSearch:true});
-  if(cached)return cached;
-  try {const response=await fetch(event.request);if(response.ok)cache.put(event.request,response.clone()).catch(()=>{});return response;}
-  catch{return event.request.mode==='navigate'?(await cache.match(new URL('./index.html',BASE))||Response.error()):Response.error();}
+  const cache=await caches.open(VERSION);
+  const cached=await cache.match(event.request,{ignoreSearch:true});
+  const extension=url.pathname.split('.').pop().toLowerCase();
+  // Always revalidate source and content when connected. A stale hero/layout
+  // after a deploy is more harmful than a tiny network request.
+  const isDocument=event.request.mode==='navigate';
+  const updateFirst=isDocument||['html','js','css','json','webmanifest'].includes(extension);
+  const readNetwork=async()=>{
+   const response=await fetch(event.request);
+   if(response.ok)cache.put(event.request,response.clone()).catch(()=>{});
+   return response;
+  };
+  if(!updateFirst&&cached)return cached;
+  try {
+   const response=await readNetwork();
+   if(response.ok)return response;
+   return cached||response;
+  } catch {
+   if(cached)return cached;
+   if(isDocument){
+    return await cache.match(new URL('./index.html',BASE))||Response.error();
+   }
+   return Response.error();
+  }
  })());
 });
