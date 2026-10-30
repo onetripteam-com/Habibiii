@@ -1,8 +1,9 @@
 /* Version this list whenever changing the packaged app. Cache-first, local and predictable. */
-const VERSION='maha-worlds-v8.0.1';
+const VERSION='maha-worlds-v9.0.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
- './js/memory.js','./css/remembering-home.css','./css/atelier.css','./js/atelier-art.js','./js/atelier-life.js','./','./index.html','./css/style.css','./css/refresh.css','./css/new-home.css','./js/main.js','./js/hug.js','./js/flowers.js',
+ './js/memory.js','./css/remembering-home.css','./css/atelier.css','./js/atelier-art.js','./js/atelier-life.js','./js/cinematic-home.js','./css/cinematic-room.css',
+ './assets/rooms/story.webp','./assets/rooms/monsoon.webp','./assets/rooms/sunroom.webp','./assets/rooms/terracotta.webp','./assets/rooms/midnight.webp','./assets/rooms/cosmos.webp','./','./index.html','./css/style.css','./css/refresh.css','./css/new-home.css','./js/main.js','./js/hug.js','./js/flowers.js',
  './js/botanical.js','./js/room.js','./js/new-home.js','./js/home-art.js','./js/room-studio.js','./js/store.js','./js/time.js',
  './js/letters.js','./js/letter-unlocks.js','./content/letters.json','./content/config.json','./assets/letters/handwritten-placeholder.svg','./js/audio.js','./js/animation.js','./js/doors.js',
  './js/arcade.js','./js/games/common.js','./js/games/rules.js',
