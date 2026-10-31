@@ -354,3 +354,19 @@
 }
 
 @media(prefers-reduced-motion:reduce){#portal-screen[data-place="travel"] .atlas-map-layer{transition:none!important}}
+
+/* Studio.css deliberately boxed all earlier worlds into a 780px phone-style
+   stage. Cinema and Atlas now have genuinely panoramic desktop layouts. */
+@media(min-width:760px){
+ .app-frame .portal-screen:is([data-place="movies"],[data-place="travel"]) .portal-place .portal-content{
+  box-sizing:border-box!important;
+  width:min(calc(100% - 56px),1500px)!important;
+  max-width:none!important;
+  left:50%!important;right:auto!important;transform:translateX(-50%)!important;
+  padding:0 14px!important;
+ }
+}
+@media(min-width:760px) and (max-height:660px){
+ #portal-screen[data-place="movies"] .cinema-screen-wrap{max-height:49vh}
+ #portal-screen[data-place="movies"] .cinema-chapters button{min-height:40px;padding:7px 10px}
+}
