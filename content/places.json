@@ -1,12 +1,12 @@
 {
   "version": 1,
-  "caption": "Illustrated memory map. Pin locations are approximate, not navigation coordinates.",
+  "caption": "Original paper atlas uses public-domain Natural Earth country outlines. Map pins use approximate geographical coordinates; not for navigation.",
   "places": [
     {
       "id": "kerala",
       "name": "Kerala",
-      "x": 57,
-      "y": 69,
+      "x": 62.16,
+      "y": 74.61,
       "gate": "wood",
       "intro": "The air smells like rain and something frying. Probably a good sign.",
       "phrase": "നമുക്ക് പോകാം",
@@ -17,13 +17,17 @@
       "colors": [
         "#476e5a",
         "#ddc999"
-      ]
+      ],
+      "geo": {
+        "longitude": 76.2711,
+        "latitude": 9.9312
+      }
     },
     {
       "id": "kuwait",
       "name": "Kuwait",
-      "x": 43,
-      "y": 40,
+      "x": 20.56,
+      "y": 33.24,
       "gate": "stone",
       "intro": "For an ordinary Kuwait evening that deserves to be remembered.",
       "phrase": "സുഖമാണോ?",
@@ -34,13 +38,17 @@
       "colors": [
         "#b68572",
         "#efd3a4"
-      ]
+      ],
+      "geo": {
+        "longitude": 47.9783,
+        "latitude": 29.3759
+      }
     },
     {
       "id": "bangalore",
       "name": "Bengaluru",
-      "x": 66,
-      "y": 60,
+      "x": 64.11,
+      "y": 68.15,
       "gate": "wood",
       "intro": "The familiar chaos, with a very good snack somewhere nearby.",
       "phrase": "പതുക്കെ പോകാം",
@@ -51,13 +59,17 @@
       "colors": [
         "#667886",
         "#e6bba3"
-      ]
+      ],
+      "geo": {
+        "longitude": 77.5946,
+        "latitude": 12.9716
+      }
     },
     {
       "id": "munnar",
       "name": "Munnar",
-      "x": 73,
-      "y": 77,
+      "x": 63.32,
+      "y": 74.28,
       "gate": "wood",
       "intro": "Clouds that behave like they own the tea estates.",
       "phrase": "എന്തൊരു ഭംഗി!",
@@ -68,13 +80,17 @@
       "colors": [
         "#54836e",
         "#d0dfa9"
-      ]
+      ],
+      "geo": {
+        "longitude": 77.0597,
+        "latitude": 10.0889
+      }
     },
     {
       "id": "manali",
       "name": "Manali",
-      "x": 74,
-      "y": 35,
+      "x": 63.51,
+      "y": 27.14,
       "gate": "stone",
       "intro": "A winding road. An excuse for another playlist.",
       "phrase": "നല്ല തണുപ്പ്",
@@ -85,13 +101,17 @@
       "colors": [
         "#6b8290",
         "#d6dde4"
-      ]
+      ],
+      "geo": {
+        "longitude": 77.1892,
+        "latitude": 32.2432
+      }
     },
     {
       "id": "ladakh",
       "name": "Ladakh",
-      "x": 86,
-      "y": 23,
+      "x": 64.08,
+      "y": 23.08,
       "gate": "stone",
       "intro": "An enormous sky. A very small list of worries.",
       "phrase": "പോകാം",
@@ -102,13 +122,17 @@
       "colors": [
         "#7b8290",
         "#e3c6a6"
-      ]
+      ],
+      "geo": {
+        "longitude": 77.5771,
+        "latitude": 34.1526
+      }
     },
     {
       "id": "nepal",
       "name": "Nepal",
-      "x": 83,
-      "y": 47,
+      "x": 75.48,
+      "y": 36.77,
       "gate": "stone",
       "intro": "A road bends around the mountain and makes you look up again. One day, perhaps, with a camera in your hand.",
       "phrase": "നമുക്ക് മലകളിലേക്ക് പോകാം",
@@ -119,7 +143,11 @@
       "colors": [
         "#617b86",
         "#e5d7b4"
-      ]
+      ],
+      "geo": {
+        "longitude": 85.32396,
+        "latitude": 27.7172
+      }
     }
   ],
   "futureSlots": [
