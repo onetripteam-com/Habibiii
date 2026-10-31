@@ -106,6 +106,19 @@ async function run(engine,launcher,w,h){
   assert.ok(overflow<=5,'horizontal scroll overflow: '+overflow);
   const targets=await page.locator('[data-door]').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {w:r.width,h:r.height,x:r.x,y:r.y,bottom:r.bottom,right:r.right}}));
   for(const r of targets){assert.ok(r.w>=44&&r.h>=44,'comfortable touch target');assert.ok(r.x>=0&&r.y>=0&&r.right<=w+1&&r.bottom<=h+1,'all objects fit on screen')}
+  // A hotspot that looks beautiful but is covered by another button is broken.
+  const areas=await page.locator('[data-door],#room-bouquet').evaluateAll(elements=>elements.map(el=>{
+    const r=el.getBoundingClientRect();
+    return {name:el.dataset.door||'bouquet',x:r.left,y:r.top,right:r.right,bottom:r.bottom,width:r.width,height:r.height};
+  }));
+  for(let i=0;i<areas.length;i++)for(let j=i+1;j<areas.length;j++){
+    const a=areas[i],b=areas[j];
+    const dx=Math.max(0,Math.min(a.right,b.right)-Math.max(a.x,b.x));
+    const dy=Math.max(0,Math.min(a.bottom,b.bottom)-Math.max(a.y,b.y));
+    const fraction=dx*dy/Math.min(a.width*a.height,b.width*b.height);
+    assert.ok(fraction<.22,'Overlapping room targets: '+a.name+' / '+b.name+' ('+fraction.toFixed(2)+')');
+  }
+
   const frame=await page.locator('#app').boundingBox();
   assert.ok(Math.abs(frame.width-w)<2&&Math.abs(frame.height-h)<2,'home fills viewport: '+JSON.stringify({frame,w,h}));
   if(w>=760){const room=await page.locator('.inhabited-room').boundingBox();assert.ok(room.x<1&&room.y<1&&Math.abs(room.width-w)<2&&Math.abs(room.height-h)<2,'desktop room has no inner panel')}
