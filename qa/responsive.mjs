@@ -162,6 +162,26 @@ async function run(engine,launcher,w,h){
      await page.locator('#portal-screen.portal-arrived').waitFor({state:'visible',timeout:15000});
      const worldRoot=({letters:".mail-heading",music:".fm-app",movies:".cinema-app",travel:".atlas-app",games:".arcade-app",garden:".wordgarden",rest:".restroom"})[scene];
      await page.locator(worldRoot).waitFor({state:'visible',timeout:15000});
+     if(w===1440&&['games','garden','letters','music','rest'].includes(scene)){
+       const width=await page.locator('#portal-screen .portal-content').evaluate(el=>el.getBoundingClientRect().width);
+       assert.ok(width>950,'Desktop '+scene+' must use the actual desktop width, not a 780px phone column: '+width);
+       if(scene==='games'){
+         assert.ok(await page.locator('.arcade-info').isVisible(),'Desktop arcade game guide must be visible');
+         const before=await page.locator('.arcade-info h2').innerText();
+         await page.locator('[data-next]').click();
+         const after=await page.locator('.arcade-info h2').innerText();
+         assert.notEqual(after,before,'Cabinet guide must follow game selection');
+       }
+       if(scene==='garden'){
+         const width=await page.locator('.wg-canvas-wrap').evaluate(el=>el.getBoundingClientRect().width);
+         assert.ok(width>700,'Garden should be a spacious writing canvas');
+       }
+       if(scene==='letters'){
+         const columns=await page.locator('.mail-inbox-list').evaluate(el=>getComputedStyle(el).gridTemplateColumns);
+         assert.ok(columns.includes(' '),'Inbox should have two letter columns on PC');
+       }
+     }
+
      if(w>=1280&&(scene==='travel'||scene==='movies')){
        const contentWidth=await page.locator('#portal-screen .portal-content').evaluate(el=>el.getBoundingClientRect().width);
        assert.ok(contentWidth>=w*.82,'Panoramic '+scene+' must use desktop width, not old 780px cap: '+contentWidth);
