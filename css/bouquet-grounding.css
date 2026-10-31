@@ -3,6 +3,8 @@
    Draw only her actual seven living blooms at that exact tabletop position;
    let the photographed ceramic remain the vessel. */
 @media(min-width:760px){
+ /* The radio has its own material region; do not let it share the flowers' hitbox. */
+ .cinematic-room .object-music{left:74%!important;top:49%!important}
  .cinematic-room[data-theme="story"][data-original-art="false"] .table-bouquet{
    left:66.5%!important;top:75%!important;
    width:clamp(78px,8.8vw,126px)!important;
