@@ -169,6 +169,11 @@ async function run(engine,launcher,w,h){
        assert.equal((await page.request.get(new URL('./assets/atlas-region.svg',BASE).href)).status(),200);
        const coords=await page.locator('.atlas-pin[data-place="kuwait"]').evaluate(el=>({x:parseFloat(el.style.left),y:parseFloat(el.style.top)}));
        assert.ok(coords.x>18&&coords.x<24&&coords.y>29&&coords.y<38,'Kuwait pin must match approximate real regional geography');
+       await page.locator('[data-zoom]').click();
+       assert.ok(await page.locator('.atlas-board.is-zoomed').isVisible(),'India close-up should zoom map and actual pin layer together');
+       await page.locator('[data-zoom]').click();
+       assert.equal(await page.locator('.atlas-board.is-zoomed').count(),0,'Atlas should zoom back out');
+
      }
      if(scene==='movies'){
        await page.locator('.cinema-poster').first().click();
