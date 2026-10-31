@@ -162,6 +162,11 @@ async function run(engine,launcher,w,h){
      await page.locator('#portal-screen.portal-arrived').waitFor({state:'visible',timeout:15000});
      const worldRoot=({letters:".mail-heading",music:".fm-app",movies:".cinema-app",travel:".atlas-app",games:".arcade-app",garden:".wordgarden",rest:".restroom"})[scene];
      await page.locator(worldRoot).waitFor({state:'visible',timeout:15000});
+     if(w>=1280&&(scene==='travel'||scene==='movies')){
+       const contentWidth=await page.locator('#portal-screen .portal-content').evaluate(el=>el.getBoundingClientRect().width);
+       assert.ok(contentWidth>=w*.82,'Panoramic '+scene+' must use desktop width, not old 780px cap: '+contentWidth);
+     }
+
      if(scene==='travel'){
        assert.equal(await page.locator('.atlas-board .atlas-watercolor').count(),1,'Travel should display the accurate regional atlas');
        const img=await page.locator('.atlas-board .atlas-watercolor').getAttribute('src');
@@ -178,6 +183,9 @@ async function run(engine,launcher,w,h){
      if(scene==='movies'){
        await page.locator('.cinema-poster').first().click();
        await page.locator('.cinema-screen-wrap').waitFor({state:'visible'});
+       const ratio=await page.locator('.cinema-screen-wrap').evaluate(el=>{const r=el.getBoundingClientRect();return r.width/r.height});
+       assert.ok(ratio>1.58&&ratio<1.97,'Physical movie screen should be cinematic wide, not a stretched or tiny banner: '+ratio);
+
        assert.equal(await page.locator('.cinema-side-notes').count(),1,'Cinema needs a screening-side film guide');
        assert.ok(await page.locator('.cinema-chapters [data-chapter]').count()>=3,'Film chapters should be discoverable');
        await page.locator('.cinema-chapters [data-chapter]').nth(1).click();
