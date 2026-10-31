@@ -144,12 +144,32 @@ async function run(engine,launcher,w,h){
   await page.locator('#portal-screen').waitFor({state:'hidden',timeout:16000});
   if(w===393||w===1440){
    for(const scene of ['letters','music','movies','travel','games','garden','rest']){
+     // Scene-specific regression tests check actual geography and cinema controls,
+     // not just whether a page is present.
+
      const door=page.locator('[data-door="'+scene+'"]');
      await door.click();
      await page.locator('#portal-screen[data-place="'+scene+'"]').waitFor({state:'visible'});
      await page.locator('#portal-screen.portal-arrived').waitFor({state:'visible',timeout:15000});
      const worldRoot=({letters:".mail-heading",music:".fm-app",movies:".cinema-app",travel:".atlas-app",games:".arcade-app",garden:".wordgarden",rest:".restroom"})[scene];
      await page.locator(worldRoot).waitFor({state:'visible',timeout:15000});
+     if(scene==='travel'){
+       assert.equal(await page.locator('.atlas-board .atlas-watercolor').count(),1,'Travel should display the accurate regional atlas');
+       const img=await page.locator('.atlas-board .atlas-watercolor').getAttribute('src');
+       assert.ok(img?.includes('atlas-region.svg'),'Travel board must not show the old abstract polygon map');
+       assert.equal((await page.request.get(new URL('./assets/atlas-region.svg',BASE).href)).status(),200);
+       const coords=await page.locator('.atlas-pin[data-place="kuwait"]').evaluate(el=>({x:parseFloat(el.style.left),y:parseFloat(el.style.top)}));
+       assert.ok(coords.x>18&&coords.x<24&&coords.y>29&&coords.y<38,'Kuwait pin must match approximate real regional geography');
+     }
+     if(scene==='movies'){
+       await page.locator('.cinema-poster').first().click();
+       await page.locator('.cinema-screen-wrap').waitFor({state:'visible'});
+       assert.equal(await page.locator('.cinema-side-notes').count(),1,'Cinema needs a screening-side film guide');
+       assert.ok(await page.locator('.cinema-chapters [data-chapter]').count()>=3,'Film chapters should be discoverable');
+       await page.locator('.cinema-chapters [data-chapter]').nth(1).click();
+       const selected=await page.locator('[data-seek]').inputValue();
+       assert.ok(parseFloat(selected)>0,'Movie chapter should seek within the film');
+     }
      const content=page.locator('#portal-screen .portal-content');
      await content.locator(':scope > *').first().waitFor({state:'visible',timeout:10000});
      await page.screenshot({path:join(OUT,key+'-world-'+scene+'.png'),animations:'disabled'});
