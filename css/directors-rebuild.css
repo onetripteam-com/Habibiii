@@ -242,6 +242,21 @@
 #portal-screen[data-place="travel"] .atlas-wall{background:#795c44;padding:10px;border:1px solid #d8bb8d;border-radius:2px;box-shadow:0 12px 30px #64534139,0 2px 2px #43302b69}
 #portal-screen[data-place="travel"] .atlas-board{aspect-ratio:960/560;min-height:250px;box-shadow:inset 0 0 30px #4c553f2c;border:1px solid #cab38d;background:#9fc3bc}
 #portal-screen[data-place="travel"] .atlas-watercolor{width:100%;height:100%;object-fit:cover}
+#portal-screen[data-place="travel"] .atlas-map-layer{
+ position:absolute;inset:0;width:100%;height:100%;transform-origin:67% 58%;
+ transition:transform .72s cubic-bezier(.22,.82,.17,1);will-change:transform;
+}
+#portal-screen[data-place="travel"] .atlas-board.is-zoomed .atlas-map-layer{transform:scale(1.85)}
+#portal-screen[data-place="travel"] .atlas-wall{isolation:isolate}
+#portal-screen[data-place="travel"] .atlas-zoom{
+ position:absolute;z-index:7;right:18px;bottom:18px;
+ color:#f3e8d3;background:#2d504bcf;border:1px solid #d6c39ca1;
+ font:650 11px/1.2 system-ui,sans-serif;letter-spacing:.02em;
+ border-radius:5px;padding:10px 13px;min-height:44px;
+ box-shadow:0 6px 16px #21352c70;backdrop-filter:blur(8px);
+}
+#portal-screen[data-place="travel"] .atlas-zoom:focus-visible{outline:2px solid #f8ecc9;outline-offset:3px}
+
 #portal-screen[data-place="travel"] .atlas-board:after{content:'';position:absolute;inset:0;pointer-events:none;z-index:1;box-shadow:inset 0 0 62px #6f665044}
 #portal-screen[data-place="travel"] .atlas-routes{z-index:2}
 #portal-screen[data-place="travel"] .atlas-pin{
@@ -323,7 +338,9 @@
  #portal-screen[data-place="travel"] .atlas-map-top h1{font-size:clamp(24px,7vw,32px)}
  #portal-screen[data-place="travel"] .atlas-map-top p{font-size:10px}
  #portal-screen[data-place="travel"] .atlas-wall{padding:3px;border-width:5px}
- #portal-screen[data-place="travel"] .atlas-board{aspect-ratio:960/620;min-height:0}
+ #portal-screen[data-place="travel"] .atlas-board{aspect-ratio:960/560;min-height:0}
+ #portal-screen[data-place="travel"] .atlas-board.is-zoomed .atlas-map-layer{transform:scale(2.25)}
+ #portal-screen[data-place="travel"] .atlas-zoom{right:7px;bottom:7px;min-height:40px;padding:8px 10px;font-size:10px}
  #portal-screen[data-place="travel"] .atlas-hint{font-size:8px}
  #portal-screen[data-place="travel"] .atlas-pin-name{display:none}
  #portal-screen[data-place="travel"] .atlas-pin-head{width:18px;height:18px;min-width:18px;left:11px;top:11px}
@@ -335,3 +352,5 @@
  #portal-screen[data-place="movies"] .cinema-chapters button{transition:none}
  #portal-screen[data-place="travel"] .atlas-pin-name{transition:none}
 }
+
+@media(prefers-reduced-motion:reduce){#portal-screen[data-place="travel"] .atlas-map-layer{transition:none!important}}
