@@ -48,6 +48,13 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.table-bouquet .real-vase').count(),1,'Bouquet must live in a physical vase');
   assert.ok(await page.locator('.object-movies').isVisible(),'The cinema remains a reachable scene hotspot');
   assert.ok(await page.locator('#room-bouquet').isVisible(),'Photographed vase must remain interactive');
+  if(w===1440){
+    await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.originalArt==='false');
+    assert.ok(await page.locator('.table-bouquet .real-vase').isVisible(),'Seven chosen flowers must be visible at the Story room vase, not hidden behind a decorative marker');
+    const pot=await page.locator('#room-bouquet').evaluate(el=>{const b=el.getBoundingClientRect(),r=el.closest('.inhabited-room').getBoundingClientRect();return {x:(b.left+b.width/2-r.left)/r.width,y:(b.top+b.height/2-r.top)/r.height};});
+    assert.ok(pot.x>.59&&pot.x<.73&&pot.y>.63&&pot.y<.85,'Vase must appear on the photographed coffee-table vessel');
+  }
+
   const sticker=await page.locator('.object-movies .object-drawing').evaluate(el=>getComputedStyle(el).display);
   assert.equal(sticker,'none','Avoid pasted-on cartoon art over photographic backgrounds');
   if(w<760){
