@@ -19,6 +19,8 @@ on:
       - 'css/physical-room.css'
       - 'css/worlds-director.css'
       - 'css/directors-rebuild.css'
+      - 'css/wide-worlds.css'
+      - 'js/arcade.js'
       - 'assets/atlas-region.svg'
       - 'js/travel.js'
       - 'js/cinema.js'
