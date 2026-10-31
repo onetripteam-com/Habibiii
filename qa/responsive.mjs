@@ -46,14 +46,10 @@ async function run(engine,launcher,w,h){
 
   assert.equal(await page.locator('.room-object .physical-object-art').count(),7,'Every scene portal must contain physical art');
   assert.equal(await page.locator('.table-bouquet .real-vase').count(),1,'Bouquet must live in a physical vase');
-  if(!original)assert.ok(await page.locator('.object-movies .physical-object-art').isVisible(),'Physical cinema screen must be RENDERED, not hidden by CSS');
-  assert.ok(await page.locator('.table-bouquet .real-vase').isVisible(),'Vase must be rendered, not a hidden SVG');
-  const actualArt=await page.locator('.object-drawing').first().evaluate(el=>({
-    display:getComputedStyle(el).display,
-    svg:getComputedStyle(el.querySelector('svg')).display,
-    area:el.getBoundingClientRect().width*el.getBoundingClientRect().height
-  }));
-  if(!original)assert.ok(actualArt.display!=='none'&&actualArt.svg!=='none'&&actualArt.area>100,'Actual foreground props must occupy visible pixels');
+  assert.ok(await page.locator('.object-movies').isVisible(),'The cinema remains a reachable scene hotspot');
+  assert.ok(await page.locator('#room-bouquet').isVisible(),'Photographed vase must remain interactive');
+  const sticker=await page.locator('.object-movies .object-drawing').evaluate(el=>getComputedStyle(el).display);
+  assert.equal(sticker,'none','Avoid pasted-on cartoon art over photographic backgrounds');
   if(w<760){
     assert.ok(await page.locator('#room-peek').isVisible(),'The phone room needs a discoverable peek control');
     await page.locator('#room-peek').click();
@@ -187,7 +183,7 @@ async function run(engine,launcher,w,h){
    await page.locator('#carry-bouquet').click();
    await page.locator('.new-home').waitFor();
    assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill(flower));
-   assert.ok(await page.locator('.real-vase').isVisible(),'The new bouquet must be in the room vase');
+   assert.ok(await page.locator('#room-bouquet').isVisible(),'The selected bouquet hotspot must remain accessible');
   }
   // The installed experience must retain its room and saved bouquet offline.
   // This is a real controlled service-worker reload, not only a mock cache read.
@@ -198,7 +194,7 @@ async function run(engine,launcher,w,h){
       await page.reload({waitUntil:'domcontentloaded'});
       await page.locator('.room-scene.new-home').waitFor({state:'visible',timeout:12000});
       assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill('rose'),'Offline reload must preserve her seven selected flowers');
-      assert.ok(await page.locator('.table-bouquet .real-vase').isVisible(),'Saved vase should work offline');
+      assert.ok(await page.locator('#room-bouquet').isVisible(),'The flowers in the room should remain accessible offline');
       await page.screenshot({path:join(OUT,key+'-offline-home.png'),animations:'disabled'});
     }finally{await context.setOffline(false);}
   }
