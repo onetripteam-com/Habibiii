@@ -20,6 +20,7 @@ on:
       - 'css/worlds-director.css'
       - 'css/directors-rebuild.css'
       - 'css/wide-worlds.css'
+      - 'css/bouquet-grounding.css'
       - 'js/arcade.js'
       - 'assets/atlas-region.svg'
       - 'js/travel.js'
