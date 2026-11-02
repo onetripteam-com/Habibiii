@@ -310,6 +310,18 @@ async function run(engine,launcher,w,h){
       await page.screenshot({path:join(OUT,key+'-offline-home.png'),animations:'disabled'});
     }finally{await context.setOffline(false);}
   }
+  if(engine==='chromium'&&w===393){
+    await page.locator('#revisit-hug').click();
+    await page.locator('.new-hug .hug-envelope').waitFor({state:'visible'});
+    await page.screenshot({path:join(OUT,key+'-whale-hug.png'),animations:'disabled'});
+    await page.locator('#hug-open').click();
+    assert.ok(await page.locator('#hug-letter').isVisible(),'Original letter must unfold on tap');
+    await page.locator('#hug-yes').click();
+    assert.ok(await page.locator('#hug-result').isVisible(),'A genuine optional virtual hug should appear');
+    await page.locator('#next-flowers').click();
+    await page.locator('.room-scene.new-home').waitFor({state:'visible'});
+    assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill('rose'),'Revisiting hug must not reset saved flowers');
+  }
   assert.deepEqual(errors,[],'JS errors: '+errors.join('; '));
   assert.deepEqual(missing,[],'Missing assets: '+missing.join('; '));
   reports.push('PASS '+key);
