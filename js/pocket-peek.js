@@ -10,8 +10,10 @@ export function mountPocketPeek(room){
  const layer=room.querySelector('.living-photo-plane');
  if(!stage||!left||!right||!layer)return ()=>{};
  const small=matchMedia('(max-width:759px)');
- let pan=.5,start=null,disposed=false,lastVelocity=0,frame=0;
- const maxTravel=()=>Math.max(0,(layer.getBoundingClientRect().width-stage.getBoundingClientRect().width)/2);
+ let pan=.5,start=null,disposed=false,lastVelocity=0,frame=0,travel=0;
+ const measure=()=>{travel=Math.max(0,(layer.offsetWidth-stage.clientWidth)/2)};
+ const maxTravel=()=>travel;
+ measure();
  function paint(quiet=false){
    if(disposed)return;
    const max=maxTravel();
@@ -56,12 +58,13 @@ export function mountPocketPeek(room){
      lastVelocity=Math.max(-2,Math.min(2,(e.clientX-start.previousX)/elapsed));
      start.previousX=e.clientX;start.previousT=now;
      pan=Math.max(0,Math.min(1,start.initial-dx/(2*max)));
-     paint(true);
+     if(!frame)frame=requestAnimationFrame(()=>{frame=0;paint(true)});
    }
  };
  const onEnd=()=>{
    const dragging=start?.dragging;
    start=null;
+   if(frame){cancelAnimationFrame(frame);frame=0;paint(true)}
    layer.classList.remove('room-is-dragging');
    if(dragging&&Math.abs(lastVelocity)>.11){
      const max=Math.max(1,maxTravel());
@@ -69,7 +72,7 @@ export function mountPocketPeek(room){
      set(projected);
    }else paint();
  };
- const onResize=()=>paint();
+ const onResize=()=>{measure();paint()};
  left.addEventListener('click',goLeft);
  right.addEventListener('click',goRight);
  stage.addEventListener('pointerdown',onDown,{passive:true});
