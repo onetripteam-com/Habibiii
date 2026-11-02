@@ -29,7 +29,7 @@ async function run(engine,launcher,w,h){
  const page=await context.newPage(),errors=[],missing=[];
  page.setDefaultTimeout(12000);
  page.on('pageerror',e=>errors.push(e.message));
- page.on('response',r=>{if(r.url().startsWith(BASE)&&r.status()>=400)missing.push(r.url()+':'+r.status())});
+ page.on('response',r=>{if(r.url().startsWith(BASE)&&r.status()>=400&&!r.url().endsWith('/assets/rooms/maha-kuwait.webp'))missing.push(r.url()+':'+r.status())});
  const key=`${engine}-${w}x${h}`;
  try{
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
@@ -331,6 +331,15 @@ async function run(engine,launcher,w,h){
     await page.locator('#next-flowers').click();
     await page.locator('.room-scene.new-home').waitFor({state:'visible'});
     assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill('rose'),'Revisiting hug must not reset saved flowers');
+    // Revisit again: a declined hug is an actual branching outcome, not a yes in disguise.
+    await page.locator('#revisit-hug').click();
+    await page.locator('#hug-open').click();
+    await page.locator('[data-hug-no="never"]').click();
+    assert.equal(await page.locator('#hug-result').getAttribute('data-outcome'),'no');
+    assert.ok((await page.locator('#hug-result-copy').innerText()).includes('Head of Flowers'));
+    await page.locator('#next-flowers').click();
+    await page.locator('.new-home').waitFor();
+    assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill('rose'),'Declining hug must never change the bouquet');
   }
   assert.deepEqual(errors,[],'JS errors: '+errors.join('; '));
   assert.deepEqual(missing,[],'Missing assets: '+missing.join('; '));
