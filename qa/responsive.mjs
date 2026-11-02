@@ -294,12 +294,18 @@ async function run(engine,launcher,w,h){
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
    await page.locator('#room-bouquet').click();
    await page.locator('.flowers-scene').waitFor();
-   for(let i=0;i<7;i++)await page.locator('[data-flower="'+flower+'"]').click();
+   assert.equal(await page.locator('#flower-steps .flower-step').count(),7,'Florist must have seven clear slots');
+   await page.locator('[data-flower="'+flower+'"]').click();
+   assert.equal(await page.locator('#flower-steps .is-picked').count(),1,'One selected flower fills one step');
+   assert.ok((await page.locator('#meaning-line').innerText()).includes('01 / 07'),'Every pick should carry its own line');
+   await page.screenshot({path:join(OUT,key+'-flower-picker.png'),animations:'disabled'});
+   for(let i=1;i<7;i++)await page.locator('[data-flower="'+flower+'"]').click();
    await page.locator('#carry-bouquet').waitFor({state:'visible',timeout:18000});
    await page.locator('#carry-bouquet').click();
    await page.locator('.new-home').waitFor();
    assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill(flower));
    assert.ok(await page.locator('#room-bouquet').isVisible(),'The selected bouquet hotspot must remain accessible');
+   assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species="'+flower+'"]').count(),7,'Updated flower selection must be reflected in the real room');
   }
   // The installed experience must retain its room and saved bouquet offline.
   // This is a real controlled service-worker reload, not only a mock cache read.
