@@ -170,7 +170,7 @@
 /* Phone navigation: calm arrows + free-drag, not a rotating 3-stop button. */
 .cinematic-room .room-pan-controls{display:none}
 @media(max-width:759px){
- .cinematic-room[data-room-photo-scene="original"] .room-pan-controls{
+ .cinematic-room .room-pan-controls{
   display:flex!important;position:absolute;z-index:30!important;
   left:50%;transform:translateX(-50%);top:auto!important;
   bottom:calc(78px + env(safe-area-inset-bottom,0px))!important;
