@@ -154,3 +154,33 @@
  .cinematic-room .living-photo-image,
  .cinematic-room .cinematic-lens{transition:none!important;animation:none!important}
 }
+
+/* Two photo-accurate atmospheric layers, no video download or external asset.
+   Curtain motion and candle warmth are painted from the actual image. */
+.cinematic-room[data-room-photo-scene="original"] .living-photo-plane:before{
+ content:'';position:absolute;z-index:2;inset:0;pointer-events:none;
+ background:url('../assets/rooms/maha-living-room.webp') center / 100% 100% no-repeat;
+ clip-path:polygon(25% 2%,32% 2%,33% 24%,35% 49%,32% 59%,29% 54%,28% 25%,25% 13%);
+ opacity:.95;
+ animation:maha-curtain-sway 11s ease-in-out infinite alternate;
+ transform-origin:27% 6%;
+}
+.cinematic-room[data-room-photo-scene="original"] .living-photo-plane:after{
+ content:'';position:absolute;inset:0;z-index:3;pointer-events:none;
+ background:radial-gradient(ellipse 10% 12% at 69% 76%,#fbc16e45,transparent 85%),
+ radial-gradient(ellipse 13% 10% at 77% 42%,#ffd6a019,transparent 90%);
+ mix-blend-mode:screen;animation:maha-candle-breathe 7s ease-in-out infinite alternate;
+}
+@keyframes maha-curtain-sway{
+ 0%{transform:translateX(-1px) skewX(-.14deg);opacity:.77}
+ 100%{transform:translateX(2px) skewX(.21deg);opacity:.91}
+}
+@keyframes maha-candle-breathe{0%{opacity:.36}50%{opacity:.7}100%{opacity:.48}}
+.cinematic-room[data-room-photo-scene="original"] .theme-preview-art[data-theme="story"]{
+ background-image:url('../assets/rooms/maha-living-room.webp')!important;
+ background-size:cover!important;background-position:center!important;
+}
+@media(prefers-reduced-motion:reduce){
+ .cinematic-room[data-room-photo-scene="original"] .living-photo-plane:before,
+ .cinematic-room[data-room-photo-scene="original"] .living-photo-plane:after{animation:none!important}
+}
