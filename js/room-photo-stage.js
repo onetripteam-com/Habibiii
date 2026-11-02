@@ -31,7 +31,7 @@ export function mountLivingRoomPhoto(room){
   rest:{x:2,y:43,w:35,h:45,title:'The sofa · somewhere to rest'},
   garden:{x:39,y:23,w:18,h:37,title:'The living plants · word garden'},
   movies:{x:87,y:5,w:13,h:29,title:'The projector screen · cinema'},
-  travel:{x:60,y:17,w:26,h:27,title:'The travel wall · passport & map'},
+  travel:{x:60,y:17,w:26,h:22,title:'The travel wall · passport & map'},
   letters:{x:67,y:39,w:17,h:17,title:'The letter desk · letters'},
   music:{x:88,y:43,w:12,h:18,title:'The radio · Habibii FM'},
   games:{x:60,y:77,w:16,h:15,title:'The handheld game console · arcade'},
@@ -51,6 +51,12 @@ export function mountLivingRoomPhoto(room){
  const oldImage=room.querySelector('.cinematic-photo');
  function setTheme(){
   const active=room.dataset.theme==='story';
+  // In other themes, the SAME buttons must return to the scene root.
+  // Hiding their parent would otherwise make all portals disappear.
+  for(const control of portals){
+    if(active&&control.parentElement!==layer)layer.append(control);
+    if(!active&&control.parentElement!==stage)stage.append(control);
+  }
   layer.hidden=!active;
   room.dataset.roomPhotoScene=active?'original':'other';
   if(active&&oldImage)oldImage.style.visibility='hidden';
