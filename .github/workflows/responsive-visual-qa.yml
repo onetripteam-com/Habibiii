@@ -21,6 +21,8 @@ on:
       - 'css/directors-rebuild.css'
       - 'css/wide-worlds.css'
       - 'css/bouquet-grounding.css'
+      - 'css/maha-world-2026.css'
+      - 'js/room-moments.js'
       - 'js/arcade.js'
       - 'assets/atlas-region.svg'
       - 'js/travel.js'
