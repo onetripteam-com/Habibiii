@@ -157,11 +157,11 @@ async function run(engine,launcher,w,h){
   for(const [id,photo] of [['kerala','maha-kerala.webp'],['bengaluru','maha-bengaluru.webp']]){
    await page.locator('[data-world="'+id+'"]').click();
    assert.equal(await page.locator('.new-home').getAttribute('data-theme'),id);
-   await page.waitForFunction(name=>document.querySelector('.living-photo-image')?.getAttribute('src')?.endsWith(name),photo);
-   const loaded=await page.locator('.living-photo-image').evaluate(img=>img.complete&&img.naturalWidth>1000);
+   await page.waitForFunction(name=>{const img=document.querySelector('.living-photo-image');return img?.getAttribute('src')?.endsWith(name)&&img.complete&&img.naturalWidth>1000},photo);
+   const loaded=true;
    assert.ok(loaded,id+' must render an original locally packaged scene');
    await page.screenshot({path:join(OUT,key+'-'+id+'.png'),animations:'disabled'});
-   await page.locator('#theme-trigger').click();
+   if(id==='kerala')await page.locator('#theme-trigger').click();
   }
   // Switch back to the exact user-approved room before portal testing:
   // switching themes must not strand the semantic room controls.
