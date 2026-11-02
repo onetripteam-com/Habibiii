@@ -207,3 +207,26 @@
   transition:none!important;
  }
 }
+
+/* Screenshot review: maintain readable ivory controls over the dark header,
+ * and never duplicate a large polygon of the photo over the window. */
+.app-frame[data-scene="room"] .app-header .room-top-controls button{
+ color:#fff1de!important;
+ -webkit-text-fill-color:#fff1de!important;
+}
+.app-frame[data-scene="room"] .app-header .room-top-controls button span{
+ color:#f6dfb8!important;
+ -webkit-text-fill-color:#f6dfb8!important;
+}
+/* The former 'curtain sway' reprojected a whole angular piece of the photo.
+   Replace the fake seam with the much gentler leaf-only motion above. */
+.cinematic-room[data-room-photo-scene="original"] .living-photo-plane:before{
+ display:none!important;content:none!important;
+}
+.cinematic-room[data-room-photo-scene="original"] .living-leaf-sway:before{
+ clip-path:polygon(16% 0%,47% 0%,48% 8%,42% 13%,34% 12%,23% 10%,16% 7%)!important;
+ opacity:.26!important;
+}
+.cinematic-room[data-room-photo-scene="original"] .living-leaf-sway:after{
+ opacity:.23!important;
+}
