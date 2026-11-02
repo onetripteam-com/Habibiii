@@ -36,6 +36,15 @@ async function run(engine,launcher,w,h){
   await page.locator('.room-scene.new-home').waitFor({timeout:16000});
   assert.ok(await page.locator('.room-heading h1').isVisible());
   assert.equal(await page.locator('[data-door]').count(),7);
+  assert.ok(await page.locator('.identity-flower').isVisible(),'Signature original flower mark must be visible');
+  assert.ok(await page.locator('#room-welcome').isVisible(),'Visit-aware welcome must be visible');
+  assert.ok(await page.locator('#room-light-trigger').isVisible(),'Room light must sit in the top controls');
+  await page.locator('#room-light-trigger').click();
+  await page.locator('[data-light-option="night"]').click();
+  assert.equal(await page.locator('.cinematic-room').getAttribute('data-light'),'night','Selecting a light mood must change the real room');
+  await page.locator('#room-light-trigger').click();
+  await page.locator('[data-light-option="auto"]').click();
+
   const artManifestResponse=await page.request.get(new URL('./assets/rooms/originals/manifest.json',BASE).href);
   assert.equal(artManifestResponse.status(),200);
   const artManifest=await artManifestResponse.json();
@@ -195,6 +204,11 @@ async function run(engine,launcher,w,h){
      }
 
      if(scene==='travel'){
+       await page.locator('[data-tab="passport"]').click();
+       assert.ok(await page.locator('.passport-spread').isVisible(),'Travel passport must be a physical two-page book');
+       assert.equal(await page.locator('.passport-paper').count(),2,'Passport must have both left and right pages');
+       await page.locator('[data-tab="map"]').click();
+
        assert.equal(await page.locator('.atlas-board .atlas-watercolor').count(),1,'Travel should display the accurate regional atlas');
        const img=await page.locator('.atlas-board .atlas-watercolor').getAttribute('src');
        assert.ok(img?.includes('atlas-region.svg'),'Travel board must not show the old abstract polygon map');
@@ -206,6 +220,10 @@ async function run(engine,launcher,w,h){
        await page.locator('[data-zoom]').click();
        assert.equal(await page.locator('.atlas-board.is-zoomed').count(),0,'Atlas should zoom back out');
 
+     }
+     if(scene==='rest'){
+        assert.ok(await page.locator('.rr-intro').isVisible(),'Quiet room has a human-written introduction');
+        assert.ok(await page.locator('.rr-lamp').isVisible(),'Rest is a physical lamp-lit room');
      }
      if(scene==='movies'){
        await page.locator('.cinema-poster').first().click();
