@@ -1,5 +1,5 @@
 /* MAHA offline shell. Network-first for code/content prevents stale design after a deploy; local cache remains available offline. */
-const VERSION='maha-worlds-v11.0.0';
+const VERSION='maha-worlds-v11.1.0';
 const BASE=new URL('./',self.location.href).href;
 const FILES=[
  './js/memory.js','./css/remembering-home.css','./css/atelier.css','./js/atelier-art.js','./js/atelier-life.js','./js/cinematic-home.js','./css/cinematic-room.css','./css/physical-room.css','./css/worlds-director.css','./css/directors-rebuild.css','./css/wide-worlds.css','./css/bouquet-grounding.css','./css/maha-world-2026.css','./js/room-moments.js','./assets/atlas-region.svg','./js/physical-room-objects.js','./js/botanical-miniatures.js','./js/pocket-peek.js','./js/original-room-art.js',
@@ -10,7 +10,7 @@ const FILES=[
  './js/arcade.js','./js/games/common.js','./js/games/rules.js',
  './js/games/softlanding.js','./js/games/spark.js','./js/games/lettersmile.js','./js/games/baggage.js',
  './js/games/phase2-rules.js','./js/games/doctor.js','./js/games/world.js','./js/games/vlog.js','./js/places.js','./js/portal.js',
- './js/media-control.js','./js/cinema.js','./js/radio.js','./js/travel.js','./js/garden.js','./js/rest.js','./content/comfort.json',
+ './js/media-control.js','./js/cinema.js','./js/radio.js','./js/radio-ambience.js','./js/travel.js','./js/garden.js','./js/rest.js','./content/comfort.json',
  './content/movies.json','./content/radio.json','./content/places.json',
  './assets/video/kerala.en.vtt','./assets/video/kerala.ml.vtt',
  './assets/video/kuwait.en.vtt','./assets/video/kuwait.ml.vtt',
