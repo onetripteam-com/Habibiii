@@ -15,12 +15,23 @@ export function mountLivingRoomPhoto(room,chosen=[]){
  image.alt='';
  image.draggable=false;
  image.decoding='async';
- image.src='./assets/rooms/maha-living-room.webp';
+ const generatedKuwait='./assets/rooms/maha-kuwait.webp';
+ const originalKuwait='./assets/rooms/maha-living-room.webp';
+ let kuwaitMissing=false;
+ image.src=originalKuwait;
  image.addEventListener('error',()=>{
+  // The approved photo is optional until its WebP has been uploaded to the repo.
+  if(!kuwaitMissing&&image.getAttribute('src')===generatedKuwait){
+   kuwaitMissing=true;
+   image.src=originalKuwait;
+   return;
+  }
   room.dataset.roomPhoto='unavailable';
  });
  image.addEventListener('load',()=>{
   room.dataset.roomPhoto='ready';
+  room.dataset.kuwaitPhoto=image.getAttribute('src')===generatedKuwait?'ready':'fallback';
+  if(room.dataset.theme==='story')syncFlowers('story');
  });
  layer.append(image);
  const flowerLayer=document.createElement('div');
@@ -76,12 +87,21 @@ export function mountLivingRoomPhoto(room,chosen=[]){
   btn.title=area.title;
  }
  const oldImage=room.querySelector('.cinematic-photo');
- const sceneImages={story:'maha-living-room.webp',kerala:'maha-kerala.webp',bengaluru:'maha-bengaluru.webp'};
+ const sceneImages={story:'maha-kuwait.webp',kerala:'maha-kerala.webp',bengaluru:'maha-bengaluru.webp'};
  const placements={story:{},kerala:{rest:[0,43,39,43],garden:[39,18,20,36],movies:[84,7,16,38],travel:[62,13,24,29],letters:[65,36,19,23],music:[88,41,12,20],games:[59,72,20,20],flowers:[49,52,17,32]},bengaluru:{rest:[0,46,41,42],garden:[38,18,23,38],movies:[84,5,16,37],travel:[60,15,24,28],letters:[64,39,19,23],music:[88,43,12,18],games:[59,70,23,23],flowers:[46,54,19,30]}};
+ function syncFlowers(id){
+  // The old photo rim cutout must not be pasted into a new Kuwait vase.
+  const spriteScene=id==='story'&&room.dataset.kuwaitPhoto==='ready'?'kuwait':id;
+  if(flowerLayer.dataset.vaseScene!==id||flowerLayer.dataset.spriteScene!==spriteScene){
+   flowerLayer.innerHTML=photoBloomsMarkup(chosen,spriteScene);
+   flowerLayer.dataset.vaseScene=id;
+   flowerLayer.dataset.spriteScene=spriteScene;
+  }
+ }
  function setTheme(){
   const active=Boolean(sceneImages[room.dataset.theme]);
   const id=sceneImages[room.dataset.theme]?room.dataset.theme:'story';
-  const src='./assets/rooms/'+sceneImages[id];
+  const src=id==='story'&&kuwaitMissing?originalKuwait:'./assets/rooms/'+sceneImages[id];
   if(image.getAttribute('src')!==src)image.src=src;
   const region=placements[id];
   for(const [name,coords] of Object.entries(region)){
@@ -91,8 +111,7 @@ export function mountLivingRoomPhoto(room,chosen=[]){
   }
   // A bouquet is a living souvenir: it must appear in all three rooms.
   flowerLayer.hidden=false;
-  if(flowerLayer.dataset.vaseScene!==id){flowerLayer.innerHTML=photoBloomsMarkup(chosen,id)}
-  flowerLayer.dataset.vaseScene=id;
+  syncFlowers(id);
   flowerLayer.setAttribute('aria-hidden','true');
   // In other themes, the SAME buttons must return to the scene root.
   // Hiding their parent would otherwise make all portals disappear.
