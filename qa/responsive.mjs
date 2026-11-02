@@ -154,6 +154,13 @@ async function run(engine,launcher,w,h){
     assert.equal(await page.locator('.cinematic-note').isVisible(),false,'PC-only copy must not leak into mobile');
   }
   await page.screenshot({path:join(OUT,key+'-cosmos.png'),animations:'disabled'});
+  // Switch back to the exact user-approved room before portal testing:
+  // switching themes must not strand the semantic room controls.
+  await page.locator('#theme-trigger').click();
+  await page.locator('[data-world="story"]').click();
+  assert.equal(await page.locator('.cinematic-room').getAttribute('data-room-photo-scene'),'original');
+  assert.equal(await page.locator('.living-photo-plane .living-hit-area').count(),8);
+
   await page.locator('[data-door="letters"]').scrollIntoViewIfNeeded();
   await page.locator('[data-door="letters"]').click();
   await page.locator('#portal-screen').waitFor({state:'visible'});
