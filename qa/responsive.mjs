@@ -6,7 +6,7 @@ import {join,resolve,extname} from 'node:path';
 import {chromium,webkit} from 'playwright';
 const ROOT=resolve('.'),OUT=join(ROOT,'qa','screenshots');
 await mkdir(OUT,{recursive:true});
-const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.vtt':'text/vtt'};
+const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.json':'application/json','.svg':'image/svg+xml','.png':'image/png','.webp':'image/webp','.vtt':'text/vtt'};
 const server=createServer(async(req,res)=>{
  let raw;try{raw=decodeURIComponent(new URL(req.url,'http://localhost').pathname)}catch{res.writeHead(400);res.end();return}
  const path=resolve(ROOT,'.'+(raw==='/'?'/index.html':raw));
@@ -40,10 +40,13 @@ async function run(engine,launcher,w,h){
   assert.equal((await page.request.get(new URL('./assets/rooms/maha-living-room.webp',BASE).href)).status(),200,'Original chosen room image must be stored locally');
   assert.equal(await page.locator('.living-photo-plane .living-hit-area').count(),8,'All seven physical objects plus the real vase must share the same image plane');
   if(w<760){
-    await page.locator('#room-peek').click();
-    assert.ok(await page.locator('.cinematic-room').getAttribute('data-peek')!=='1','Look Around should pan the actual original photo');
-    await page.locator('#room-peek').click();
-    await page.locator('#room-peek').click();
+    assert.ok(await page.locator('#room-pan-left').isVisible());
+    assert.ok(await page.locator('#room-pan-right').isVisible());
+    const origin=await page.locator('.living-photo-plane').evaluate(el=>getComputedStyle(el).transform);
+    await page.locator('#room-pan-right').click();
+    const after=await page.locator('.living-photo-plane').evaluate(el=>getComputedStyle(el).transform);
+    assert.notEqual(origin,after,'Photo should pan when tapping a direction arrow');
+    await page.locator('#room-pan-left').click();
   }
 
 
@@ -53,7 +56,9 @@ async function run(engine,launcher,w,h){
 
   assert.ok(await page.locator('.identity-flower').isVisible(),'Signature original flower mark must be visible');
   assert.ok(await page.locator('#room-welcome').isVisible(),'Visit-aware welcome must be visible');
-  assert.ok(await page.locator('#room-light-trigger').isVisible(),'Room light must sit in the top controls');
+  assert.ok(await page.locator('#room-light-trigger').isVisible(),'Room light must sit in the header');
+  assert.ok(await page.locator('#sound-toggle').evaluate(el=>el.parentElement===document.querySelector('.app-header')));
+  assert.ok(await page.locator('#room-light-trigger').evaluate(el=>el.parentElement?.parentElement===document.querySelector('.app-header')),'Scenes and lighting must be next to sound');
   await page.locator('#room-light-trigger').click();
   await page.locator('[data-light-option="night"]').click();
   assert.equal(await page.locator('.cinematic-room').getAttribute('data-light'),'night','Selecting a light mood must change the real room');
@@ -74,7 +79,7 @@ async function run(engine,launcher,w,h){
   assert.ok(await page.locator('#room-bouquet').isVisible(),'Photographed vase must remain interactive');
   if(w===1440){
     await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.originalArt==='false');
-    assert.ok(await page.locator('.table-bouquet .real-vase').isVisible(),'Seven chosen flowers must be visible at the Story room vase, not hidden behind a decorative marker');
+    assert.ok(await page.locator('.photographed-vase-flowers .photo-blooms').isVisible(),'Seven flowers must grow from photographed vase opening');
     const pot=await page.locator('#room-bouquet').evaluate(el=>{const b=el.getBoundingClientRect(),r=el.closest('.inhabited-room').getBoundingClientRect();return {x:(b.left+b.width/2-r.left)/r.width,y:(b.top+b.height/2-r.top)/r.height};});
     assert.ok(pot.x>.45&&pot.x<.65&&pot.y>.45&&pot.y<.92,'Vase must appear over the actual coffee-table vessel');
   }
@@ -82,15 +87,19 @@ async function run(engine,launcher,w,h){
   const sticker=await page.locator('.object-movies .object-drawing').evaluate(el=>getComputedStyle(el).display);
   assert.equal(sticker,'none','Avoid pasted-on cartoon art over photographic backgrounds');
   if(w<760){
-    assert.ok(await page.locator('#room-peek').isVisible(),'The phone room needs a discoverable peek control');
-    await page.locator('#room-peek').click();
+    assert.ok(await page.locator('#room-pan-left').isVisible(),'The room needs simple navigation arrows');
+    assert.ok(await page.locator('#room-pan-right').isVisible(),'The room needs simple navigation arrows');
+    await page.locator('#room-pan-right').click();
     assert.equal(await page.locator('.cinematic-room').getAttribute('data-peek'),'2');
-    await page.locator('#room-peek').click();
+    await page.locator('#room-pan-left').click();
+    await page.locator('#room-pan-left').click();
     assert.equal(await page.locator('.cinematic-room').getAttribute('data-peek'),'0');
-    await page.locator('#room-peek').click();
+    await page.locator('#room-pan-right').click();
   }
 
-  assert.equal(await page.locator('.real-vase ellipse[fill]').count()>0,true,'Vase needs drawn blooms');
+  assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,'Seven selected blooms must appear in the original vase');
+  assert.equal(await page.locator('.room-traces').isVisible(),false,'Avoid meaningless floating postcard labels on photo');
+  assert.equal(await page.locator('#room-window').isVisible(),false,'Remove unexplained centre dot');
   assert.equal(await page.locator('.physical-movies').count(),1,'Cinema portal must be an actual screen');
   if(engine==='chromium'&&w===393){
     const flora=await page.evaluate(async()=>{
@@ -189,7 +198,7 @@ async function run(engine,launcher,w,h){
        for(let n=0;n<3;n++){
          const current=Number(await page.locator('.cinematic-room').getAttribute('data-peek'));
          if(current===desired)break;
-         await page.locator('#room-peek').click();
+         await page.locator(desired===0?'#room-pan-left':'#room-pan-right').click();
        }
      }
      await door.click();
