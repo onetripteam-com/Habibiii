@@ -1,0 +1,46 @@
+name: Package Maha's original room photograph
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/package-maha-room.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  package-room:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch the actual original room image chosen in chat
+        run: |
+          set -euo pipefail
+          mkdir -p assets/rooms
+          curl --location --fail --silent --show-error --retry 3 --max-time 90 \
+            'https://d2ol7oe51mr4n9.cloudfront.net/user_3Kr2mB6wawNwljfL4o9CKuS674p/53e3737a-7b5d-46ab-ae9f-1ddf18394e22.png' -o /tmp/maha-room-source.png
+          file /tmp/maha-room-source.png
+          test "$(stat -c%s /tmp/maha-room-source.png)" -gt 50000
+      - name: Optimize as local WebP for iPhone and desktop
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from PIL import Image,ImageOps
+          p=Image.open('/tmp/maha-room-source.png')
+          p=ImageOps.exif_transpose(p).convert('RGB')
+          assert p.width>=1600 and p.height>=900,(p.width,p.height)
+          p.save('assets/rooms/maha-living-room.webp','WEBP',quality=85,method=6)
+          print('Original room',p.size,'WebP bytes',__import__('os').stat('assets/rooms/maha-living-room.webp').st_size)
+          PY
+      - name: Commit original local scene
+        run: |
+          git config user.name "MAHA website"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/rooms/maha-living-room.webp
+          if ! git diff --cached --quiet; then
+             git commit -m "Bundle the user-selected original living room image as the interactive home"
+             git pull --rebase origin main
+             git push origin HEAD:main
+          fi
