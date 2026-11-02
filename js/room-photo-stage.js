@@ -72,8 +72,20 @@ export function mountLivingRoomPhoto(room,chosen=[]){
   btn.title=area.title;
  }
  const oldImage=room.querySelector('.cinematic-photo');
+ const sceneImages={story:'maha-living-room.webp',kerala:'maha-kerala.webp',bengaluru:'maha-bengaluru.webp'};
+ const placements={story:{},kerala:{rest:[0,43,39,43],garden:[39,18,20,36],movies:[84,7,16,38],travel:[62,13,24,29],letters:[65,36,19,23],music:[88,41,12,20],games:[59,72,20,20],flowers:[49,52,17,32]},bengaluru:{rest:[0,46,41,42],garden:[38,18,23,38],movies:[84,5,16,37],travel:[60,15,24,28],letters:[64,39,19,23],music:[88,43,12,18],games:[59,70,23,23],flowers:[46,54,19,30]}};
  function setTheme(){
-  const active=room.dataset.theme==='story';
+  const active=Boolean(sceneImages[room.dataset.theme]);
+  const id=sceneImages[room.dataset.theme]?room.dataset.theme:'story';
+  const src='./assets/rooms/'+sceneImages[id];
+  if(image.getAttribute('src')!==src)image.src=src;
+  const region=placements[id];
+  for(const [name,coords] of Object.entries(region)){
+    const btn=name==='flowers'?room.querySelector('#room-bouquet'):room.querySelector('[data-door="'+name+'"]');
+    if(!btn)continue;
+    ['--object-x','--object-y','--object-w','--object-h'].forEach((key,i)=>btn.style.setProperty(key,coords[i]+'%'));
+  }
+  flowerLayer.hidden=id!=='story';
   // In other themes, the SAME buttons must return to the scene root.
   // Hiding their parent would otherwise make all portals disappear.
   for(const control of portals){
