@@ -83,7 +83,7 @@ function persistDream(name){const prev=Array.isArray(store.get('dreamPins'))?sto
 }
 export function mountGarden(host){
  host.classList.add('garden-host');let disposed=false,mode='name',theme=store.get('gardenPalette','marigold');if(!colorways[theme])theme='marigold';
- let oldText=DEFAULTS.name,plants=[],ghosts=[],raf=0,sweepTimer=0,lastWidth=0,lastHeight=0,context,canvas,field,stage;
+ let oldText=DEFAULTS.name,plants=[],ghosts=[],raf=0,resizeRaf=0,resizeObserver=null,sweepTimer=0,lastWidth=0,lastHeight=0,context,canvas,field,stage;
  host.innerHTML=`<section class="wordgarden" aria-label="Grow words into a flower garden">
  <header class="wg-heading"><span class="wg-kicker">THE LITTLE WORD GARDEN · ORIGINAL BOTANICAL TYPE</span><h1>Whatever you type, <em>grows.</em></h1></header>
  <div class="wg-prompts" role="group" aria-label="Garden prompts">
@@ -131,7 +131,7 @@ export function mountGarden(host){
   if(width===lastWidth&&height===lastHeight)return;lastWidth=width;lastHeight=height;
   canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);canvas.style.width=width+'px';canvas.style.height=height+'px';context.setTransform(dpr,0,0,dpr,0,0);
  }
- function tick(now){if(disposed)return;resize();ghosts=ghosts.filter(p=>now-p.death<700);
+ function tick(now){if(disposed)return;ghosts=ghosts.filter(p=>now-p.death<700);
   paint(context,lastWidth,lastHeight,[...plants,...ghosts],colorways[theme],now);
   raf=requestAnimationFrame(tick);
  }
@@ -163,7 +163,9 @@ export function mountGarden(host){
  host.querySelector('[data-dream-save]').addEventListener('click',()=>{if(mode==='dream'&&oldText.trim()){status.textContent=persistDream(oldText.trim().slice(0,55));soundEffect('complete')}});
  host.querySelector('[data-release]').addEventListener('click',()=>clearSweep('release'));
  host.querySelector('[data-export]').addEventListener('click',exportWallpaper);
- vv?.addEventListener('resize',resize);vv?.addEventListener('scroll',resize);window.addEventListener('resize',resize);
+ const scheduleResize=()=>{if(disposed||resizeRaf)return;resizeRaf=requestAnimationFrame(()=>{resizeRaf=0;resize()})};
+ if(typeof ResizeObserver!=='undefined'){resizeObserver=new ResizeObserver(scheduleResize);resizeObserver.observe(host)}
+ vv?.addEventListener('resize',scheduleResize);vv?.addEventListener('scroll',scheduleResize);window.addEventListener('resize',scheduleResize);
  resize();raf=requestAnimationFrame(tick);
- return ()=>{disposed=true;cancelAnimationFrame(raf);clearTimeout(sweepTimer);vv?.removeEventListener('resize',resize);vv?.removeEventListener('scroll',resize);window.removeEventListener('resize',resize);host.innerHTML='';host.classList.remove('garden-host')};
+ return ()=>{disposed=true;cancelAnimationFrame(raf);cancelAnimationFrame(resizeRaf);resizeObserver?.disconnect();clearTimeout(sweepTimer);vv?.removeEventListener('resize',scheduleResize);vv?.removeEventListener('scroll',scheduleResize);window.removeEventListener('resize',scheduleResize);host.innerHTML='';host.classList.remove('garden-host')};
 }
