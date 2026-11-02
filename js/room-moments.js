@@ -52,3 +52,19 @@ export const LIGHT_CHOICES=[
 export function automaticLight(hour){
  return hour<6||hour>=21?'night':hour<11?'daylight':hour<17?'golden':'evening';
 }
+
+/** Kuwait-local time changes the welcome; each scene keeps its own character. */
+export function sceneMoment(period,scene){
+ const invitation={
+  morning:'A morning-sized escape. Choose your first little detour.',
+  afternoon:'A tiny break in the middle of everything. Pick a door.',
+  dusk:'The evening edition of your little escape is open.',
+  night:'A quieter little escape. No hurry, no homework.'
+ }[period]||'Your little escape, whenever you need it.';
+ const scenes={
+  story:{morning:'Kuwait wakes in soft Gulf light.',afternoon:'Warm city light, and a corner of your own.',dusk:'The Gulf catches the last gold of the day.',night:'The Kuwait skyline glows after dark.'},
+  kerala:{morning:'Fresh leaves, a soft sky, and Kerala mornings.',afternoon:'A green little pause between the showers.',dusk:'The palms settle into the evening.',night:'Rain on the leaves. Everything else can wait.'},
+  bengaluru:{morning:'Bengaluru opens its windows to a new day.',afternoon:'A Bangalore afternoon, with room for a detour.',dusk:'The city lights arrive, one by one.',night:'A quiet corner above a city still awake.'}
+ };
+ return {invitation,placeLine:scenes[scene]?.[period]||'A little place. Always here.'};
+}
