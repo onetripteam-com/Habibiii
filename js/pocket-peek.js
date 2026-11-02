@@ -37,11 +37,11 @@ export function mountPocketPeek(room){
  // Five camera stops preserve detail without a sudden half-room jump.
  const stopAt=next=>Math.round(Math.max(0,Math.min(1,next))*4)/4;
  const settle=next=>{
-   if(settleFrame)cancelAnimationFrame(settleFrame);
-   // A transition needs a rendered starting frame after the drag class clears.
+   if(settleFrame){cancelAnimationFrame(settleFrame);settleFrame=0}
+   // Flush the unanimated drag pose before enabling the easing transition.
    layer.classList.remove('room-is-dragging');
    void layer.offsetWidth;
-   settleFrame=requestAnimationFrame(()=>{settleFrame=0;set(stopAt(next));});
+   set(stopAt(next));
  };
  const goLeft=()=>settle(pan-.25),goRight=()=>settle(pan+.25);
  const onDown=e=>{
