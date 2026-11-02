@@ -3,6 +3,9 @@ import {flowerSVG,bouquetMarkup,downloadBouquet} from './botanical.js';
 import {soundEffect} from './audio.js';
 import {move,delay} from './animation.js';
 const esc=x=>String(x).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+const floristWords={
+ rose:'The classic. Yes, it earned that reputation.',peony:'A little dramatic. In the nicest possible way.',sunflower:'Bringing its own sunshine. Very efficient.',tulip:'All neat lines and quiet confidence.',lily:'The elegant one who never needs to announce it.',orchid:'A bit fancy. Completely allowed.',hibiscus:'A little Kerala sunshine has arrived.',lotus:'Taking its own time. Good idea.',jasmine:'Small flower. Entire room changed.',marigold:'The unofficial festival committee is here.',daisy:'The easy-going one. No big introduction.',lavender:'That is a very good excuse to slow down.',iris:'A little colour with opinions.'
+};
 export function mountFlowers(root,flowers,onDone){
  let chosen=[],complete=false,disposed=false;
  root.innerHTML=`<section class="scene flowers-scene" aria-label="Choose seven flowers">
@@ -12,9 +15,10 @@ export function mountFlowers(root,flowers,onDone){
        <div class="flower-counter" id="flower-counter" aria-live="polite"><strong>0 <span>of 7</span></strong><span class="counter-caption">picked by Maha</span></div>
        <div class="flower-status-note"><span id="flower-instruction">Choose your flowers</span><small>Every flower can be picked again</small></div>
      </div>
+     <div id="flower-steps" class="flower-steps" aria-label="Seven places in the bouquet"></div>
    </div>
    <div class="bouquet-display" id="bouquet-display"><span class="bouquet-hint" id="bouquet-hint">Your little bunch begins here <span aria-hidden="true">↘</span></span><div class="bouquet-growing" id="bouquet-growing"></div><div class="petals" aria-hidden="true"><i>✿</i><i>✿</i><i>✿</i><i>✿</i><i>✿</i></div></div>
-   <div class="flower-bottom" id="flower-bottom"><div class="shelf-heading"><span>Choose your flowers</span><span class="shelf-hint">SCROLL DOWN · PICK ANY ONE AGAIN</span></div><div class="flower-browser flower-browser-v2"><div id="flower-rail" class="flower-rail" role="group" aria-label="Thirteen flowers. Repeats allowed."></div></div><div class="meaning-line" id="meaning-line" aria-live="polite">Choose from all thirteen. Tap a favourite seven times if you like.</div><div class="flower-controls"><button class="text-button" id="undo-flower" disabled>↶ Undo</button><button class="text-button" id="reset-flowers" disabled>Reset ↺</button></div></div>
+   <div class="flower-bottom" id="flower-bottom"><div class="shelf-heading"><span>Choose your flowers</span><span class="shelf-hint">SCROLL DOWN · PICK ANY ONE AGAIN</span></div><div class="flower-browser flower-browser-v2"><div id="flower-rail" class="flower-rail" role="group" aria-label="Thirteen flowers. Repeats allowed."></div></div><div class="meaning-line" id="meaning-line" aria-live="polite">The stems are waiting. One flower at a time.</div><div class="flower-controls"><button class="text-button" id="undo-flower" disabled>↶ Undo</button><button class="text-button" id="reset-flowers" disabled>Reset ↺</button></div></div>
    <div class="bouquet-final" id="bouquet-final" hidden><span class="eyebrow">HAND-PICKED. VERY OFFICIAL.</span><h2>For Maha. <span aria-hidden="true">♡</span></h2><p>Seven chosen by you. Which makes them the right seven.</p><div class="final-controls"><button class="button button-outline" id="save-bouquet">Save as picture ↓</button><button class="button button-primary" id="carry-bouquet">Take them in →</button></div><p class="export-hint" id="export-hint"></p></div>
  </section>`;
  const rail=root.querySelector('#flower-rail'),renderPlace=root.querySelector('#bouquet-growing'),display=root.querySelector('#bouquet-display');
@@ -25,6 +29,7 @@ export function mountFlowers(root,flowers,onDone){
  }
  function update(){
   root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="counter-caption">picked by Maha</span>`;
+  root.querySelector('#flower-steps').innerHTML=Array.from({length:7},(_,i)=>{const id=chosen[i];const flower=flowers.find(f=>f.id===id);return `<span class="flower-step ${id?'is-picked':''}" title="${esc(flower?.name||'Waiting for a flower')}" aria-label="${id?esc(flower.name):'Empty place'}"><i>${id?'✿':String(i+1).padStart(2,'0')}</i></span>`}).join('');
   renderPlace.innerHTML=chosen.length?bouquetMarkup(chosen,{stage:complete?'final':'preview'}):'';
   rail.querySelectorAll('button').forEach(b=>{const count=chosen.filter(id=>id===b.dataset.flower).length;b.setAttribute('aria-pressed',String(count>0));b.disabled=complete;b.querySelector('.picked-check').textContent=count?`×${count}`:'';});
   root.querySelector('#undo-flower').disabled=!chosen.length||complete; root.querySelector('#reset-flowers').disabled=!chosen.length||complete;
@@ -33,7 +38,8 @@ export function mountFlowers(root,flowers,onDone){
  function updateInstruction(text){root.querySelector('#flower-instruction').textContent=text;}
  function pick(f,button){
   if(complete||chosen.length>=7) return;
-  chosen.push(f.id); root.querySelector("#flower-counter").classList.remove("counter-pop"); void root.querySelector("#flower-counter").offsetWidth; root.querySelector("#flower-counter").classList.add("counter-pop"); soundEffect('pick'); update(); root.querySelector('#meaning-line').textContent=f.meaning;
+  chosen.push(f.id); root.querySelector("#flower-counter").classList.remove("counter-pop"); void root.querySelector("#flower-counter").offsetWidth; root.querySelector("#flower-counter").classList.add("counter-pop"); soundEffect('pick'); update(); const repeats=chosen.filter(id=>id===f.id).length;
+  root.querySelector('#meaning-line').textContent=`${String(chosen.length).padStart(2,'0')} / 07 — ${repeats>1?`Another ${f.name.toLowerCase()}? You've made your choice, and I respect it.`:floristWords[f.id]||f.meaning}`;
   if(button&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
    button.classList.remove('flower-just-picked');void button.offsetWidth;button.classList.add('flower-just-picked');
    const last=renderPlace.querySelector('.bouquet-bloom:last-child');if(last){last.classList.add('bloom-new');setTimeout(()=>last.classList.remove('bloom-new'),900)}
