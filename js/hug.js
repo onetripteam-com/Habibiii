@@ -11,7 +11,14 @@ export function mountHug(root,data,onDone){
   <div class="hug-stage">
    <div class="hug-overline">AN UNEXPECTED LITTLE DELIVERY · FOR MAHA</div>
    <h1>A little hello, <em>before you go in.</em></h1>
-   <div class="hug-postbird" aria-hidden="true"><span>✦</span></div>
+   <div class="hug-postbird" aria-hidden="true"><svg class="hug-whale" viewBox="0 0 248 112" fill="none">
+ <path d="M23 56C33 16 92 10 143 31C165 42 190 54 216 36C210 59 196 70 174 74C158 95 118 104 79 93C44 83 19 73 23 56Z" fill="#8BAACA" stroke="#D8E9ED" stroke-width="2"/>
+ <path d="M153 53Q181 69 204 51M75 70Q119 100 156 73" stroke="#DFE9E8" stroke-width="3" stroke-linecap="round"/>
+ <path d="M78 28Q52 6 39 18Q48 30 68 38" fill="#7799BC"/><path d="M123 85Q141 112 158 100L149 82" fill="#7799BC"/>
+ <circle cx="52" cy="53" r="3" fill="#283F56"/><path d="M44 65Q53 71 63 64" stroke="#38566A" stroke-width="2" stroke-linecap="round"/>
+ <path d="M98 33Q98 10 107 6M105 31Q117 15 122 13" stroke="#E5F3F2" stroke-width="2" stroke-linecap="round"/>
+ <circle cx="114" cy="3" r="3" fill="#EFFAF4"/><circle cx="124" cy="8" r="2" fill="#EFFAF4"/>
+ </svg><span class="hug-butterfly">✦</span><div class="hug-delivery-thread"></div></div>
    <button type="button" class="hug-envelope" id="hug-open" aria-expanded="false" aria-controls="hug-letter">
     <span class="hug-envelope-flap"></span><span class="hug-envelope-wax">M</span><span class="hug-envelope-address">TO MAHA · OPEN WHENEVER</span>
     <span class="hug-open-instruction">Someone left a letter for you ↗</span>
