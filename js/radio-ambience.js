@@ -10,9 +10,10 @@ const PROFILES={
  night:{low:70,high:370,noise:.17,hum:82.41,drift:.03}
 };
 export function makeRadioAtmosphere(){
- let ac=null,source=null,filterLo=null,filterHi=null,master=null,hum=null,humGain=null,lfo=null,lfoGain=null,id=null;
+ let ac=null,source=null,filterLo=null,filterHi=null,master=null,hum=null,humGain=null,lfo=null,lfoGain=null,id=null,generation=0;
  const C=window.AudioContext||window.webkitAudioContext;
  const stop=()=>{
+   generation++;
    try{source?.stop()}catch{}try{hum?.stop()}catch{}try{lfo?.stop()}catch{}
    for(const n of [source,filterLo,filterHi,master,hum,humGain,lfo,lfoGain])try{n?.disconnect()}catch{}
    source=filterLo=filterHi=master=hum=humGain=lfo=lfoGain=null;
@@ -20,9 +21,12 @@ export function makeRadioAtmosphere(){
  };
  const start=async station=>{
    stop();if(!C)return false;
+   const ticket=generation;
    const profile=PROFILES[station]||PROFILES.night;
    try{
-     ac=new C();await ac.resume();
+     ac=new C();const context=ac;await context.resume();
+     // A station change can cancel a pending AudioContext resume on iOS.
+     if(ticket!==generation)return false;
      const duration=ac.sampleRate*3;
      const buffer=ac.createBuffer(1,duration,ac.sampleRate),array=buffer.getChannelData(0);
      // Deterministic low-level noise prevents a short audible click at loop end.
@@ -46,7 +50,7 @@ export function makeRadioAtmosphere(){
      master.gain.setTargetAtTime(Math.min(.05,profile.noise*.09),ac.currentTime,.45);
      id=station;
      return true;
-   }catch{stop();return false;}
+   }catch{if(ticket===generation)stop();return false;}
  };
  return {start,stop,get active(){return id!==null},get station(){return id}};
 }
