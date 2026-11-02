@@ -22,7 +22,7 @@ export function mountPocketPeek(room){
    left.disabled=!small.matches||pan<=.002;
    right.disabled=!small.matches||pan>=.998;
    if(caption){
-     caption.textContent=pan<.25?'LEFT SIDE':pan>.75?'RIGHT SIDE':'SWIPE THE ROOM';
+     caption.textContent=pan<.25?'BY THE SOFA':pan>.75?'POSTCARD WALL':'LOOK AROUND';
    }
    if(!quiet)layer.classList.remove('room-is-dragging');
  }
