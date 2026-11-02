@@ -1,42 +1,65 @@
-import {move,delay,reduce} from './animation.js';
 import {startSound,soundEffect} from './audio.js';
+/** The arrival is a little story, not a fake building entrance.
+ * Original whale/butterfly artwork is background-only. Text, envelope,
+ * choices and letter folding are real DOM and accessible on every device.
+ */
 export function mountHug(root,data,onDone){
-  let noCount=0,finished=false,disposed=false;
-  root.innerHTML=`<section class="scene hug-scene" aria-label="The virtual hug">
-    <div class="hug-doodle" aria-hidden="true"><svg viewBox="0 0 280 238"><path d="M50 145c-15-11-20-39-8-52 16-17 39-3 51 9M231 145c15-11 20-39 8-52-16-17-39-3-51 9" stroke="#ba715c" stroke-width="7" stroke-linecap="round" fill="none" opacity=".8"/><path d="M90 85c21-13 46-6 50 8 7-23 38-21 51-7 26 27-11 57-51 86-42-30-77-64-50-87z" fill="#d87e70" opacity=".85" stroke="#b95e56" stroke-width="3"/><path d="M64 166c22 13 45 20 76 20s61-7 81-20" fill="none" stroke="#aa765e" stroke-width="4" stroke-linecap="round" stroke-dasharray="3 11"/></svg><span class="hug-doodle-caption">${escapeHTML(data.illustrationCaption)}</span></div>
-    <div class="hug-content"><span class="eyebrow">${escapeHTML(data.eyebrow)}</span><h1>${escapeHTML(data.heroFirst)}<br>${escapeHTML(data.heroSecond)}<em>${escapeHTML(data.heroEmphasis)}</em></h1><div class="hug-lines" id="hug-lines"></div><div class="no-reply" id="no-reply" aria-live="polite"></div></div>
-    <div class="hug-actions" id="hug-actions"><div class="hug-action-question">${escapeHTML(data.actionQuestion)}</div><div class="button-row"><button class="button button-primary" id="hug-yes">${escapeHTML(data.yesButton)}</button><button class="button button-outline" id="hug-no">${escapeHTML(data.noButton)}</button></div><span class="tiny-footnote">${escapeHTML(data.footnote)}</span><button type="button" class="hug-skip" id="hug-skip">Continue without a hug →</button></div>
-    <div class="hug-complete" id="hug-complete" hidden><span class="little-knot" aria-hidden="true">❧</span><p id="hug-result"></p><p class="next-line">${escapeHTML(data.next)}</p><button class="button button-primary" id="next-flowers">${escapeHTML(data.flowerButton)} <span aria-hidden="true">→</span></button></div>
-    </section>`;
-  const lines=root.querySelector('#hug-lines');
-  const response=root.querySelector('#no-reply');
-  const actions=root.querySelector('#hug-actions');
-  const done=root.querySelector('#hug-complete');
-  const question=root.querySelector('.hug-action-question');
-  const noButton=root.querySelector('#hug-no');
-  data.opening.forEach((line,i)=>{const p=document.createElement('p');p.textContent=line;p.className='opening-line';p.style.animationDelay=`${.32+i*.8}s`;lines.append(p);});
-  const reveal=async(reply,isYes)=>{
-    if(finished)return;finished=true;startSound();soundEffect('complete');
-    actions.classList.add('leaving'); response.textContent='';
-    const heart=root.querySelector('.hug-doodle');if(isYes)heart.classList.add('hug-given');
-    if(isYes) await delay(1300); else await delay(600);
-    if(disposed)return;
-    actions.hidden=true;done.hidden=false;root.querySelector('#hug-result').textContent=reply;
-    await move(done,{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'translateY(0)'},580);
-    root.querySelector('#next-flowers')?.focus({preventScroll:true});
-  };
-  root.querySelector('#hug-yes').addEventListener('click',()=>reveal(data.yes,true));
-  const gentleNo=["Not today? Got it. What about one microscopic high-five?","Fair enough. Sending a hug to your doorstep. You can ignore the parcel.","Okay okay. One very dignified eyebrow raise instead?","No means no. Flowers are still yours, obviously. ♡"];
-  noButton.addEventListener('click',()=>{
-    if(finished)return;
-    noCount++;soundEffect('tap');
-    response.textContent=gentleNo[Math.min(noCount-1,gentleNo.length-1)];
-    question.textContent=noCount>2?'I respect the committee’s decision.':'One tiny counter-offer?';
-    noButton.textContent=noCount>2?'No thanks, continue →':'Not today';
-    if(noCount>=4)reveal("No hugs required. You still get the flowers, obviously.",false);
-  });
-  root.querySelector('#hug-skip').addEventListener('click',()=>{disposed=true;onDone();});
-  root.querySelector('#next-flowers').addEventListener('click',()=>{disposed=true;onDone();});
-  return ()=>{disposed=true;};
+ let finished=false,disposed=false,opened=false;
+ root.innerHTML=`<section class="scene new-hug" aria-label="A small letter for Maha">
+  <div class="hug-night-sky" aria-hidden="true"></div>
+  <div class="hug-live-stars" aria-hidden="true"></div>
+  <div class="hug-stage">
+   <div class="hug-overline">AN UNEXPECTED LITTLE DELIVERY · FOR MAHA</div>
+   <h1>A little hello, <em>before you go in.</em></h1>
+   <div class="hug-postbird" aria-hidden="true"><span>✦</span></div>
+   <button type="button" class="hug-envelope" id="hug-open" aria-expanded="false" aria-controls="hug-letter">
+    <span class="hug-envelope-flap"></span><span class="hug-envelope-wax">M</span><span class="hug-envelope-address">TO MAHA · OPEN WHENEVER</span>
+    <span class="hug-open-instruction">Someone left a letter for you ↗</span>
+   </button>
+   <div class="hug-letter" id="hug-letter" hidden>
+    <span class="hug-letter-stamp">A NOTE, ACROSS THE MILES</span>
+    <p>Hey, Maha.</p>
+    <p>I can't deliver a proper hug all the way from here. Terrible logistics, really.</p>
+    <p>But I can send a little virtual one. <em>Would you like it?</em></p>
+    <div class="hug-response">
+     <button type="button" class="hug-accept" id="hug-yes">Yes, send it ♡</button>
+     <button type="button" class="hug-decline" id="hug-no">Maybe another time</button>
+    </div>
+   </div>
+   <div id="hug-result" class="hug-result" hidden aria-live="polite">
+    <div class="hug-heart-burst" aria-hidden="true">♡</div>
+    <h2>Consider yourself <em>hugged.</em></h2>
+    <p>No international shipping. Just a small reminder that you're thought of.</p>
+    <button type="button" id="next-flowers" class="hug-accept">A little surprise is waiting ↗</button>
+   </div>
+   <button type="button" id="hug-skip" class="hug-skip">Head straight to the flowers →</button>
+  </div>
+ </section>`;
+ const letter=root.querySelector('#hug-letter');
+ const envelope=root.querySelector('#hug-open');
+ const result=root.querySelector('#hug-result');
+ const skip=root.querySelector('#hug-skip');
+ const open=()=>{
+  if(disposed||opened)return;
+  opened=true;startSound();soundEffect('paper');
+  envelope.classList.add('is-open');
+  envelope.setAttribute('aria-expanded','true');
+  letter.hidden=false;
+  letter.classList.add('is-revealed');
+  skip.textContent='Maybe later. Show me the flowers →';
+  root.querySelector('#hug-yes').focus({preventScroll:true});
+ };
+ envelope.addEventListener('click',open);
+ const leave=()=>{if(disposed)return;disposed=true;onDone()};
+ const yes=()=>{
+  if(disposed||finished)return;
+  finished=true;startSound();soundEffect('complete');
+  letter.hidden=true;envelope.hidden=true;result.hidden=false;
+  root.querySelector('#next-flowers').focus({preventScroll:true});
+ };
+ root.querySelector('#hug-yes').addEventListener('click',yes);
+ root.querySelector('#hug-no').addEventListener('click',leave);
+ root.querySelector('#next-flowers').addEventListener('click',leave);
+ skip.addEventListener('click',leave);
+ return ()=>{disposed=true;};
 }
-function escapeHTML(x){return String(x).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
