@@ -89,7 +89,10 @@ export function mountLivingRoomPhoto(room,chosen=[]){
     if(!btn)continue;
     ['--object-x','--object-y','--object-w','--object-h'].forEach((key,i)=>btn.style.setProperty(key,coords[i]+'%'));
   }
-  flowerLayer.hidden=id!=='story';
+  // A bouquet is a living souvenir: it must appear in all three rooms.
+  flowerLayer.hidden=false;
+  flowerLayer.dataset.vaseScene=id;
+  flowerLayer.setAttribute('aria-hidden','true');
   // In other themes, the SAME buttons must return to the scene root.
   // Hiding their parent would otherwise make all portals disappear.
   for(const control of portals){
