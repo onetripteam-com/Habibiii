@@ -39,6 +39,13 @@ async function run(engine,launcher,w,h){
   assert.ok(await page.locator('.living-photo-plane .living-photo-image').isVisible(),'Exact original image must be mounted in the live room');
   assert.equal((await page.request.get(new URL('./assets/rooms/maha-living-room.webp',BASE).href)).status(),200,'Original chosen room image must be stored locally');
   assert.equal(await page.locator('.living-photo-plane .living-hit-area').count(),8,'All seven physical objects plus the real vase must share the same image plane');
+  if(w<760){
+    await page.locator('#room-peek').click();
+    assert.ok(await page.locator('.cinematic-room').getAttribute('data-peek')!=='1','Look Around should pan the actual original photo');
+    await page.locator('#room-peek').click();
+    await page.locator('#room-peek').click();
+  }
+
 
   assert.equal(await page.locator('#room-light-trigger').count(),1);
   assert.equal(await page.locator('#room-visit-label').count(),1);
@@ -176,6 +183,16 @@ async function run(engine,launcher,w,h){
      // not just whether a page is present.
 
      const door=page.locator('[data-door="'+scene+'"]');
+     if(w<760){
+       // Mobile scene is a genuinely panoramic room: user must look towards
+       // the physical object before touching it, instead of clicking a sticker.
+       const desired=scene==='rest'?0:scene==='garden'?1:2;
+       for(let n=0;n<3;n++){
+         const current=Number(await page.locator('.cinematic-room').getAttribute('data-peek'));
+         if(current===desired)break;
+         await page.locator('#room-peek').click();
+       }
+     }
      await door.click();
      await page.locator('#portal-screen[data-place="'+scene+'"]').waitFor({state:'visible'});
      await page.locator('#portal-screen.portal-arrived').waitFor({state:'visible',timeout:15000});
