@@ -1,0 +1,48 @@
+name: Package the three original MAHA rooms
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/package-three-rooms.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  rooms:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --quiet Pillow
+      - name: Package Kuwait, Kerala, Bengaluru and original intro art
+        env:
+          KERALA_URL: https://d2ol7oe51mr4n9.cloudfront.net/user_3Kr2mB6wawNwljfL4o9CKuS674p/c302b524-065b-4deb-b744-050e0c28124c.png
+          BENGALURU_URL: https://d2ol7oe51mr4n9.cloudfront.net/user_3Kr2mB6wawNwljfL4o9CKuS674p/f2ddf15f-62f3-4e44-846a-8d5f1f4606ed.png
+          WELCOME_URL: https://d2ol7oe51mr4n9.cloudfront.net/user_3Kr2mB6wawNwljfL4o9CKuS674p/a1daa5a6-0221-49c0-8e44-67513487a10e.png
+        run: |
+          set -euo pipefail
+          mkdir -p assets/rooms
+          curl -Lf --retry 3 --fail --max-time 110 "$KERALA_URL" -o /tmp/kerala.png
+          curl -Lf --retry 3 --fail --max-time 110 "$BENGALURU_URL" -o /tmp/bengaluru.png
+          curl -Lf --retry 3 --fail --max-time 110 "$WELCOME_URL" -o /tmp/welcome.png
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          for name in ('kerala','bengaluru','welcome'):
+              im=Image.open('/tmp/'+name+'.png').convert('RGB')
+              assert im.width>=900 and im.height>=900,(name,im.size)
+              im.save('assets/rooms/maha-'+name+'.webp',format='WEBP',quality=83,method=6)
+              print(name,im.size,Path('assets/rooms/maha-'+name+'.webp').stat().st_size)
+          PY
+      - name: Commit bundled art
+        run: |
+          git config user.name "MAHA room art"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/rooms/maha-kerala.webp assets/rooms/maha-bengaluru.webp assets/rooms/maha-welcome.webp
+          if ! git diff --cached --quiet; then
+            git commit -m "Package original Kerala, Bengaluru and butterfly-letter welcome illustrations"
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
