@@ -37,7 +37,7 @@ export function mountHug(root,data,onDone){
     <div class="hug-heart-burst" aria-hidden="true">♡</div>
     <h2>Consider yourself <em>hugged.</em></h2>
     <p>No international shipping. Just a small reminder that you're thought of.</p>
-    <button type="button" id="next-flowers" class="hug-accept">A little surprise is waiting ↗</button>
+    <button type="button" id="next-flowers" class="hug-accept">See what's waiting ↗</button>
    </div>
    <button type="button" id="hug-skip" class="hug-skip">Head straight to the flowers →</button>
   </div>
