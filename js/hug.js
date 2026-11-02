@@ -23,13 +23,13 @@ export function mountHug(root,data,onDone){
     <p>But I can send a little virtual one. <em>Would you like it?</em></p>
     <div class="hug-response">
      <button type="button" class="hug-accept" id="hug-yes">Yes, send it ♡</button>
-     <button type="button" class="hug-decline" id="hug-no">Maybe another time</button>
+     <div class="hug-no-choices" role="group" aria-label="Decline the virtual hug"><button type="button" class="hug-decline" data-hug-no="no">Nope</button><button type="button" class="hug-decline" data-hug-no="never">Never 😂</button><button type="button" class="hug-decline" data-hug-no="not-at-all">Not at all</button></div>
     </div>
    </div>
-   <div id="hug-result" class="hug-result" hidden aria-live="polite">
+   <div id="hug-result" class="hug-result" hidden aria-live="polite" data-outcome="yes">
     <div class="hug-heart-burst" aria-hidden="true">♡</div>
-    <h2>Consider yourself <em>hugged.</em></h2>
-    <p>No international shipping. Just a small reminder that you're thought of.</p>
+    <h2 id="hug-result-title">Consider yourself <em>hugged.</em></h2>
+    <p id="hug-result-copy">No international shipping. Just a small reminder that you're thought of.</p>
     <button type="button" id="next-flowers" class="hug-accept">See what's waiting ↗</button>
    </div>
    <button type="button" id="hug-skip" class="hug-skip">Head straight to the flowers →</button>
@@ -54,11 +54,27 @@ export function mountHug(root,data,onDone){
  const yes=()=>{
   if(disposed||finished)return;
   finished=true;startSound();soundEffect('complete');
-  letter.hidden=true;envelope.hidden=true;result.hidden=false;
+  letter.hidden=true;envelope.hidden=true;result.hidden=false;skip.hidden=true;
   root.querySelector('#next-flowers').focus({preventScroll:true});
  };
  root.querySelector('#hug-yes').addEventListener('click',yes);
- root.querySelector('#hug-no').addEventListener('click',leave);
+ const noLines={
+  no:{title:'Request <em>rejected.</em>',copy:'Okay, madam. The whale has updated his CV. Apparently, he is now a florist.'},
+  never:{title:'NEVER? <em>Noted.</em>',copy:'Such strong feedback. The whale has resigned from hugs. The butterflies have appointed him Head of Flowers.'},
+  'not-at-all':{title:'Not even <em>one percent?</em>',copy:'Official No-Hug Certificate issued. Signed by the whale. Zero arguments. Seven flowers still included.'}
+ };
+ const decline=choice=>{
+  if(disposed||finished)return;
+  finished=true;soundEffect('tap');
+  const line=noLines[choice]||noLines.no;
+  result.dataset.outcome='no';
+  root.querySelector('#hug-result-title').innerHTML=line.title;
+  root.querySelector('#hug-result-copy').textContent=line.copy;
+  root.querySelector('#next-flowers').textContent='Fine. Show me the flowers →';
+  letter.hidden=true;envelope.hidden=true;result.hidden=false;skip.hidden=true;
+  root.querySelector('#next-flowers').focus({preventScroll:true});
+ };
+ root.querySelectorAll('[data-hug-no]').forEach(button=>button.addEventListener('click',()=>decline(button.dataset.hugNo)));
  root.querySelector('#next-flowers').addEventListener('click',leave);
  skip.addEventListener('click',leave);
  return ()=>{disposed=true;};
