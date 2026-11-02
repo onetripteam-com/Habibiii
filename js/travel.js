@@ -10,7 +10,7 @@ const mapSVG='<img class="atlas-watercolor" src="./assets/atlas-region.svg" alt=
 function validDreams(){return (Array.isArray(store.get('dreamPins'))?store.get('dreamPins'):[]).filter(x=>typeof x.name==='string'&&typeof x.x==='number'&&typeof x.y==='number').slice(0,25)}
 function stamps(){const raw=store.get('passportStamps',[]);return Array.isArray(raw)?raw:[]}
 export function mountTravel(host,{onPostcard=()=>{}}={}){
- let places=[],tab='map',current=null,disposed=false,clip=null,pending=null,gateTimer=0,zoomed=false;
+ let places=[],tab='map',current=null,disposed=false,clip=null,pending=null,gateTimer=0,zoomed=false,passportPage=0;
  host.classList.add('travel-host');
  const stopClip=()=>{if(clip){releaseMedia(clip);clip.remove();clip=null}};
  const getSeen=()=>Array.isArray(store.get('visitedPlaces',[]))?store.get('visitedPlaces',[]):[];
@@ -32,7 +32,70 @@ export function mountTravel(host,{onPostcard=()=>{}}={}){
  }
  function openDream(dream){const pop=host.querySelector('[data-popover]');pop.hidden=false;pop.innerHTML=`<div class="atlas-dream-card"><span>♡ A DREAM FOR LATER</span><h2>${esc(dream.name)}</h2><p>${esc(dream.note||'A place on your someday list.')}</p><button type="button" data-close>Back to the map</button></div>`;pop.querySelector('[data-close]').addEventListener('click',()=>pop.hidden=true)}
  function pinModal(){const pop=host.querySelector('[data-popover]');pop.hidden=false;pop.innerHTML=`<form class="atlas-dream-form"><span>♡ A PLACE TO KEEP IN MIND</span><h2>Where would you go?</h2><label>Place name<input name="name" required maxlength="55" placeholder="Somewhere wonderful…" autocomplete="off"></label><label>A note to your future self<textarea name="note" maxlength="280" rows="3" placeholder="[What calls you there?]"></textarea></label><p>Saved only in this browser. You can add up to 25 dream pins.</p><div><button type="button" data-cancel>Not now</button><button type="submit">Pin my dream ✦</button></div></form>`;pop.querySelector('[data-cancel]').addEventListener('click',()=>pop.hidden=true);const form=pop.querySelector('form');form.addEventListener('submit',e=>{e.preventDefault();const dreams=validDreams();if(dreams.length>=25){pop.querySelector('p').textContent='25 pins is a whole universe. Keep these for now!';return}const name=safe(form.elements.name.value,55),note=safe(form.elements.note.value,280);if(!name)return;const i=dreams.length;dreams.push({name,note,x:15+(i*27)%69,y:18+(i*19)%67,createdAt:new Date().toISOString()});store.set('dreamPins',dreams);soundEffect('pick');render()});pop.querySelector('input').focus()}
- function renderPassport(stage){const s=stamps(),seen=getSeen();stage.innerHTML=`<div class="atlas-passport"><span class="atlas-passport-mark">❧ PRIVATE LITTLE PASSPORT ❧</span><h1>Proof of <em>little adventures.</em></h1><p>Every game you win and every place you visit adds a stamp.</p><div class="atlas-stamp-page">${s.length?s.map((st,i)=>{const id=String(st.id);const name=id.startsWith('travel-')?(places.find(p=>'travel-'+p.id===id)?.name||id):({chai:'Chai Maker',sadya:'Sadya Builder',baggage:'Airport Baggage',doctor:'Decode the Doctor',world:'Where in the World',vlog:'Vlog Director'}[id]||id);return `<div class="atlas-stamp" style="--stamp-angle:${((i%5)-2)*8}deg"><i>✳</i><strong>${esc(name)}</strong><small>${id.startsWith('travel-')?'POSTCARD VISIT':'GAME WON'}</small></div>`}).join(''):'<div class="atlas-no-stamp">A blank page is full of possibility. Open a postcard to leave your first mark.</div>'}</div><div class="atlas-stamp-footer">${seen.length} places explored · ${validDreams().length} dream pins kept</div><button type="button" data-map>← Back to the map</button></div>`;stage.querySelector('[data-map]').addEventListener('click',()=>{tab='map';render()})}
+ function renderPassport(stage){
+   const issued=stamps(),seen=getSeen();
+   const names={spark:'Tiny Joys',lettersmile:'Compliment Heist',softlanding:'Pocket Sunshine',doctor:'Decode the Doctor',world:'Where in the World',vlog:'Vlog Director',chai:'Chai Maker',sadya:'Sadya Builder',baggage:'Airport Baggage'};
+   const displayStamp=s=>{
+      const id=String(s.id||''),place=places.find(p=>'travel-'+p.id===id);
+      const name=place?.name||names[id]||id.replace(/^travel-/,'');
+      const date=s.earnedAt?new Date(s.earnedAt):null;
+      const when=date&&!Number.isNaN(date.getTime())?date.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'UNDATED';
+      return `<div class="passport-ink-stamp" style="--ink-angle:${((name.length%7)-3)*4}deg">
+        <span>✳ MAHA'S WORLD ✳</span><strong>${esc(name)}</strong>
+        <small>${place?'POSTCARD VISITED':'ARCADE ACHIEVEMENT'} · ${esc(when)}</small>
+      </div>`;
+   };
+   const perSpread=6,spreadCount=Math.max(1,Math.ceil(issued.length/perSpread));
+   passportPage=Math.min(Math.max(0,passportPage),spreadCount-1);
+   const slice=issued.slice(passportPage*perSpread,(passportPage+1)*perSpread);
+   const left=slice.slice(0,3),right=slice.slice(3,6);
+   const stampsOn=(arr)=>arr.length?arr.map(displayStamp).join(''):`<div class="passport-blank-stamp"><span>✳</span><p>No stamp on this page yet.<br>That's a perfectly good beginning.</p></div>`;
+   stage.innerHTML=`<section class="passport-experience" aria-label="Maha's interactive personal travel passport">
+     <div class="passport-overline"><span>THE SMALL ADVENTURES DEPARTMENT</span><span>NOT AN OFFICIAL DOCUMENT</span></div>
+     <div class="passport-intro"><span>YOUR OWN LITTLE PASSPORT</span><h1>Places worth <em>keeping.</em></h1><p>Every postcard explored becomes ink on a page. Turn the pages whenever you like.</p></div>
+     <div class="passport-case">
+       <div class="passport-spread" data-spread data-page="${passportPage}">
+         <section class="passport-paper passport-left" aria-label="Left passport page">
+           <div class="passport-page-header"><span>MAHA · LITTLE ESCAPE</span><span>PAGE ${passportPage*2+1}</span></div>
+           ${passportPage===0?`<div class="passport-identity">
+             <span class="passport-flower-mark" aria-hidden="true">❀</span>
+             <span>PERSONAL RECORD · NO BORDERS</span><strong>MAHA</strong>
+             <p>For every place explored, and every place still to come.</p>
+             <small>ISSUED WITH UNLIMITED LITTLE DETOURS</small>
+           </div>`:`<div class="passport-stamp-grid">${stampsOn(left)}</div>`}
+           <div class="passport-page-foot">A PRIVATE COLLECTION <span>✳</span></div>
+         </section>
+         <div class="passport-spine" aria-hidden="true"></div>
+         <section class="passport-paper passport-right" aria-label="Right passport page">
+           <div class="passport-page-header"><span>ENTRY & EXPERIENCE</span><span>PAGE ${passportPage*2+2}</span></div>
+           <div class="passport-stamp-grid">${stampsOn(passportPage===0?issued.slice(0,6):right)}</div>
+           <div class="passport-page-foot">NOT FOR OFFICIAL TRAVEL <span>MAHA'S LITTLE WORLD</span></div>
+         </section>
+       </div>
+     </div>
+     <div class="passport-bottom">
+       <button type="button" data-passport-prev ${passportPage===0?'disabled':''} aria-label="Previous passport pages">← Earlier pages</button>
+       <span role="status" aria-live="polite">SPREAD ${passportPage+1} OF ${spreadCount} · ${issued.length} STAMPS</span>
+       <button type="button" data-passport-next ${passportPage>=spreadCount-1?'disabled':''} aria-label="Next passport pages">More pages →</button>
+     </div>
+     <div class="passport-after"><span>${seen.length} places explored</span><span>${validDreams().length} future stops</span><button type="button" data-map>Back to the atlas ↗</button></div>
+     </section>`;
+   const turn=dir=>{
+     const next=passportPage+dir;
+     if(next<0||next>=spreadCount)return;
+     const book=stage.querySelector('[data-spread]');
+     book.classList.add(dir>0?'passport-turn-forward':'passport-turn-back');
+     const delay=reduced()?0:270;
+     setTimeout(()=>{if(disposed||!stage.isConnected||tab!=='passport')return;passportPage=next;renderPassport(stage)},delay);
+   };
+   stage.querySelector('[data-passport-prev]').addEventListener('click',()=>turn(-1));
+   stage.querySelector('[data-passport-next]').addEventListener('click',()=>turn(1));
+   stage.querySelector('[data-map]').addEventListener('click',()=>{tab='map';render()});
+   stage.querySelector('.passport-experience').addEventListener('keydown',e=>{
+     if(e.key==='ArrowRight'){e.preventDefault();turn(1)}
+     if(e.key==='ArrowLeft'){e.preventDefault();turn(-1)}
+   });
+ }
  function openPostcard(p,source){if(!p)return;stopClip();current=p;startSound();soundEffect('door');const stage=host.querySelector('#atlas-stage');stage.innerHTML=`<div class="atlas-gateway ${p.gate==='stone'?'stone':'wood'}"><div class="gate-half gate-left"></div><div class="gate-half gate-right"></div><span>ARRIVING IN ${esc(p.name.toUpperCase())}…</span></div><div class="atlas-postcard" hidden><div class="atlas-postcard-head"><button type="button" data-back>← The map</button><span>POSTCARD NO. ${places.indexOf(p)+1}</span></div><div class="atlas-postcard-rotator" data-card><div class="atlas-card-front" style="--scene1:${p.colors[0]};--scene2:${p.colors[1]}"><div class="postcard-art" aria-label="Painted travel postcard artwork">${p.still?`<img class="postcard-photo" src="${esc(p.still)}" alt="" loading="lazy" onerror="this.remove()">`:``}${paintedWorld(({kerala:"palms",kuwait:"city",bangalore:"city",munnar:"hills",manali:"mountains",ladakh:"mountains",nepal:"mountains"})[p.id]||"hills")}</div><h2>${esc(p.name)}</h2><span>FLIP ME ↻</span></div><div class="atlas-card-back"><span>POSTMARK: MAHA'S WORLD</span><h2>Dear Maha,</h2><p>${esc(p.intro)}</p><strong>${esc(p.phrase)}</strong><small>${esc(p.translation)}</small><span class="atlas-postcard-sig">A place for a future memory.</span></div></div><button class="atlas-flip" type="button" data-flip>↻ Flip postcard</button><div class="atlas-vlog-note"><strong>🎬 10-second vlog idea</strong><p>${esc(p.prompt)}</p></div><button class="atlas-keep" type="button" data-keep>♡ Keep this postcard</button><div class="atlas-postcard-clip">${p.clip?`<button data-clip>▶ Play your clip</button>`:'<span>A painted place to keep in your pocket</span>'}</div></div>`;
  const card=stage.querySelector('.atlas-postcard');const gateway=stage.querySelector('.atlas-gateway');gateway.classList.add('gate-open');const show=()=>{if(disposed||!stage.isConnected)return;gateway.remove();card.hidden=false};gateTimer=setTimeout(show,reduced()?40:470);
  stage.querySelector('[data-back]').addEventListener('click',()=>{clearTimeout(gateTimer);stopClip();current=null;render()});stage.querySelector('[data-flip]').addEventListener('click',()=>{card.querySelector('[data-card]').classList.toggle('flipped');soundEffect('tap')});stage.querySelector('[data-keep]').addEventListener('click',()=>{stampVisit(p);store.set('postcardPinned',true);store.set('lastPostcard',p.id);onPostcard(p.id);soundEffect('complete');stage.querySelector('[data-keep]').textContent='♥ Kept in your passport'});
