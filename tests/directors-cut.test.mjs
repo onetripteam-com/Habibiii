@@ -12,8 +12,16 @@ test('original illustrated scenes use unique gradient names and all requested mo
 test('room asset is intact and exactly 400 by 780 coordinates',()=>{
  const svg=read('assets/room-directors-cut.svg');assert.match(svg,/viewBox="0 0 400 780"/);for(const object of ['window','radio','letter','projector','suitcase','garden'])assert.ok(svg.toLowerCase().includes(object),object);
 });
-test('Director layer responds to actual room and portal scenes and stops FM when leaving',()=>{
- const js=read('js/director.js');assert.match(js,/MutationObserver/);assert.match(js,/director-room/);assert.match(js,/radioSound\.stop\(\)/);assert.match(js,/caption\)note\.textContent=caption/);
+test('Director observes room changes while the Radio module owns audio and cleans up on exit',()=>{
+ const js=read('js/director.js');
+ assert.match(js,/MutationObserver/);
+ assert.match(js,/director-room/);
+ assert.doesNotMatch(js,/stopImmediatePropagation|radioSound/);
+ const radio=read('js/radio.js');
+ assert.match(radio,/return \(\)=>\{disposed=true;stop\(\)/);
+ assert.match(radio,/maha:mutechange/);
+ const ambience=read('js/radio-ambience.js');
+ assert.match(ambience,/generation\+\+/);
 });
 test('synthesized FM voices are gesture-activated and use no external audio',()=>{
  const ctor=new FMAtmosphere('88.3');assert.equal(ctor.running,false);assert.equal(ctor.context,null);const s=read('js/fm-atmosphere.js');assert.match(s,/AudioContext/);assert.doesNotMatch(s,/fetch\(|\.src\s*=/);
