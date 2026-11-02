@@ -198,7 +198,7 @@ async function run(engine,launcher,w,h){
        for(let n=0;n<3;n++){
          const current=Number(await page.locator('.cinematic-room').getAttribute('data-peek'));
          if(current===desired)break;
-         await page.locator(desired===0?'#room-pan-left':'#room-pan-right').click();
+         await page.locator(current>desired?'#room-pan-left':'#room-pan-right').click();
        }
      }
      await door.click();
