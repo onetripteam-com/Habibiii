@@ -6,6 +6,7 @@ import {mountAtelierLife} from './atelier-life.js';
 import {mountCinematicHome} from './cinematic-home.js';
 import {mountPocketPeek} from './pocket-peek.js';
 import {mountOriginalRoomArt} from './original-room-art.js';
+import {mountLivingRoomPhoto} from './room-photo-stage.js';
 import {physicalObjectMarkup,bouquetObjectMarkup} from './physical-room-objects.js';
 import {mountMemoryTools} from './memory.js';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -64,6 +65,6 @@ export function mountRoom(root,{chosen,visits,lastVisit,onReplay,onNewBouquet}){
  };
  const picker=root.querySelector('#home-world-overlay');root.querySelector('#theme-trigger').onclick=()=>picker.showModal();
  root.querySelectorAll('[data-world]').forEach(b=>b.onclick=()=>{theme=b.dataset.world;store.set('roomTheme',theme);room.dataset.theme=theme;/* Inline atelier artwork takes theme colours from CSS; no DOM reset required. */root.querySelectorAll('[data-world]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));picker.close()});
- const disposeLife=mountAtelierLife(room);const disposeCinema=mountCinematicHome(room);const disposePeek=mountPocketPeek(room);const disposeOriginalArt=mountOriginalRoomArt(room);const disposeMemory=mountMemoryTools(root);const timer=setInterval(()=>{root.querySelector('#clock-value').textContent=kuwaitParts().clock;refreshMoments()},60000);
- return ()=>{clearInterval(timer);disposeOriginalArt();disposePeek();disposeCinema();disposeLife();disposeMemory();portal.destroy()};
+ const disposeLivingPhoto=mountLivingRoomPhoto(room);const disposeLife=mountAtelierLife(room);const disposeCinema=mountCinematicHome(room);const disposePeek=mountPocketPeek(room);const disposeOriginalArt=mountOriginalRoomArt(room);const disposeMemory=mountMemoryTools(root);const timer=setInterval(()=>{root.querySelector('#clock-value').textContent=kuwaitParts().clock;refreshMoments()},60000);
+ return ()=>{clearInterval(timer);disposeLivingPhoto();disposeOriginalArt();disposePeek();disposeCinema();disposeLife();disposeMemory();portal.destroy()};
 }
