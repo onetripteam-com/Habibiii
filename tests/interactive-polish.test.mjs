@@ -19,7 +19,7 @@ test('all three photographed worlds render the current chosen bouquet, without K
  const petals=read('js/photo-bouquet.js');
  const css=read('css/experience-polish.css');
  assert.match(room,/flowerLayer\.hidden=false/);
- assert.match(room,/photoBloomsMarkup\(chosen,id\)/);
+ assert.match(room,/photoBloomsMarkup\(chosen,spriteScene\)/);
  assert.doesNotMatch(room,/flowerLayer\.hidden=id!=='story'/);
  assert.match(petals,/scene==='story'/);
  for(const scene of ['story','kerala','bengaluru'])assert.ok(css.includes('data-theme="'+scene+'"'),scene);
