@@ -1,9 +1,10 @@
+import {photoBloomsMarkup} from './photo-bouquet.js';
 /** Direct manipulation of Maha's own original room illustration.
  * Every portal is positioned over the exact physical object in the one
  * full-bleed scene. Buttons stay semantic, focusable and part of existing portal
  * system. The photo and hotspots share one aspect-ratio-locked canvas.
  */
-export function mountLivingRoomPhoto(room){
+export function mountLivingRoomPhoto(room,chosen=[]){
  const stage=room.querySelector('.inhabited-room');
  if(!stage)return ()=>{};
  const layer=document.createElement('div');
@@ -22,6 +23,14 @@ export function mountLivingRoomPhoto(room){
   room.dataset.roomPhoto='ready';
  });
  layer.append(image);
+ const flowerLayer=document.createElement('div');
+ flowerLayer.className='photographed-vase-flowers';
+ flowerLayer.innerHTML=photoBloomsMarkup(chosen);
+ layer.append(flowerLayer);
+ const vineLayer=document.createElement('div');
+ vineLayer.className='living-leaf-sway';
+ vineLayer.setAttribute('aria-hidden','true');
+ layer.append(vineLayer);
  // Move the existing semantic controls, never clone them; event listeners,
  // references, saved bouquet and reverse portal transitions remain intact.
  const portals=[...stage.querySelectorAll('.room-object[data-door],#room-bouquet')];
@@ -35,10 +44,24 @@ export function mountLivingRoomPhoto(room){
   letters:{x:67,y:39,w:17,h:17,title:'The letter desk · letters'},
   music:{x:88,y:43,w:12,h:18,title:'The radio · Habibii FM'},
   games:{x:60,y:77,w:16,h:15,title:'The handheld game console · arcade'},
-  flowers:{x:49.5,y:57,w:11,h:29,title:'The ceramic flower vase · arrange your flowers'}
+  flowers:{x:51,y:59,w:12,h:20,title:'The vase · A few flowers for whatever today brings'}
  };
  for(const [id,area] of Object.entries(areas)){
   const btn=id==='flowers'?room.querySelector('#room-bouquet'):room.querySelector('[data-door="'+id+'"]');
+  if(btn&&id!=='flowers'){
+    const sublines={
+      rest:'The world can wait a minute.',
+      garden:'Some words deserve to grow.',
+      movies:'One seat. Your kind of stories.',
+      travel:'Every postcard has somewhere to take you.',
+      letters:'There are words worth keeping.',
+      music:'Find a song for the day you had.',
+      games:'A little silliness, on purpose.'
+    };
+    const label=btn.querySelector('.object-label');
+    if(label)label.innerHTML='<strong>'+label.textContent.replace('↗','').trim()+'</strong><small>'+sublines[id]+'</small>';
+  }
+
   if(!btn)continue;
   btn.classList.add('living-hit-area');
   btn.style.setProperty('--object-x',area.x+'%');
