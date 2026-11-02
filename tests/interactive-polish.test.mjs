@@ -8,7 +8,8 @@ test('mobile panorama uses finger tracking plus separate eased release',()=>{
  const css=read('css/experience-polish.css');
  assert.match(js,/setPointerCapture/);
  assert.match(js,/const settle=/);
- assert.match(js,/requestAnimationFrame\(\(\)=>\{settleFrame=0;set\(stopAt\(next\)\)/);
+ assert.match(js,/void layer\.offsetWidth/);
+ assert.match(js,/set\(stopAt\(next\)\)/);
  assert.match(js,/const onCancel=/);
  assert.match(css,/room-is-dragging/);
  assert.match(css,/touch-action:pan-y/);
