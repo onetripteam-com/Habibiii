@@ -10,7 +10,7 @@ import {mountLivingRoomPhoto} from './room-photo-stage.js';
 import {physicalObjectMarkup,bouquetObjectMarkup} from './physical-room-objects.js';
 import {mountMemoryTools} from './memory.js';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const worlds=[['story','Kuwait'],['kerala','Kerala'],['bengaluru','Bengaluru']];
+const worlds=[['story','Kuwait'],['kerala','Kerala'],['bengaluru','Bangalore']];
 const objects=[['letters','Letters','A little post for any day'],['music','Habibii FM','Find your frequency'],['movies','Cinema','One seat. All yours.'],['travel','Travel','Where shall we go?'],['games','Arcade','Highly unserious business'],['garden','Word garden','Let a thought grow'],['rest','Rest','No plans required']];
 export function mountRoom(root,{chosen,visits,lastVisit,onReplay,onNewBouquet}){
  let theme=store.get('roomTheme','story');if(!worlds.some(w=>w[0]===theme)){theme=theme==='monsoon'?'kerala':'story';store.set('roomTheme',theme)}
