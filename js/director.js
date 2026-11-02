@@ -2,10 +2,8 @@
  * Pure enhancement: every original game, envelope and page remains independently usable.
  */
 import {paintedWorld} from './painted-worlds.js';
-import {FMAtmosphere} from './fm-atmosphere.js';
 const root=document.querySelector('#app');
 let scheduled=false,lastRoom=null,helloShown=false;
-let radioSound=null,currentRadio=null;
 const safeRead=(key,fallback)=>{try{const s=localStorage.getItem('maha.escape.v1.'+key);return s===null?fallback:JSON.parse(s)}catch{return fallback}};
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const iconMark=()=>{
@@ -72,32 +70,6 @@ function images(){
   el.insertAdjacentHTML('afterbegin',paintedWorld(type));
  });
 }
-function radio(){
- const app=root.querySelector('.fm-app');
- if(!app){if(radioSound){radioSound.stop();radioSound=null}currentRadio=null;return}
- const station=app.querySelector('.fm-frequency strong')?.textContent?.trim()||'88.3';
- const ambient=app.querySelector('[data-ambience]');
- if(ambient&&ambient.dataset.director!=='ready'){
-  ambient.dataset.director='ready';ambient.textContent='▶ Hear this atmosphere';ambient.setAttribute('aria-pressed','false');
- }
- const voice=app.querySelector('[data-audio]');if(voice&&!voice.textContent.includes('Hear my introduction'))voice.hidden=true;
- const note=app.querySelector('.radio-audio-state');const caption='The station has an original little atmosphere. No outside links, no interruptions.';if(note&&!app.querySelector('[data-audio]:not([hidden])')&&note.textContent!==caption)note.textContent=caption;
- if(currentRadio!==station){if(radioSound){radioSound.stop();radioSound=null}currentRadio=station;}
-}
-function scan(){scheduled=false;if(!root)return;iconMark();images();radio();}
+function scan(){scheduled=false;if(!root)return;iconMark();images();}
 function schedule(){if(!scheduled){scheduled=true;requestAnimationFrame(scan)}}
 if(root){const observer=new MutationObserver(m=>{if(m.some(x=>x.type==='childList'))schedule()});observer.observe(root,{subtree:true,childList:true});schedule();}
-// The existing radio explicitly has no recorded audio; create a local acoustic miniature instead.
-document.addEventListener('click',e=>{
- const btn=e.target.closest?.('.fm-app [data-ambience]');if(!btn)return;
- e.preventDefault();e.stopImmediatePropagation();
- const station=btn.closest('.fm-app')?.querySelector('.fm-frequency strong')?.textContent?.trim()||'88.3';
- if(radioSound){radioSound.stop();radioSound=null;btn.setAttribute('aria-pressed','false');btn.textContent='▶ Hear this atmosphere';return}
- if(document.querySelector('#sound-toggle')?.getAttribute('aria-pressed')==='true'){
-  btn.textContent='Unmute sound above to listen';return;
- }
- try{radioSound=new FMAtmosphere(station);radioSound.play();btn.textContent='Ⅱ Stop atmosphere';btn.setAttribute('aria-pressed','true')}
- catch{btn.textContent='Sound unavailable on this device';radioSound?.stop();radioSound=null}
-},true);
-document.addEventListener('maha:mutechange',()=>{if(radioSound){radioSound.stop();radioSound=null}schedule()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&radioSound){radioSound.stop();radioSound=null;schedule()}});
