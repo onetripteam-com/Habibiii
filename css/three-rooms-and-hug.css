@@ -1,0 +1,151 @@
+/* Three different lived-in homes, each actually photographed and interactive. */
+.cinematic-room[data-theme="story"]{--room-paper:#d8b99d;--room-metal:#ba8c65}
+.cinematic-room[data-theme="kerala"]{--room-paper:#e7d6a2;--room-metal:#ad945c}
+.cinematic-room[data-theme="bengaluru"]{--room-paper:#d8bca7;--room-metal:#bc826c}
+.cinematic-room[data-theme="kerala"] .living-photo-plane .living-photo-image{
+ filter:brightness(.89) saturate(.95) contrast(1.035)!important;
+}
+.cinematic-room[data-theme="bengaluru"] .living-photo-plane .living-photo-image{
+ filter:brightness(.97) saturate(1.05) contrast(1.025)!important;
+}
+.cinematic-room[data-theme="kerala"] .cinematic-lens{
+ background:linear-gradient(110deg,#132916a1 0%,#14351a27 45%,transparent 74%)!important;
+}
+.cinematic-room[data-theme="bengaluru"] .cinematic-lens{
+ background:linear-gradient(110deg,#4d2519a1 0%,#5a291b23 46%,transparent 75%)!important;
+}
+.home-world-choices{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.theme-preview-art[data-theme="story"]{background-image:url('../assets/rooms/maha-living-room.webp')!important;background-position:center}
+.theme-preview-art[data-theme="kerala"]{background-image:url('../assets/rooms/maha-kerala.webp')!important;background-position:center}
+.theme-preview-art[data-theme="bengaluru"]{background-image:url('../assets/rooms/maha-bengaluru.webp')!important;background-position:center}
+.cinematic-room[data-room-photo-scene="original"] .living-photo-plane .living-hit-area .object-label{
+ color:#fff2df!important;
+}
+/* Smooth, momentum-based panning on a composited photographic layer. */
+@media(max-width:759px){
+ .cinematic-room .living-photo-plane{
+  transform:translate3d(calc(-50% + var(--photo-pan-px,0px)),-50%,0)!important;
+  will-change:transform;
+  backface-visibility:hidden;
+  transition:transform .76s cubic-bezier(.18,.75,.19,1)!important;
+ }
+ .cinematic-room .living-photo-plane.room-is-dragging{transition:none!important}
+ .room-pan-controls span{min-width:95px}
+ .home-world-choices{grid-template-columns:1fr!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .cinematic-room .living-photo-plane{transition:none!important}
+}
+/* Rebuilt opening, all real interactive layers over original generated art. */
+.app-frame[data-scene="hug"] .app-header{background:#171c24a1;backdrop-filter:blur(9px)}
+.new-hug{
+ position:relative;min-height:100%;height:100%;width:100%;overflow:auto;
+ display:grid;place-items:center;
+ background:linear-gradient(165deg,#1e253e,#493a52 48%,#a06c64);
+ color:#fff0d4;
+}
+.new-hug .hug-night-sky{
+ position:fixed;inset:0;background:
+ linear-gradient(90deg,#101b36a8,#141b394d 50%,#20273899),
+ url('../assets/rooms/maha-welcome.webp') center 45% / cover no-repeat;
+ filter:saturate(.85);
+ transform:scale(1.012);animation:hug-sky-drift 24s ease-in-out infinite alternate;
+ pointer-events:none;
+}
+.new-hug .hug-live-stars{
+ position:fixed;inset:0;pointer-events:none;
+ background:radial-gradient(circle at 17% 23%,#ffe7ab 0 1px,transparent 3px),
+ radial-gradient(circle at 73% 18%,#fff2c8 0 2px,transparent 5px),
+ radial-gradient(circle at 65% 68%,#ffe8ab 0 1px,transparent 5px),
+ radial-gradient(circle at 28% 57%,#ffe0ab 0 2px,transparent 5px);
+ animation:hug-twinkle 6s ease-in-out infinite alternate;
+}
+.new-hug .hug-stage{
+ position:relative;isolation:isolate;z-index:2;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ width:min(100% - 34px,570px);
+ padding:clamp(90px,13vh,146px) 12px 70px;
+ text-align:center;
+}
+.new-hug .hug-overline{
+ font:750 10px/1.4 system-ui,sans-serif;letter-spacing:.24em;color:#fae2ac;
+ text-shadow:0 2px 8px #100f1ea9;margin-bottom:15px;
+}
+.new-hug h1{
+ font:400 clamp(38px,5.4vw,72px)/1.01 Georgia,serif;
+ letter-spacing:-.056em;text-shadow:0 5px 18px #161c32ad;margin:0 0 22px;
+ text-wrap:balance;
+}
+.new-hug h1 em{color:#f6d1ab;font-weight:400}
+.new-hug .hug-postbird{
+ font-size:32px;color:#ffe3a3;text-shadow:0 0 24px #ffdda8;
+ animation:postbird-float 4.5s ease-in-out infinite alternate;
+ margin:2px 0 8px;pointer-events:none;
+}
+.new-hug .hug-envelope{
+ position:relative;overflow:visible;
+ width:min(100%,370px);min-height:185px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ background:linear-gradient(160deg,#f9edd5,#ddc59c);
+ border:2px solid #fff0d1;border-radius:5px;
+ box-shadow:0 27px 50px #14152baa,0 2px 4px #1a1d3477;
+ color:#6f4238;cursor:pointer;transform:rotate(-2deg);
+ transition:transform .5s cubic-bezier(.18,.78,.2,1),opacity .35s;
+}
+.new-hug .hug-envelope:hover,.new-hug .hug-envelope:focus-visible{transform:rotate(0deg) translateY(-5px)}
+.new-hug .hug-envelope-flap{
+ position:absolute;inset:0;
+ clip-path:polygon(0 0,100% 0,50% 56%);
+ background:linear-gradient(180deg,#faf1db,#dcc8ac 92%);border:0;opacity:.95;
+ transform-origin:50% 0;transition:transform .7s ease;
+}
+.new-hug .hug-envelope.is-open .hug-envelope-flap{transform:rotateX(160deg)}
+.new-hug .hug-envelope-wax{
+ position:relative;z-index:3;display:grid;place-items:center;
+ width:52px;height:52px;background:#9b4853;color:#f8d8a8;border-radius:50%;
+ border:2px ridge #d89386;box-shadow:0 4px 7px #3e262e71;
+ font:italic 24px Georgia,serif;margin-top:25px;
+}
+.new-hug .hug-envelope-address{position:relative;z-index:4;font:700 9px system-ui,sans-serif;letter-spacing:.17em;margin-top:12px}
+.new-hug .hug-open-instruction{position:relative;z-index:4;font:italic 14px Georgia,serif;margin:12px 0 10px}
+.new-hug .hug-letter{
+ width:min(100%,460px);
+ background:#f6e7c8;color:#463329;
+ border:1px solid #e1c49c;border-radius:3px;
+ padding:clamp(17px,4vw,33px) clamp(17px,5vw,38px);
+ box-shadow:0 21px 46px #171729a8;
+ text-align:left;transform-origin:50% 0;
+}
+.new-hug .hug-letter.is-revealed{animation:letter-rise .7s cubic-bezier(.16,.84,.24,1) both}
+.new-hug .hug-letter-stamp{font:750 9px system-ui,sans-serif;letter-spacing:.22em;color:#926d4c}
+.new-hug .hug-letter p{font:400 clamp(16px,2vw,20px)/1.5 Georgia,serif;margin:15px 0}
+.new-hug .hug-letter em{color:#a25d5b}
+.new-hug .hug-response{display:flex;gap:9px;flex-wrap:wrap;margin-top:24px}
+.new-hug .hug-response button,.new-hug .hug-result button{
+ min-height:48px;border-radius:100px;padding:12px 18px;border:1px solid #b27a69;
+ font:650 12px system-ui,sans-serif;cursor:pointer;
+}
+.new-hug .hug-accept{background:#9c5861;color:#fff6e8}
+.new-hug .hug-decline{background:#fff7e8;color:#795c50}
+.new-hug .hug-skip{margin-top:25px;background:transparent;border:0;color:#fff0d3;font:italic 15px Georgia,serif;min-height:44px;cursor:pointer}
+.new-hug .hug-result{background:#f9e9d6;color:#47382f;padding:28px;border-radius:4px;box-shadow:0 18px 50px #111a2b99}
+.new-hug .hug-result h2{font:400 clamp(27px,4vw,41px) Georgia,serif;letter-spacing:-.04em}
+.new-hug .hug-result p{font:17px/1.6 Georgia,serif}
+.new-hug .hug-heart-burst{font:90px Georgia,serif;color:#a45a63;animation:heart-appear .85s ease-out both}
+@keyframes hug-sky-drift{from{transform:scale(1.012) translateX(-.4%)}to{transform:scale(1.04) translateX(.4%)}}
+@keyframes hug-twinkle{from{opacity:.4}to{opacity:.8}}
+@keyframes postbird-float{from{transform:translate3d(-7px,-4px,0)}to{transform:translate3d(7px,4px,0)}}
+@keyframes letter-rise{from{opacity:0;transform:translateY(-30px) scale(.9)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes heart-appear{from{transform:scale(.5);opacity:0}to{transform:scale(1);opacity:1}}
+@media(max-width:759px){
+ .new-hug .hug-night-sky{background-position:49% center}
+ .new-hug .hug-stage{padding-top:94px}
+ .new-hug .hug-envelope{min-height:160px}
+ .new-hug h1{font-size:39px}
+ .new-hug .hug-letter{max-height:55vh;overflow:auto}
+ .new-hug .hug-response{flex-direction:column}
+ .new-hug .hug-response button{width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ .new-hug *, .new-hug .hug-night-sky,.new-hug .hug-live-stars{animation:none!important;transition:none!important}
+}
