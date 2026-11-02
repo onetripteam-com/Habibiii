@@ -24,6 +24,8 @@ on:
       - 'css/maha-world-2026.css'
       - 'css/room-touch-and-rest.css'
       - 'css/living-room-photo.css'
+      - 'css/room-finishing.css'
+      - 'js/photo-bouquet.js'
       - 'js/room-photo-stage.js'
       - 'assets/rooms/maha-living-room.webp'
       - 'js/room-moments.js'
