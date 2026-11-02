@@ -36,6 +36,10 @@ async function run(engine,launcher,w,h){
   await page.locator('.room-scene.new-home').waitFor({timeout:16000});
   assert.ok(await page.locator('.room-heading h1').isVisible());
   assert.equal(await page.locator('[data-door]').count(),7);
+  assert.ok(await page.locator('.living-photo-plane .living-photo-image').isVisible(),'Exact original image must be mounted in the live room');
+  assert.equal((await page.request.get(new URL('./assets/rooms/maha-living-room.webp',BASE).href)).status(),200,'Original chosen room image must be stored locally');
+  assert.equal(await page.locator('.living-photo-plane .living-hit-area').count(),8,'All seven physical objects plus the real vase must share the same image plane');
+
   assert.equal(await page.locator('#room-light-trigger').count(),1);
   assert.equal(await page.locator('#room-visit-label').count(),1);
   assert.ok((await page.locator('#room-welcome').innerText()).trim().length>4);
