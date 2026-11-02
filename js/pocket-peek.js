@@ -10,7 +10,7 @@ export function mountPocketPeek(room){
  const layer=room.querySelector('.living-photo-plane');
  if(!stage||!left||!right||!layer)return ()=>{};
  const small=matchMedia('(max-width:759px)');
- let pan=.5,start=null,disposed=false,lastVelocity=0,frame=0,travel=0;
+ let pan=.5,start=null,disposed=false,lastVelocity=0,frame=0,settleFrame=0,travel=0;
  const measure=()=>{travel=Math.max(0,(layer.offsetWidth-stage.clientWidth)/2)};
  const maxTravel=()=>travel;
  measure();
@@ -34,11 +34,22 @@ export function mountPocketPeek(room){
    pan=Math.max(0,Math.min(1,next));
    paint();
  }
- const goLeft=()=>set(pan-.26),goRight=()=>set(pan+.26);
+ // Five camera stops preserve detail without a sudden half-room jump.
+ const stopAt=next=>Math.round(Math.max(0,Math.min(1,next))*4)/4;
+ const settle=next=>{
+   if(settleFrame)cancelAnimationFrame(settleFrame);
+   // A transition needs a rendered starting frame after the drag class clears.
+   layer.classList.remove('room-is-dragging');
+   void layer.offsetWidth;
+   settleFrame=requestAnimationFrame(()=>{settleFrame=0;set(stopAt(next));});
+ };
+ const goLeft=()=>settle(pan-.25),goRight=()=>settle(pan+.25);
  const onDown=e=>{
    if(!small.matches||e.button&&e.button!==0)return;
    if(e.target.closest('button,dialog,[role="button"],a,input,textarea'))return;
    if(frame)cancelAnimationFrame(frame);
+   if(settleFrame)cancelAnimationFrame(settleFrame);
+   settleFrame=0;
    lastVelocity=0;
    start={x:e.clientX,y:e.clientY,previousX:e.clientX,previousT:performance.now(),initial:pan,dragging:false};
  };
@@ -50,6 +61,7 @@ export function mountPocketPeek(room){
      if(Math.abs(dx)<Math.abs(dy)*1.25){start=null;return}
      start.dragging=true;
      layer.classList.add('room-is-dragging');
+     try{stage.setPointerCapture?.(e.pointerId)}catch{}
    }
    if(e.cancelable)e.preventDefault();
    const max=maxTravel();
@@ -61,36 +73,37 @@ export function mountPocketPeek(room){
      if(!frame)frame=requestAnimationFrame(()=>{frame=0;paint(true)});
    }
  };
- const onEnd=()=>{
+ const onEnd=e=>{
    const dragging=start?.dragging;
    start=null;
    if(frame){cancelAnimationFrame(frame);frame=0;paint(true)}
-   layer.classList.remove('room-is-dragging');
-   if(dragging&&Math.abs(lastVelocity)>.11){
-     const max=Math.max(1,maxTravel());
-     const projected=pan-lastVelocity*80/(2*max);
-     set(projected);
-   }else paint();
+   try{if(e&&stage.hasPointerCapture?.(e.pointerId))stage.releasePointerCapture(e.pointerId)}catch{}
+   if(!dragging){layer.classList.remove('room-is-dragging');paint();return}
+   const max=Math.max(1,maxTravel());
+   // Project a little momentum in photo pixels, then ease to a real viewpoint.
+   const projected=pan-lastVelocity*85/(2*max);
+   settle(projected);
  };
+ const onCancel=()=>{start=null;lastVelocity=0;if(frame){cancelAnimationFrame(frame);frame=0}settle(pan)};
  const onResize=()=>{measure();paint()};
  left.addEventListener('click',goLeft);
  right.addEventListener('click',goRight);
  stage.addEventListener('pointerdown',onDown,{passive:true});
  stage.addEventListener('pointermove',onMove,{passive:false});
  stage.addEventListener('pointerup',onEnd,{passive:true});
- stage.addEventListener('pointercancel',onEnd,{passive:true});
+ stage.addEventListener('pointercancel',onCancel,{passive:true});
  window.addEventListener('resize',onResize,{passive:true});
  if(small.addEventListener)small.addEventListener('change',onResize);
  else small.addListener(onResize);
  paint();
  return ()=>{
-   disposed=true;start=null;if(frame)cancelAnimationFrame(frame);
+   disposed=true;start=null;if(frame)cancelAnimationFrame(frame);if(settleFrame)cancelAnimationFrame(settleFrame);
    left.removeEventListener('click',goLeft);
    right.removeEventListener('click',goRight);
    stage.removeEventListener('pointerdown',onDown);
    stage.removeEventListener('pointermove',onMove);
    stage.removeEventListener('pointerup',onEnd);
-   stage.removeEventListener('pointercancel',onEnd);
+   stage.removeEventListener('pointercancel',onCancel);
    window.removeEventListener('resize',onResize);
    if(small.removeEventListener)small.removeEventListener('change',onResize);
    else small.removeListener(onResize);
