@@ -237,3 +237,39 @@
  }
  .cinematic-room .room-dock #revisit-hug{color:#f4dcb9!important}
 }
+
+/* A modest animated atmosphere on the ORIGINAL picture, rather than a
+   separately playing video. No network, CPU-heavy canvas, camera or sensor. */
+.cinematic-room[data-room-photo-scene="original"] .scene-atmosphere{
+ position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden;
+}
+.cinematic-room .scene-atmosphere::before,
+.cinematic-room .scene-atmosphere::after{
+ content:'';position:absolute;inset:0;pointer-events:none;will-change:opacity;
+}
+.cinematic-room[data-theme="story"] .scene-atmosphere:before{
+ background:radial-gradient(ellipse 16% 11% at 39% 38%,#ffdbac10,transparent 80%);
+ animation:maha-city-glow 13s ease-in-out infinite alternate;
+}
+.cinematic-room[data-theme="kerala"] .scene-atmosphere:before{
+ background:repeating-linear-gradient(108deg,transparent 0 12px,#c9e0d720 12.5px 13px,transparent 13.5px 28px);
+ background-size:180px 220px;
+ clip-path:polygon(21% 11%,53% 11%,53% 55%,21% 55%);
+ opacity:.18;animation:maha-rain-move 4s linear infinite;
+}
+.cinematic-room[data-theme="kerala"] .scene-atmosphere:after{
+ background:radial-gradient(ellipse 32% 20% at 35% 43%,#dce5d718,transparent 100%);
+ opacity:.55;animation:maha-city-glow 15s ease-in-out infinite alternate;
+}
+.cinematic-room[data-theme="bengaluru"] .scene-atmosphere:before{
+ background:radial-gradient(ellipse 16% 13% at 41% 25%,#ffb97b19,transparent 100%),
+ radial-gradient(ellipse 10% 9% at 51% 36%,#f7bd8b13,transparent 90%);
+ opacity:.33;animation:maha-city-glow 12s ease-in-out infinite alternate;
+}
+@keyframes maha-rain-move{from{background-position:0 -120px}to{background-position:-36px 120px}}
+@keyframes maha-city-glow{from{opacity:.2}to{opacity:.65}}
+@media(prefers-reduced-motion:reduce){
+ .cinematic-room .scene-atmosphere::before,.cinematic-room .scene-atmosphere::after{
+  animation:none!important;will-change:auto!important;
+ }
+}
