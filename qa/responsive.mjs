@@ -117,7 +117,7 @@ async function run(engine,launcher,w,h){
 
   assert.ok(await page.locator('.atelier-home').isVisible(),'Atelier should be active');
   assert.equal(await page.locator('.atelier-illustration').count(),0,'No invisible legacy cartoon room markup should be mounted');
-  assert.equal(await page.locator('.theme-preview-art').count(),6,'All six themes should have real photographic previews');
+  assert.equal(await page.locator('.theme-preview-art').count(),3,'Only Kuwait, Kerala and Bengaluru scenery choices should exist');
   assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
   assert.ok(await page.locator('.living-photo-plane .living-photo-image').isVisible(),'Original chosen photo must be visible');
   const photoLoaded=await page.locator('.living-photo-image').evaluate(img=>img.complete&&img.naturalWidth>1500);
@@ -153,16 +153,16 @@ async function run(engine,launcher,w,h){
   await page.screenshot({path:join(OUT,key+'-home.png'),animations:'disabled'});
   await page.locator('#theme-trigger').click();
   await page.locator('#home-world-overlay').waitFor({state:'visible'});
-  assert.equal(await page.locator('[data-world]').count(),6);
-  await page.locator('[data-world="cosmos"]').click();
-  assert.equal(await page.locator('.new-home').getAttribute('data-theme'),'cosmos');
-  if(w>=760){
-    const photo=await page.locator('.cinematic-photo').evaluate(el=>getComputedStyle(el).backgroundImage);
-    assert.ok(photo.includes(artManifest?.scenes?.cosmos?.[variant]?'cosmos-'+variant+'.webp':'cosmos.webp'),'Cosmos must load a DIFFERENT real photo, not recolour story');
-  } else {
-    assert.equal(await page.locator('.cinematic-note').isVisible(),false,'PC-only copy must not leak into mobile');
+  assert.equal(await page.locator('[data-world]').count(),3);
+  for(const [id,photo] of [['kerala','maha-kerala.webp'],['bengaluru','maha-bengaluru.webp']]){
+   await page.locator('[data-world="'+id+'"]').click();
+   assert.equal(await page.locator('.new-home').getAttribute('data-theme'),id);
+   await page.waitForFunction(name=>document.querySelector('.living-photo-image')?.getAttribute('src')?.endsWith(name),photo);
+   const loaded=await page.locator('.living-photo-image').evaluate(img=>img.complete&&img.naturalWidth>1000);
+   assert.ok(loaded,id+' must render an original locally packaged scene');
+   await page.screenshot({path:join(OUT,key+'-'+id+'.png'),animations:'disabled'});
+   await page.locator('#theme-trigger').click();
   }
-  await page.screenshot({path:join(OUT,key+'-cosmos.png'),animations:'disabled'});
   // Switch back to the exact user-approved room before portal testing:
   // switching themes must not strand the semantic room controls.
   await page.locator('#theme-trigger').click();
