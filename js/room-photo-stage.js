@@ -91,6 +91,7 @@ export function mountLivingRoomPhoto(room,chosen=[]){
   }
   // A bouquet is a living souvenir: it must appear in all three rooms.
   flowerLayer.hidden=false;
+  if(flowerLayer.dataset.vaseScene!==id){flowerLayer.innerHTML=photoBloomsMarkup(chosen,id)}
   flowerLayer.dataset.vaseScene=id;
   flowerLayer.setAttribute('aria-hidden','true');
   // In other themes, the SAME buttons must return to the scene root.
