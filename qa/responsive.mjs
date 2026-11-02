@@ -204,6 +204,7 @@ async function run(engine,launcher,w,h){
        assert.match(await ambience.innerText(),/Hear|Play/i,'Do not offer a dead or missing ambient recording control');
      }
      if(scene==='games'){
+       if(w===1440)await page.locator('[data-prev]').click(); // Earlier dossier QA changed to Sadya.
        assert.ok(await page.locator('.cabinet-marquee').innerText().then(s=>s.includes('CHAAYA')),'First arcade cabinet must be playable Chai Maker');
        await page.locator('[data-next]').click();
        assert.ok((await page.locator('.cabinet-marquee').innerText()).includes('SADYA'),'Second cabinet must be Sadya Builder');
