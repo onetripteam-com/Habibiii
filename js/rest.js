@@ -1,6 +1,7 @@
 /** MAHA — A Little Escape · Rest Room. Optional, pressure-free and offline. */
 import {soundEffect,startSound} from './audio.js';
 import {takeMedia,releaseMedia,isMediaMuted} from './media-control.js';
+import {store} from './store.js';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -8,13 +9,16 @@ const PHASES=[['Inhale',4000],['Hold',4000],['Exhale',6000]];
 const fallback={shows:['A favourite episode you already know by heart.'],snacks:['Something warm, easy, and good.'],songs:['A song you have loved for years.'],voice:{src:'',caption:''},rain:{src:'',licence:'Original local sound.'}};
 export function mountRest(host,{onPlay=()=>{}}={}){
  let disposed=false,runningBreath=false,breathStart=0,breathPaused=0,raf=0,visibilityPaused=false;
- let audioContext=null,noiseSource=null,noiseGain=null,voice=null,voiceBusy=false,rainVolume=0.36,rainArmed=false;
- let drips=[],rainCanvas,rainCtx,stage,light=72,comfort=fallback;
+ let audioContext=null,noiseSource=null,noiseGain=null,voice=null,voiceBusy=false,rainArmed=false;
+ const savedPercent=(key,otherwise)=>{const n=Number(store.get(key,otherwise));return Number.isFinite(n)?Math.max(0,Math.min(100,Math.round(n))):otherwise;};
+ let light=savedPercent('restLamp',72),rainVolume=savedPercent('restRainVolume',36)/100;
+ let comfortTab=['shows','snacks','songs'].includes(store.get('restComfortTab'))?store.get('restComfortTab'):'shows';
+ let drips=[],rainCanvas,rainCtx,stage,comfort=fallback;
  host.classList.add('rest-host');
  host.innerHTML=`<section class="restroom" aria-label="A little room for resting">
  <div class="restroom-top"><span class="rr-kicker">MAHA'S QUIET ROOM · NO EXPECTATIONS</span><h1>Leave the day <em>at the door.</em></h1><p class="rr-intro">There's a comfortable chair, some rain outside, and nowhere you need to be.</p></div>
  <div class="rr-window" id="rr-window"><canvas id="rr-rain-canvas" aria-hidden="true"></canvas><div class="rr-window-bars" aria-hidden="true"></div><div class="rr-night-sill" aria-hidden="true"></div><div class="rr-lamp" aria-hidden="true"><div class="rr-lamp-light" id="rr-lamp-light"></div><div class="rr-lamp-shade"></div><div class="rr-lamp-stem"></div><div class="rr-lamp-base"></div></div><p class="rr-glass-note">Rain against the glass. The world can wait.</p></div>
- <div class="rr-dials"><label>THE LAMP · Brightness <input id="rr-brightness" type="range" min="0" max="100" value="72" aria-label="Lamp brightness"><output id="rr-lamp-value">72%</output></label><label>OUTSIDE · Rain sound <input id="rr-volume" type="range" min="0" max="100" value="36" aria-label="Rain sound volume"><output id="rr-volume-value">36%</output></label></div><button type="button" id="rr-rain-toggle" class="rr-rain-toggle">Listen to the rain ↗</button>
+ <div class="rr-dials"><label>THE LAMP · Brightness <input id="rr-brightness" type="range" min="0" max="100" value="${light}" aria-label="Lamp brightness"><output id="rr-lamp-value">${light}%</output></label><label>OUTSIDE · Rain sound <input id="rr-volume" type="range" min="0" max="100" value="${Math.round(rainVolume*100)}" aria-label="Rain sound volume"><output id="rr-volume-value">${Math.round(rainVolume*100)}%</output></label></div><button type="button" id="rr-rain-toggle" class="rr-rain-toggle">Listen to the rain ↗</button>
  <div class="rr-lower"><section class="rr-breath-card"><div class="rr-breath-header"><span>IF YOU FEEL LIKE IT</span><button type="button" id="rr-breath-toggle">Start ↗</button></div><div class="rr-breath-display"><div class="rr-breath-orb" id="rr-breath-orb" aria-hidden="true"><span>◌</span></div><div class="rr-breath-copy" aria-live="off"><strong id="rr-breath-stage">Whenever you like</strong><small id="rr-breath-timer">In 4 · Hold 4 · Out 6</small></div></div><p>Optional. No counts to keep, nothing to achieve.</p></section>
  <section class="rr-comfort"><span class="rr-section-kicker">ON THE BEDSIDE TABLE</span><div class="rr-comfort-tabs" role="group" aria-label="Comfort ideas"><button data-comfort="shows" aria-pressed="true">Shows</button><button data-comfort="snacks" aria-pressed="false">Snacks</button><button data-comfort="songs" aria-pressed="false">Songs</button></div><ul id="rr-comfort-list"></ul></section></div>
  <div class="rr-foot"><button id="rr-voice" type="button" hidden>▶ Press to hear me</button><button id="rr-bored" type="button">✦ Bored in bed?</button></div><p class="rr-voice-caption" id="rr-voice-caption" hidden>${esc(fallback.voice.caption)}</p><p class="rr-copyright">Nothing to finish. Come back whenever.</p>
@@ -60,7 +64,7 @@ export function mountRest(host,{onPlay=()=>{}}={}){
   else{phase='Exhale';remaining=6-Math.floor((t-8000)/1000);scale=1.03-.2*((t-8000)/6000)}
   host.querySelector('#rr-breath-stage').textContent=phase;host.querySelector('#rr-breath-timer').textContent=remaining+' second'+(remaining===1?'':'s');host.querySelector('#rr-breath-orb').style.transform=reduced()?'scale(.9)':`scale(${scale})`;
  }
- function renderComfort(k){host.querySelectorAll('[data-comfort]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.comfort===k)));
+ function renderComfort(k){comfortTab=k;store.set('restComfortTab',k);host.querySelectorAll('[data-comfort]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.comfort===k)));
   const list=Array.isArray(comfort[k])?comfort[k]:[];host.querySelector('#rr-comfort-list').innerHTML=list.map(v=>`<li>✿ ${esc(typeof v==='string'?v:v.title||'A little comfort')}</li>`).join('')||'<li>Something cosy, whenever it turns up.</li>';
  }
  function stopVoice(){if(voice){releaseMedia(voice);voice.removeAttribute('src');voice.load();voice=null}voiceBusy=false;voiceButton.textContent='▶ Press to hear me';if(rainVolume>0&&rainArmed)startRain()}
@@ -71,8 +75,8 @@ export function mountRest(host,{onPlay=()=>{}}={}){
  }
  const mute=()=>{if(isMediaMuted())stopRain();else if(rainVolume>0&&rainArmed)startRain();if(voice)voice.muted=isMediaMuted()};
  const onVisibility=()=>{if(document.hidden){pauseBreath();stopRain()}else if(rainVolume>0&&!isMediaMuted())startRain()};
- host.querySelector('#rr-brightness').addEventListener('input',e=>{light=+e.target.value;glowValue()});
- host.querySelector('#rr-volume').addEventListener('input',e=>setVolume(+e.target.value));
+ host.querySelector('#rr-brightness').addEventListener('input',e=>{light=+e.target.value;store.set('restLamp',light);glowValue()});
+ host.querySelector('#rr-volume').addEventListener('input',e=>{const volume=+e.target.value;store.set('restRainVolume',volume);setVolume(volume)});
  host.querySelector('#rr-rain-toggle').addEventListener('click',()=>{startSound();soundEffect('tap');rainArmed=!rainArmed;host.querySelector('#rr-rain-toggle').textContent=rainArmed?'☂ Pause the rain sound Ⅱ':'☂ Start the rain sound ↗';if(rainArmed)startRain();else stopRain()});
  host.querySelector('#rr-volume').addEventListener('pointerdown',()=>{if(rainArmed)startRain()},{passive:true});
  host.querySelector('#rr-breath-toggle').addEventListener('click',()=>{soundEffect('tap');if(runningBreath){pauseBreath();return}breathStart=performance.now()-breathPaused;runningBreath=true;host.querySelector('#rr-breath-toggle').textContent='Pause Ⅱ'});
@@ -80,7 +84,7 @@ export function mountRest(host,{onPlay=()=>{}}={}){
  host.querySelector('#rr-voice').addEventListener('click',playVoice);
  host.querySelector('#rr-bored').addEventListener('click',()=>{stopVoice();stopRain();onPlay()});
  document.addEventListener('maha:mutechange',mute);document.addEventListener('visibilitychange',onVisibility);window.addEventListener('resize',resize);
- resize();glowValue();renderComfort('shows');raf=requestAnimationFrame(tick);
- fetch('./content/comfort.json').then(r=>{if(!r.ok)throw Error('No comfort JSON');return r.json()}).then(c=>{if(!disposed){comfort={...fallback,...c};renderComfort('shows');voiceCaption.textContent=comfort.voice?.caption||fallback.voice.caption;voiceButton.hidden=!comfort.voice?.src;voiceCaption.hidden=!comfort.voice?.src}}).catch(()=>{});
+ resize();glowValue();renderComfort(comfortTab);raf=requestAnimationFrame(tick);
+ fetch('./content/comfort.json').then(r=>{if(!r.ok)throw Error('No comfort JSON');return r.json()}).then(c=>{if(!disposed){comfort={...fallback,...c};renderComfort(comfortTab);voiceCaption.textContent=comfort.voice?.caption||fallback.voice.caption;voiceButton.hidden=!comfort.voice?.src;voiceCaption.hidden=!comfort.voice?.src}}).catch(()=>{});
  return ()=>{disposed=true;cancelAnimationFrame(raf);stopRain();stopVoice();audioContext?.close().catch(()=>{});document.removeEventListener('maha:mutechange',mute);document.removeEventListener('visibilitychange',onVisibility);window.removeEventListener('resize',resize);host.innerHTML='';host.classList.remove('rest-host')};
 }
