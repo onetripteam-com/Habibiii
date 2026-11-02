@@ -49,10 +49,10 @@
  .app-frame .identity-flower{width:29px;height:29px}
  .app-frame .identity-type b{font-size:11px!important}
  .app-frame .identity-type small{font-size:7.5px!important}
- .cinematic-room .room-top-controls{top:8px!important;right:8px!important;gap:5px}
+ .cinematic-room .room-top-controls{top:calc(62px + env(safe-area-inset-top,0px))!important;right:10px!important;gap:5px;z-index:51!important}
  .cinematic-room .room-top-controls button{padding:8px!important;font-size:9px!important;min-height:38px!important;gap:4px!important}
  .cinematic-room .room-top-controls button span{font-size:13px!important}
- .cinematic-room .room-heading{top:calc(99px + env(safe-area-inset-top,0px))!important}
+ .cinematic-room .room-heading{top:calc(120px + env(safe-area-inset-top,0px))!important}
  .cinematic-room .room-heading h1{font-size:clamp(31px,8.2vw,42px)!important}
  .cinematic-room .room-heading p{font-size:11px!important;line-height:1.45!important}
  .cinematic-room .room-object.living-object .object-drawing{display:none!important}
@@ -60,7 +60,7 @@
  .cinematic-room .room-light-options{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media(max-width:759px) and (max-height:750px){
- .cinematic-room .room-heading{top:calc(83px + env(safe-area-inset-top,0px))!important}
+ .cinematic-room .room-heading{top:calc(111px + env(safe-area-inset-top,0px))!important}
 }
 /* Quiet Corner: a place to enter, not a breathing app on a coloured page. */
 #portal-screen[data-place="rest"] .portal-place{
