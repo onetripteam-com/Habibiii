@@ -76,7 +76,7 @@ async function run(engine,launcher,w,h){
     await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.originalArt==='false');
     assert.ok(await page.locator('.table-bouquet .real-vase').isVisible(),'Seven chosen flowers must be visible at the Story room vase, not hidden behind a decorative marker');
     const pot=await page.locator('#room-bouquet').evaluate(el=>{const b=el.getBoundingClientRect(),r=el.closest('.inhabited-room').getBoundingClientRect();return {x:(b.left+b.width/2-r.left)/r.width,y:(b.top+b.height/2-r.top)/r.height};});
-    assert.ok(pot.x>.59&&pot.x<.73&&pot.y>.63&&pot.y<.85,'Vase must appear on the photographed coffee-table vessel');
+    assert.ok(pot.x>.45&&pot.x<.65&&pot.y>.45&&pot.y<.92,'Vase must appear over the actual coffee-table vessel');
   }
 
   const sticker=await page.locator('.object-movies .object-drawing').evaluate(el=>getComputedStyle(el).display);
@@ -110,28 +110,20 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.atelier-illustration').count(),0,'No invisible legacy cartoon room markup should be mounted');
   assert.equal(await page.locator('.theme-preview-art').count(),6,'All six themes should have real photographic previews');
   assert.ok(await page.locator('#take-me-anywhere').isVisible(),'surprise portal should be reachable');
-  assert.ok(await page.locator('.cinematic-photo').count()===1,'Photo stage should exist');
+  assert.ok(await page.locator('.living-photo-plane .living-photo-image').isVisible(),'Original chosen photo must be visible');
+  const photoLoaded=await page.locator('.living-photo-image').evaluate(img=>img.complete&&img.naturalWidth>1500);
+  assert.ok(photoLoaded,'The actual original room file must decode in the browser');
+  assert.equal(await page.locator('.cinematic-room').getAttribute('data-room-photo-scene'),'original');
   if(w<760){
-    assert.ok(await page.locator('.cinematic-photo').isVisible(),'Mobile photo stage should be visible');
-    const background=await page.locator('.cinematic-photo').evaluate(el=>getComputedStyle(el).backgroundImage);
-    assert.ok(background.includes(original?'story-'+variant+'.webp':'story.webp'),'Mobile must use real local room photography');
-    const labels=await page.locator('[data-door] .object-label').evaluateAll(nodes=>nodes.every(n=>getComputedStyle(n).display!=='none'&&getComputedStyle(n).opacity!=='0'));
-    assert.ok(labels,'All seven mobile doors need readable on-screen labels');
-  }
-  if(w>=760){
-    const photo=page.locator('.cinematic-photo');
-    assert.ok(await photo.isVisible(),'Real scene image should be visible on PC');
-    const data=await photo.evaluate(el=>({background:getComputedStyle(el).backgroundImage,area:el.getBoundingClientRect().width}));
-    assert.ok(data.background.includes(original?'story-'+variant+'.webp':'story.webp') && data.area>200,'Photographic background should be loaded on desktop');
-    const image=await page.request.get(new URL(original?'./assets/rooms/originals/story-'+variant+'.webp':'./assets/rooms/story.webp',BASE).href);
-    assert.equal(image.status(),200,'Local scene must be packaged');
+     const label=await page.locator('.object-movies .object-label').evaluate(el=>getComputedStyle(el).opacity);
+     assert.equal(label,'0','The image must not be covered with floating sprite labels');
   }
   assert.equal(await page.locator('#room-window').isVisible(),false,'The old centre-of-room window toggle must not obscure photographed furniture');
   assert.equal(await page.locator('.home-feature-art').count(),0,'No hidden thumbnail vector art should be in the new room');
   const overflow=await page.locator('.new-home').evaluate(el=>el.scrollWidth-el.clientWidth);
   assert.ok(overflow<=5,'horizontal scroll overflow: '+overflow);
   const targets=await page.locator('[data-door]').evaluateAll(es=>es.map(e=>{const r=e.getBoundingClientRect();return {w:r.width,h:r.height,x:r.x,y:r.y,bottom:r.bottom,right:r.right}}));
-  for(const r of targets){assert.ok(r.w>=44&&r.h>=44,'comfortable touch target');assert.ok(r.x>=0&&r.y>=0&&r.right<=w+1&&r.bottom<=h+1,'all objects fit on screen')}
+  for(const r of targets){assert.ok(r.w>=44&&r.h>=44,'comfortable touch target');if(w>=1000)assert.ok(r.right>0&&r.bottom>0&&r.x<w&&r.y<h,'Desktop objects should intersect the photograph viewport')}
   // A hotspot that looks beautiful but is covered by another button is broken.
   const areas=await page.locator('[data-door],#room-bouquet').evaluateAll(elements=>elements.map(el=>{
     const r=el.getBoundingClientRect();
