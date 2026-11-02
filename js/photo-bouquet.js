@@ -13,7 +13,7 @@ const colours={
  daisy:['#e5dfcc','#fff5df'],lavender:['#8472a4','#b9acd4'],
  iris:['#526493','#a7acd8']
 };
-export function photoBloomsMarkup(chosen=[]){
+export function photoBloomsMarkup(chosen=[],scene='story'){
  const picks=Array.isArray(chosen)?chosen.slice(0,7):[];
  const xs=[26,43,60,80,100,120,140],ys=[62,42,53,29,51,43,62];
  // Every stem terminates at the neck; never across the photographed pot.
@@ -30,6 +30,6 @@ export function photoBloomsMarkup(chosen=[]){
  return '<svg class="photo-blooms" viewBox="0 0 166 125" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'+
  '<defs><clipPath id="maha-real-rim"><ellipse cx="82" cy="108" rx="43" ry="7.5"/></clipPath></defs>'+
  '<g class="photo-flower-stems">'+stems+'</g><g class="photo-flower-heads">'+petals+'</g>'+
- '<image href="./assets/rooms/maha-living-room.webp" x="-862" y="-479" width="1672" height="941" preserveAspectRatio="none" clip-path="url(#maha-real-rim)"/>'+
+ (scene==='story'?'<image href="./assets/rooms/maha-living-room.webp" x="-862" y="-479" width="1672" height="941" preserveAspectRatio="none" clip-path="url(#maha-real-rim)"/>':'')+
  '</svg>';
 }
