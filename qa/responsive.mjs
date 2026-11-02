@@ -44,6 +44,7 @@ async function run(engine,launcher,w,h){
     assert.ok(await page.locator('#room-pan-right').isVisible());
     const origin=await page.locator('.living-photo-plane').evaluate(el=>getComputedStyle(el).transform);
     await page.locator('#room-pan-right').click();
+    await page.waitForFunction(origin=>getComputedStyle(document.querySelector('.living-photo-plane')).transform!==origin,origin,{timeout:3000});
     const after=await page.locator('.living-photo-plane').evaluate(el=>getComputedStyle(el).transform);
     assert.notEqual(origin,after,'Photo should pan when tapping a direction arrow');
     await page.locator('#room-pan-left').click();
