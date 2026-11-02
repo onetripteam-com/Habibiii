@@ -1,0 +1,47 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
+
+test('mobile panorama uses finger tracking plus separate eased release',()=>{
+ const js=read('js/pocket-peek.js');
+ const css=read('css/experience-polish.css');
+ assert.match(js,/setPointerCapture/);
+ assert.match(js,/const settle=/);
+ assert.match(js,/requestAnimationFrame\(\(\)=>\{settleFrame=0;set\(stopAt\(next\)\)/);
+ assert.match(js,/const onCancel=/);
+ assert.match(css,/room-is-dragging/);
+ assert.match(css,/touch-action:pan-y/);
+});
+test('all three photographed worlds render the current chosen bouquet, without Kuwait image ghosts',()=>{
+ const room=read('js/room-photo-stage.js');
+ const petals=read('js/photo-bouquet.js');
+ const css=read('css/experience-polish.css');
+ assert.match(room,/flowerLayer\.hidden=false/);
+ assert.match(room,/photoBloomsMarkup\(chosen,id\)/);
+ assert.doesNotMatch(room,/flowerLayer\.hidden=id!=='story'/);
+ assert.match(petals,/scene==='story'/);
+ for(const scene of ['story','kerala','bengaluru'])assert.ok(css.includes('data-theme="'+scene+'"'),scene);
+});
+test('courier is a genuine illustrated whale with four decorative butterflies',()=>{
+ const hug=read('js/hug.js');
+ for(const p of ['assets/whale-courier.svg','assets/butterfly-courier.svg'])assert.ok(existsSync(new URL('../'+p,import.meta.url)));
+ assert.match(hug,/whale-courier\.svg/);
+ assert.match(hug,/butterfly-courier\.svg/);
+ assert.equal((hug.match(/class="flutter flutter-/g)||[]).length,4);
+ assert.match(read('css/experience-polish.css'),/prefers-reduced-motion:reduce/);
+});
+test('flower picker retains seven unique positions, duplicate selection and a live response',()=>{
+ const picker=read('js/flowers.js');
+ assert.match(picker,/flower-steps/);
+ assert.match(picker,/Array\.from\(\{length:7\}/);
+ assert.match(picker,/const repeats=chosen\.filter/);
+ assert.match(picker,/floristWords/);
+ assert.match(picker,/chosen\.push\(f\.id\)/);
+ assert.match(picker,/aria-live="polite"/);
+});
+test('new assets are listed in offline shell and last in stylesheet order',()=>{
+ const html=read('index.html'),sw=read('sw.js');
+ assert.ok(html.lastIndexOf('experience-polish.css')>html.lastIndexOf('scene-polish.css'));
+ for(const asset of ['experience-polish.css','whale-courier.svg','butterfly-courier.svg'])assert.ok(sw.includes(asset),asset);
+});
