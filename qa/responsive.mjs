@@ -36,6 +36,10 @@ async function run(engine,launcher,w,h){
   await page.locator('.room-scene.new-home').waitFor({timeout:16000});
   assert.ok(await page.locator('.room-heading h1').isVisible());
   assert.equal(await page.locator('[data-door]').count(),7);
+  assert.equal(await page.locator('#room-light-trigger').count(),1);
+  assert.equal(await page.locator('#room-visit-label').count(),1);
+  assert.ok((await page.locator('#room-welcome').innerText()).trim().length>4);
+
   assert.ok(await page.locator('.identity-flower').isVisible(),'Signature original flower mark must be visible');
   assert.ok(await page.locator('#room-welcome').isVisible(),'Visit-aware welcome must be visible');
   assert.ok(await page.locator('#room-light-trigger').isVisible(),'Room light must sit in the top controls');
