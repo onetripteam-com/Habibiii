@@ -203,6 +203,18 @@ async function run(engine,launcher,w,h){
        assert.ok(contentWidth>=w*.82,'Panoramic '+scene+' must use desktop width, not old 780px cap: '+contentWidth);
      }
 
+     if(scene==='music'){
+       const ambience=page.locator('[data-ambience]');
+       assert.ok(await ambience.isVisible(),'FM should expose a real locally playable atmosphere');
+       assert.match(await ambience.innerText(),/Hear|Play/i,'Do not offer a dead or missing ambient recording control');
+     }
+     if(scene==='games'){
+       assert.ok(await page.locator('.cabinet-marquee').innerText().then(s=>s.includes('CHAAYA')),'First arcade cabinet must be playable Chai Maker');
+       await page.locator('[data-next]').click();
+       assert.ok((await page.locator('.cabinet-marquee').innerText()).includes('SADYA'),'Second cabinet must be Sadya Builder');
+       await page.locator('[data-next]').click();
+       assert.ok((await page.locator('.cabinet-marquee').innerText()).includes('BAGGAGE'),'Third cabinet must be the suitcase puzzle');
+     }
      if(scene==='travel'){
        await page.locator('[data-tab="passport"]').click();
        assert.ok(await page.locator('.passport-spread').isVisible(),'Travel passport must be a physical two-page book');
