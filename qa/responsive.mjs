@@ -111,12 +111,7 @@ async function run(engine,launcher,w,h){
     const image=await page.request.get(new URL(original?'./assets/rooms/originals/story-'+variant+'.webp':'./assets/rooms/story.webp',BASE).href);
     assert.equal(image.status(),200,'Local scene must be packaged');
   }
-  await page.locator('#room-window').click();
-  assert.equal(await page.locator('.atelier-home').getAttribute('data-sky'),'rain');
-  await page.locator('#room-window').click();
-  assert.equal(await page.locator('.atelier-home').getAttribute('data-sky'),'night');
-  await page.locator('#room-window').click();
-  assert.equal(await page.locator('.atelier-home').getAttribute('data-sky'),'natural');
+  assert.equal(await page.locator('#room-window').isVisible(),false,'The old centre-of-room window toggle must not obscure photographed furniture');
   assert.equal(await page.locator('.home-feature-art').count(),0,'No hidden thumbnail vector art should be in the new room');
   const overflow=await page.locator('.new-home').evaluate(el=>el.scrollWidth-el.clientWidth);
   assert.ok(overflow<=5,'horizontal scroll overflow: '+overflow);
