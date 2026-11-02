@@ -1,13 +1,20 @@
 /** PROMPT C / Phase 1 — the room's one-cabinet-at-a-time arcade. */
 import {store} from './store.js';
 import {startSound,soundEffect} from './audio.js';
-const MODULES={spark:()=>import('./games/spark.js'),lettersmile:()=>import('./games/lettersmile.js'),softlanding:()=>import('./games/softlanding.js'),doctor:()=>import('./games/doctor.js'),world:()=>import('./games/world.js'),vlog:()=>import('./games/vlog.js')};
+const MODULES={
+ chai:()=>import('./games/chai.js'),
+ sadya:()=>import('./games/sadya.js'),
+ baggage:()=>import('./games/baggage.js'),
+ doctor:()=>import('./games/doctor.js'),
+ world:()=>import('./games/world.js'),
+ vlog:()=>import('./games/vlog.js')
+};
 const CABINETS=[
- {id:'spark',name:'Tiny Joys',marquee:'TINY JOYS CLUB',subtitle:'Tap little sparks · no timer',colour:'#d98f86',screen:'#533949',icon:'✦',accent:'#ffe2a9',blurb:'Collect tiny good things. No losing, no rushing. Just a cheerful little moment.'},
- {id:'lettersmile',name:'Compliment Heist',marquee:'STEAL A SMILE',subtitle:'Pick ridiculous compliments',colour:'#8b7fb5',screen:'#373353',icon:'♡',accent:'#fae2ff',blurb:'A highly suspicious operation to steal three smiles. Absolutely no performance review.'},
- {id:'softlanding',name:'Pocket Sunshine',marquee:'POCKET SUNSHINE',subtitle:'Pick what you need, not what you should feel',colour:'#f1b87a',screen:'#453d57',icon:'☼',accent:'#ffe2a9',blurb:'A tiny choose-your-own comfort game. No wrong answers, no timer, no fixing required.'},
+ {id:'chai',name:'Chai Maker',marquee:'CHAAYA DEPARTMENT',subtitle:'Pour, simmer and get the spices right',colour:'#b87956',screen:'#453c3a',icon:'☕',accent:'#f5c984',blurb:'Run a tiny chai counter. Hold to pour, stop the boil at the right moment, then add ginger and cardamom on the beat. Complaints from imaginary aunties included.'},
+ {id:'sadya',name:'Sadya Builder',marquee:'SADYA SERVICE',subtitle:'Build a feast, one dish at a time',colour:'#6e9476',screen:'#30594c',icon:'✽',accent:'#efdeb5',blurb:'Set out a Kerala sadya on a banana leaf by tapping or dragging nine dishes into the right spots. Regional house rules apply, naturally.'},
+ {id:'baggage',name:'Airport Baggage',marquee:'KWI BAGGAGE DESK',subtitle:'Can it all fit in the suitcase?',colour:'#9a7665',screen:'#3a454d',icon:'▤',accent:'#e3c79a',blurb:'Pack the suitcase like a real airport puzzle: rotate shapes, watch the weight limit, save enough room for the jhumkas.'},
  {id:'doctor',name:'Decode the Doctor',marquee:'DR. SQUIGGLE',subtitle:'Certified handwriting chaos',colour:'#9c738c',screen:'#323753',icon:'✎',accent:'#f7c3de',blurb:'Five fake scribbles. A PharmD degree cannot save this pen.'},
- {id:'world',name:'Where in the World?',marquee:'POSTCARD HUNT',subtitle:'Five six-second travel mysteries',colour:'#6a9a98',screen:'#284e54',icon:'⌖',accent:'#f4dea5',blurb:'Watch painted travel clues, then guess the destination.'},
+ {id:'world',name:'Where in the World?',marquee:'POSTCARD HUNT',subtitle:'Five quick travel mysteries',colour:'#6a9a98',screen:'#284e54',icon:'⌖',accent:'#f4dea5',blurb:'Watch illustrated travel clues, then guess the destination.'},
  {id:'vlog',name:'Vlog Director',marquee:'DIRECTOR MAHA',subtitle:'Five shots · Twenty seconds',colour:'#b68475',screen:'#423c5a',icon:'▣',accent:'#e7d1fa',blurb:'Rearrange the story. Premiere your cinematic masterpiece.'}
 ];
 const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
