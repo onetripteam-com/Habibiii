@@ -66,7 +66,8 @@
 }
 .cinematic-room[data-room-photo-scene="original"] .living-photo-plane .living-hit-area .object-label:before{display:none!important}
 .cinematic-room[data-room-photo-scene="original"] .living-photo-plane .living-hit-area:is(:hover,:focus-visible){
- background:#f7d39a0b!important;box-shadow:inset 0 0 0 2px #fff0c6bb,inset 0 0 32px #f7d69c1e!important;
+ background:radial-gradient(ellipse at center,#f7d39a12,transparent 67%)!important;
+ box-shadow:none!important;
 }
 .cinematic-room[data-room-photo-scene="original"] .living-photo-plane .living-hit-area:is(:hover,:focus-visible) .object-label{
  transform:translate(-50%,-50%)!important;opacity:1!important;
@@ -183,4 +184,21 @@
 @media(prefers-reduced-motion:reduce){
  .cinematic-room[data-room-photo-scene="original"] .living-photo-plane:before,
  .cinematic-room[data-room-photo-scene="original"] .living-photo-plane:after{animation:none!important}
+}
+
+/* Keep real flowers soft and photographic instead of introducing a luminous
+   sticker over the vase. Each actual chosen species still updates. */
+.cinematic-room[data-room-photo-scene="original"] #room-bouquet .real-vase .live-flowers{
+ opacity:.74!important;
+ mix-blend-mode:multiply;
+ filter:saturate(.54) contrast(.89) brightness(.92) drop-shadow(0 2px 1px #342d2080);
+}
+.cinematic-room[data-room-photo-scene="original"] #room-bouquet .real-vase{
+ transform-origin:50% 84%!important;
+}
+.cinematic-room[data-room-photo-scene="original"] #room-bouquet:hover .real-vase{
+ transform:rotate(1.5deg) translateY(-2px)!important;
+}
+@media(prefers-reduced-motion:reduce){
+ .cinematic-room[data-room-photo-scene="original"] #room-bouquet:hover .real-vase{transform:none!important}
 }
