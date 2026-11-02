@@ -161,6 +161,9 @@ async function run(engine,launcher,w,h){
    await page.waitForFunction(name=>{const img=document.querySelector('.living-photo-image');return img?.getAttribute('src')?.endsWith(name)&&img.complete&&img.naturalWidth>1000},photo);
    const loaded=true;
    assert.ok(loaded,id+' must render an original locally packaged scene');
+   assert.ok(await page.locator('.photographed-vase-flowers').isVisible(),id+' must keep the live bouquet');
+   assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,id+' must show seven user-selected blooms');
+   assert.equal(await page.locator('.photographed-vase-flowers').getAttribute('data-vase-scene'),id,'Bouquet must follow current scene');
    await page.screenshot({path:join(OUT,key+'-'+id+'.png'),animations:'disabled'});
    if(id==='kerala')await page.locator('#theme-trigger').click();
   }
