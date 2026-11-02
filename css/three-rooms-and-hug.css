@@ -188,3 +188,27 @@
 @media(prefers-reduced-motion:reduce){
  .new-hug .hug-whale,.new-hug .hug-butterfly{animation:none!important}
 }
+
+/* Ambient cutouts must ALWAYS come from the current room's own source,
+   never layer foliage photographed in Kuwait over a different interior. */
+.cinematic-room[data-theme="kerala"] .living-leaf-sway:before,
+.cinematic-room[data-theme="kerala"] .living-leaf-sway:after{
+ background-image:url('../assets/rooms/maha-kerala.webp')!important;
+}
+.cinematic-room[data-theme="bengaluru"] .living-leaf-sway:before,
+.cinematic-room[data-theme="bengaluru"] .living-leaf-sway:after{
+ background-image:url('../assets/rooms/maha-bengaluru.webp')!important;
+}
+/* Kerala's rain-window and darker wood are not a recolour of the Kuwait room. */
+.cinematic-room[data-theme="kerala"] .living-leaf-sway:before{
+ clip-path:polygon(0% 0%,72% 0%,66% 14%,53% 13%,46% 18%,33% 12%,17% 11%,0% 20%)!important;
+}
+.cinematic-room[data-theme="bengaluru"] .living-leaf-sway:before{
+ clip-path:polygon(0% 0%,62% 0%,61% 12%,54% 16%,39% 14%,26% 11%,0% 17%)!important;
+}
+.cinematic-room[data-theme="kerala"] .living-leaf-sway:after{
+ clip-path:polygon(39% 18%,58% 20%,65% 39%,59% 62%,42% 55%,36% 30%)!important;
+}
+.cinematic-room[data-theme="bengaluru"] .living-leaf-sway:after{
+ clip-path:polygon(40% 20%,61% 21%,62% 50%,51% 67%,39% 53%)!important;
+}
