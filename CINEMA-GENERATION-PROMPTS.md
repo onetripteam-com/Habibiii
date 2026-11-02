@@ -1,0 +1,22 @@
+# MAHA — original mini cinema production prompts
+These are prompts for original, quiet, non-copyrighted landscape videos. No stock clips, no borrowed film characters, no real depiction of Maha. Every clip should be generated as landscape 16:9, preferably 1920×1080, 24 fps, 6–8 seconds per shot, with little or no baked-in typography. Provide MP4/H.264, moderate bitrate and a clean stereo ambience layer separately if available. Full clips should be edited together before upload. These prompts create imagined filmic vignettes, not documentation of actual events.
+
+## Reel 1 · Kerala, Slowly
+A cinematic observational travel short in Kerala, warm rain-soaked everyday life, no people in close-up. Shot A: stationary slow push through an old Kerala veranda overlooking banana trees, wet red-oxide courtyard flooring, overcast rain light, exceptionally realistic moisture and wood grain. Shot B: macro close-up of steaming chai in a small ceramic cup beside a rain-speckled window, delicate focus breathing. Shot C: a quiet road curving through lush tea plantations near Munnar, natural cloud movement and faint roadside foliage sway. Shot D: monsoon rain visibly moving across a still canal, coconut palms in the distance, subtle ripples. Shot E: late golden light on a Kerala tiled roof, camera holds for a reflective ending. No large crowds, no text, no artificial camera spins, no made-up signs.
+
+## Reel 2 · A Day in Kuwait
+A warm, reflective imaginary day around the city, genuine Gulf architecture and atmosphere, not a luxury advertisement. Shot A: calm warm dawn over an understated Kuwait skyline with distant towers and precise horizontal lines. Shot B: street-level human-height tracking of ordinary sidewalks and neighbourhood facades, respectful documentary realism, no readable shop names. Shot C: coffee or karak steam on a sunlit table with shifting shadows, shallow focus. Shot D: golden hour light reflecting on pale sandstone walls and passing traffic from a safe static viewpoint. Shot E: blue hour city lights through a window, slow fade to warm indoor lamplight. No crowds featured, no text overlays, avoid fake landmarks.
+
+## Reel 3 · Places You'll Go
+Original visual travel postcard series, cinematic landscapes rather than literal records. Shot A: morning Bengaluru rain beads on a window overlooking leafy neighbourhood roads, subtle traffic movement. Shot B: Munnar tea terraces with low clouds moving through the valley and realistic botanical detail. Shot C: Manali cedar forest and road in mist, camera gently pans along real mountain contours. Shot D: Ladakh's high-altitude ochre ridges, deep natural blue sky and slow shadows, no impossible geological shapes. Shot E: Nepal Himalayan valley at sunrise with prayer flags subtly moving; no sacred monuments invented. Shot F: final blank travel notebook page beside a suitcase in warm room light, suggesting an unwritten chapter. No labels; the site will add subtitles.
+
+## Reel 4 · Maha's Travel Channel — Episode Zero
+A playful, friendship-focused coming-soon trailer, not impersonating Maha or manufacturing real memories. Shot A: close shot of a small travel journal being opened beside a folded map and a ceramic cup, hands can remain out of frame. Shot B: POV from a train window with countryside rolling past, warm film grain. Shot C: neatly packing a small suitcase with camera, charger and notebook (object-only overhead shot). Shot D: subtle cinematic montage of Kerala green hills, Kuwait city dusk, Manali snow foothills and Nepal sunrise, coherent lighting cuts. Shot E: still close-up of an untouched camera resting next to a fresh postcard; leave the middle 40% clean for website-built title 'Episode 1 is yours'. No artificial person resembling Maha, no text inside the video, no fake influencer branding.
+
+## Editing and audio
+- Film lengths: 30–45 seconds, 5–6 shots each. Gentle dissolves, restrained cuts, no aggressive zoom transitions.
+- Export landscape 1920×1080 H.264 MP4. Add a second 1080×1920 portrait cut later if wanted.
+- If you provide original music or your own licensed score, keep it subtle; ensure user-initiated playback and a mute switch on iOS.
+- Keep native subtitles as WebVTT in both English and Malayalam if available; do not burn them into frames.
+- Use files named kerala.mp4, kuwait.mp4, places.mp4, and maha-trailer.mp4. Ask before publishing personally identifying real-life material.
+- Do not link media in the movie manifest until an actual file exists in the repo. Never pretend placeholder cards are video.
