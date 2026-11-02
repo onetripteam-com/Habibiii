@@ -40,7 +40,7 @@ export function makeRadioAtmosphere(){
      humGain=ac.createGain();humGain.gain.value=.004;
      hum.connect(humGain).connect(master);
      lfo=ac.createOscillator();lfo.type='sine';lfo.frequency.value=profile.drift;
-     lfoGain=ac.createGain();lfoGain.gain.value=.07;
+     lfoGain=ac.createGain();lfoGain.gain.value=.004;
      lfo.connect(lfoGain).connect(master.gain);
      source.start();hum.start();lfo.start();
      master.gain.setTargetAtTime(Math.min(.05,profile.noise*.09),ac.currentTime,.45);
