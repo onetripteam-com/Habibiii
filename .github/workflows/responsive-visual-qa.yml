@@ -22,6 +22,7 @@ on:
       - 'css/wide-worlds.css'
       - 'css/bouquet-grounding.css'
       - 'css/maha-world-2026.css'
+      - 'css/room-touch-and-rest.css'
       - 'js/room-moments.js'
       - 'js/arcade.js'
       - 'js/games/chai.js'
