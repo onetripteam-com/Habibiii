@@ -15,12 +15,12 @@ async function init(){
  const visits=beginVisit();const previousVisit=store.get('lastVisit');
  const catalogue={hug,flowerList,todayLines};
  function transition(type,render){unmount();frame.dataset.scene=type;root.innerHTML='';render();}
- function sceneHug(){transition('hug',()=>{unmount=mountHug(root,hug,sceneFlowers);});}
+ function sceneHug(revisit=false){transition('hug',()=>{unmount=mountHug(root,hug,revisit?()=>sceneRoom(store.get('flowers',[])):sceneFlowers);});}
  function sceneFlowers(){transition('flowers',()=>{unmount=mountFlowers(root,flowerList,chosen=>{
   store.set('flowers',chosen);store.set('completed',true);sceneRoom(chosen);
  });});}
  function sceneRoom(chosen){
-  transition('room',()=>{unmount=mountRoom(root,{flowers:{today:todayLines},chosen,lastVisit:previousVisit,visits,onReplay:sceneHug,onNewBouquet:sceneFlowers});});
+  transition('room',()=>{unmount=mountRoom(root,{flowers:{today:todayLines},chosen,lastVisit:previousVisit,visits,onReplay:()=>sceneHug(true),onNewBouquet:sceneFlowers});});
   store.set('lastVisit',Date.now());
  }
  const flowers=store.get('flowers',[]);
