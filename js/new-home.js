@@ -1,6 +1,6 @@
 import {store} from './store.js';
 import {kuwaitParts} from './time.js';
-import {copyForRoom,LIGHT_CHOICES,automaticLight} from './room-moments.js';
+import {copyForRoom,sceneMoment,LIGHT_CHOICES,automaticLight} from './room-moments.js';
 import {makePortalSystem} from './portal.js';
 import {mountAtelierLife} from './atelier-life.js';
 import {mountCinematicHome} from './cinematic-home.js';
@@ -21,7 +21,7 @@ export function mountRoom(root,{chosen,visits,lastVisit,onReplay,onNewBouquet}){
  const flowerWhisper=flowerWhispers[(Math.max(1,visits)-1)%flowerWhispers.length];
  root.innerHTML=`<section class="scene room-scene new-home remembering-home atelier-home cinematic-room" data-theme="${theme}" data-light="${effectiveLight()}" aria-label="Maha’s home"><div class="home-shell"><header class="room-heading"><div><span class="room-eyebrow" id="room-visit-label">${esc(context.label)}</span><h1 id="room-welcome">${esc(context.heading)}</h1><p id="room-welcome-copy">${esc(context.body)}</p></div></header>
  <div class="room-top-controls"><button id="theme-trigger" aria-haspopup="dialog">Scenes <span aria-hidden="true">▧</span></button><button id="room-light-trigger" type="button" aria-haspopup="dialog" aria-label="Adjust room lighting">Lighting <span aria-hidden="true">◐</span></button></div>
- <div class="inhabited-room"><div id="home-art" hidden aria-hidden="true"></div><div class="cinematic-photo" aria-hidden="true"></div><div class="cinematic-lens" aria-hidden="true"></div><div class="cinematic-grain" aria-hidden="true"></div><button type="button" id="room-window" class="window-whisper" aria-label="Change the view through the window" title="Try the window"><span>↺ the sky</span></button><nav class="room-pan-controls" aria-label="Explore the room"><button type="button" id="room-pan-left" aria-label="Look left">←</button><span id="room-pan-caption" aria-live="polite">SWIPE TO EXPLORE</span><button type="button" id="room-pan-right" aria-label="Look right">→</button></nav><span class="room-address">MAHA’S PLACE · <span id="clock-value">${kuwaitParts().clock}</span> KUWAIT</span>
+ <div class="inhabited-room"><div id="home-art" hidden aria-hidden="true"></div><div class="cinematic-photo" aria-hidden="true"></div><div class="cinematic-lens" aria-hidden="true"></div><div class="cinematic-grain" aria-hidden="true"></div><button type="button" id="room-window" class="window-whisper" aria-label="Change the view through the window" title="Try the window"><span>↺ the sky</span></button><nav class="room-pan-controls" aria-label="Explore the room"><button type="button" id="room-pan-left" aria-label="Look left">←</button><span id="room-pan-caption" aria-live="polite">SWIPE TO EXPLORE</span><button type="button" id="room-pan-right" aria-label="Look right">→</button></nav><span class="room-address">MAHA’S PLACE · <span id="clock-value">${kuwaitParts().clock}</span> KUWAIT TIME · <span id="room-scene-label">KUWAIT</span></span>
  ${objects.map(([id,name,sub])=>`<button type="button" class="room-object living-object object-${id}" data-place="${id}" data-door="${id}" aria-label="${name}: ${sub}"><span class="object-drawing">${physicalObjectMarkup(id)}</span><span class="object-label">${name} <i>↗</i></span></button>`).join('')}
  <button id="room-bouquet" class="table-bouquet" aria-label="Change your seven flowers">${bouquetObjectMarkup(chosen)}<span>${esc(flowerWhisper)}</span></button><div id="room-traces" class="room-traces" aria-live="polite"></div><span class="atelier-inscription" aria-hidden="true">Small things, kept close.</span><div class="cinematic-note" aria-hidden="true"><b id="room-aside-label">A LITTLE NOTE FOR THIS HOUR</b><span id="room-aside-copy">${esc(context.aside)}</span></div><div class="cinematic-discovery" aria-hidden="true">TAP WHAT YOU SEE<br>THIS ROOM HAS STORIES</div><span class="cinematic-issue" aria-hidden="true">A little place. Always here.</span></div>
  <div class="room-dock"><span class="room-invitation">A little escape. Pick anything.</span><button type="button" id="take-me-anywhere" class="serendipity">Pick for me ✦</button><button id="revisit-hug" type="button" aria-label="Open your letter and virtual hug again">A little hug ♡</button><button id="home-menu-trigger" aria-haspopup="dialog">Explore ☰</button></div></div><dialog id="home-menu" class="home-picker home-menu"><form method="dialog"><button class="picker-close" aria-label="Close home menu">✕</button></form><span class="room-eyebrow">MAKE YOURSELF AT HOME</span><h2>Where would you like to go?</h2><nav class="room-shortcuts" aria-label="Explore Maha’s home">${objects.map(([id,name])=>`<button data-visit="${id}">${name} ↗</button>`).join('')}</nav>
@@ -64,14 +64,19 @@ root.querySelector('#room-traces').innerHTML=`${store.get('postcardPinned')?'<bu
  updateLight();
  const refreshMoments=()=>{
    const now=copyForRoom(visits);
+   const moment=sceneMoment(now.period,theme);
+   root.querySelector('.room-invitation').textContent=moment.invitation;
+   root.querySelector('.cinematic-issue').textContent=moment.placeLine;
+   root.querySelector('#room-scene-label').textContent=({story:'KUWAIT',kerala:'KERALA',bengaluru:'BENGALURU'})[theme]||'KUWAIT';
    root.querySelector('#room-visit-label').textContent=now.label;
    root.querySelector('#room-welcome').textContent=now.heading;
    root.querySelector('#room-welcome-copy').textContent=now.body;
    root.querySelector('#room-aside-copy').textContent=now.aside;
    if(light==='auto')updateLight();
  };
+ refreshMoments();
  const picker=root.querySelector('#home-world-overlay');root.querySelector('#theme-trigger').onclick=()=>picker.showModal();
- root.querySelectorAll('[data-world]').forEach(b=>b.onclick=()=>{theme=b.dataset.world;store.set('roomTheme',theme);room.dataset.theme=theme;/* Inline atelier artwork takes theme colours from CSS; no DOM reset required. */root.querySelectorAll('[data-world]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));picker.close()});
+ root.querySelectorAll('[data-world]').forEach(b=>b.onclick=()=>{theme=b.dataset.world;store.set('roomTheme',theme);room.dataset.theme=theme;refreshMoments();/* Update in place without resetting the bouquet. */root.querySelectorAll('[data-world]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));picker.close()});
  // Group the scene and lighting controls beside Sound in the real header.
  const appHeader=document.querySelector(".app-header");
  const roomToolbar=room.querySelector(".room-top-controls");
