@@ -31,6 +31,10 @@ export function mountLivingRoomPhoto(room,chosen=[]){
  vineLayer.className='living-leaf-sway';
  vineLayer.setAttribute('aria-hidden','true');
  layer.append(vineLayer);
+ const atmosphere=document.createElement('div');
+ atmosphere.className='scene-atmosphere';
+ atmosphere.setAttribute('aria-hidden','true');
+ layer.append(atmosphere);
  // Move the existing semantic controls, never clone them; event listeners,
  // references, saved bouquet and reverse portal transitions remain intact.
  const portals=[...stage.querySelectorAll('.room-object[data-door],#room-bouquet')];
