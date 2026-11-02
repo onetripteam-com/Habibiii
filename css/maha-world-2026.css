@@ -387,3 +387,25 @@
  #portal-screen[data-place="travel"] .passport-turn-forward,
  #portal-screen[data-place="travel"] .passport-turn-back{animation:none!important}
 }
+
+/* Verified pointer layering: scene controls must start BELOW the global
+   sound control, not share its hit region on narrow phones. */
+.cinematic-room .room-top-controls{top:calc(79px + env(safe-area-inset-top,0px))!important}
+@media(max-width:759px){
+ .cinematic-room .room-top-controls{top:calc(67px + env(safe-area-inset-top,0px))!important;right:10px!important}
+ .cinematic-room .room-heading{top:calc(139px + env(safe-area-inset-top,0px))!important}
+}
+@media(max-width:759px) and (max-height:750px){
+ .cinematic-room .room-heading{top:calc(128px + env(safe-area-inset-top,0px))!important}
+}
+/* Shape the click regions explicitly: absolutely positioned labels alone
+   have no intrinsic width and must never collapse a furniture hotspot. */
+@media(min-width:760px){
+ .cinematic-room[data-theme="story"] .room-object.object-rest{width:27%!important;height:31%!important}
+ .cinematic-room[data-theme="story"] .room-object.object-garden{width:8%!important;height:21%!important}
+ .cinematic-room[data-theme="story"] .room-object.object-movies{width:13%!important;height:24%!important}
+ .cinematic-room[data-theme="story"] .room-object.object-letters{width:12%!important;height:15%!important}
+ .cinematic-room[data-theme="story"] .room-object.object-travel{width:15%!important;height:20%!important}
+ .cinematic-room[data-theme="story"] .room-object.object-games{width:10%!important;height:14%!important}
+ .cinematic-room[data-theme="story"] .room-object.object-music{width:10%!important;height:12%!important}
+}
