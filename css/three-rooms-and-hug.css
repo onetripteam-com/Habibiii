@@ -212,3 +212,28 @@
 .cinematic-room[data-theme="bengaluru"] .living-leaf-sway:after{
  clip-path:polygon(40% 20%,61% 21%,62% 50%,51% 67%,39% 53%)!important;
 }
+
+/* Each newly generated room already has a native vase and flowers.
+   A hidden Kuwait flower cutout must never leak through onto other photos. */
+.cinematic-room .photographed-vase-flowers[hidden]{display:none!important}
+.cinematic-room:not([data-theme="story"]) #room-bouquet>span{
+ opacity:0!important;visibility:hidden!important;
+}
+.cinematic-room[data-room-photo-scene="original"] .cinematic-discovery{
+ display:none!important;
+}
+/* Three compact, equal-width thumb actions on 360-402px phones. */
+@media(max-width:759px){
+ .cinematic-room .room-dock{
+  display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.13fr)!important;
+  gap:3px!important;padding:5px!important;
+ }
+ .cinematic-room .room-dock button{
+  width:100%!important;min-width:0!important;
+  padding:9px 5px!important;
+  font-size:clamp(9px,2.65vw,11px)!important;
+  letter-spacing:-.015em!important;
+  text-overflow:clip;white-space:nowrap!important;
+ }
+ .cinematic-room .room-dock #revisit-hug{color:#f4dcb9!important}
+}
