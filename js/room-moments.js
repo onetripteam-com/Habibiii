@@ -31,14 +31,14 @@ const lines={
 export function copyForRoom(visits,date=new Date()){
  const {hour,minute}=kuwaitParts(date);
  const period=hour<5||hour>=21?'night':hour<12?'morning':hour<17?'afternoon':'dusk';
- const day=Math.floor(date.getTime()/86400000);
+ const day=Number(kuwaitParts(date).date.replaceAll('-',''));
  const n=Math.max(1,Math.trunc(Number(visits)||1));
  const choices=lines[period];
  // First, second, third visits are deliberately different. Following visits
  // rotate by visit and local day so the room does not go stale for years.
  const ix=n<=3?n-1:((n+day)%choices.length+choices.length)%choices.length;
  const [heading,body,aside]=choices[ix];
- const label=n===1?'YOUR FIRST VISIT':n===2?'A FAMILIAR LITTLE ROOM':n===3?'A PLACE TO COME BACK TO':'A DIFFERENT DAY, THE SAME DOOR';
+ const label=n===1?'A FIRST LITTLE HELLO':n===2?'WELCOME BACK':n===3?'YOUR THIRD LITTLE DETOUR':'ANOTHER DAY, ANOTHER DOOR';
  return {period,heading,body,aside,label,clock:{hour,minute}};
 }
 export const LIGHT_CHOICES=[
@@ -46,7 +46,8 @@ export const LIGHT_CHOICES=[
  {id:'daylight',name:'Daylight',hint:'Clear and airy'},
  {id:'golden',name:'Golden hour',hint:'Warm and gentle'},
  {id:'evening',name:'Evening',hint:'Soft light'},
- {id:'night',name:'Night',hint:'Low and cosy'}
+ {id:'night',name:'Night',hint:'Low and cosy'},
+ {id:'lamplight',name:'Lamplight',hint:'Just the warm corners'}
 ];
 export function automaticLight(hour){
  return hour<6||hour>=21?'night':hour<11?'daylight':hour<17?'golden':'evening';
