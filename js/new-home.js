@@ -1,5 +1,6 @@
 import {store} from './store.js';
 import {kuwaitParts} from './time.js';
+import {copyForRoom,LIGHT_CHOICES,automaticLight} from './room-moments.js';
 import {makePortalSystem} from './portal.js';
 import {mountAtelierLife} from './atelier-life.js';
 import {mountCinematicHome} from './cinematic-home.js';
@@ -12,13 +13,18 @@ const worlds=[['story','The little hideaway'],['monsoon','Kerala, when it rains'
 const objects=[['letters','Letters','A little post for any day'],['music','Habibii FM','Find your frequency'],['movies','Cinema','One seat. All yours.'],['travel','Travel','Where shall we go?'],['games','Arcade','Highly unserious business'],['garden','Word garden','Let a thought grow'],['rest','Rest','No plans required']];
 export function mountRoom(root,{chosen,visits,lastVisit,onReplay,onNewBouquet}){
  let theme=store.get('roomTheme','story');if(!worlds.some(w=>w[0]===theme))theme='story';
- root.innerHTML=`<section class="scene room-scene new-home remembering-home atelier-home cinematic-room" data-theme="${theme}" aria-label="Maha’s home"><div class="home-shell"><header class="room-heading"><div><span class="room-eyebrow">A ROOM FOR ANY KIND OF DAY</span><h1>Come in, <em>Maha.</em></h1><p>No catching up required. Pick something and see where it takes you.</p></div><button id="theme-trigger" aria-haspopup="dialog">◐ Change the scenery</button></header>
+ const context=copyForRoom(visits);
+ let light=store.get('roomLight','auto');if(!LIGHT_CHOICES.some(x=>x.id===light))light='auto';
+ const effectiveLight=()=>light==='auto'?automaticLight(kuwaitParts().hour):light;
+ root.innerHTML=`<section class="scene room-scene new-home remembering-home atelier-home cinematic-room" data-theme="${theme}" data-light="${effectiveLight()}" aria-label="Maha’s home"><div class="home-shell"><header class="room-heading"><div><span class="room-eyebrow" id="room-visit-label">${esc(context.label)}</span><h1 id="room-welcome">${esc(context.heading)}</h1><p id="room-welcome-copy">${esc(context.body)}</p></div></header>
+ <div class="room-top-controls"><button id="theme-trigger" aria-haspopup="dialog">Change scenery <span aria-hidden="true">▧</span></button><button id="room-light-trigger" type="button" aria-haspopup="dialog" aria-label="Adjust room lighting">Light <span aria-hidden="true">◐</span></button></div>
  <div class="inhabited-room"><div id="home-art" hidden aria-hidden="true"></div><div class="cinematic-photo" aria-hidden="true"></div><div class="cinematic-lens" aria-hidden="true"></div><div class="cinematic-grain" aria-hidden="true"></div><button type="button" id="room-window" class="window-whisper" aria-label="Change the view through the window" title="Try the window"><span>↺ the sky</span></button><button id="room-peek" type="button" aria-label="Look around the room"><span>LOOK AROUND ↔</span></button><span class="room-address">MAHA’S PLACE · <span id="clock-value">${kuwaitParts().clock}</span> KUWAIT</span>
  ${objects.map(([id,name,sub])=>`<button type="button" class="room-object living-object object-${id}" data-place="${id}" data-door="${id}" aria-label="${name}: ${sub}"><span class="object-drawing">${physicalObjectMarkup(id)}</span><span class="object-label">${name} <i>↗</i></span></button>`).join('')}
- <button id="room-bouquet" class="table-bouquet" aria-label="Change your seven flowers">${bouquetObjectMarkup(chosen)}<span>Your seven flowers ↗</span></button><div id="room-traces" class="room-traces" aria-live="polite"></div><span class="atelier-inscription" aria-hidden="true">Small things, kept close.</span><div class="cinematic-note" aria-hidden="true"><b>FOR THE IN-BETWEEN DAYS</b>A bit of a detour is allowed. Even on a Tuesday.</div><div class="cinematic-discovery" aria-hidden="true">Seven little things to find<br>Follow the lights ✳</div><span class="cinematic-issue" aria-hidden="true">A little place. Always here.</span></div>
- <div class="room-dock"><span class="room-invitation">A little escape. Pick anything.</span><button type="button" id="take-me-anywhere" class="serendipity">Surprise me ✦</button><button id="home-menu-trigger" aria-haspopup="dialog">Explore the room ☰</button></div></div><dialog id="home-menu" class="home-picker home-menu"><form method="dialog"><button class="picker-close" aria-label="Close home menu">✕</button></form><span class="room-eyebrow">MAKE YOURSELF AT HOME</span><h2>A moment for you.</h2><nav class="room-shortcuts" aria-label="Explore Maha’s home">${objects.map(([id,name])=>`<button data-visit="${id}">${name} ↗</button>`).join('')}</nav>
+ <button id="room-bouquet" class="table-bouquet" aria-label="Change your seven flowers">${bouquetObjectMarkup(chosen)}<span>Your seven flowers ↗</span></button><div id="room-traces" class="room-traces" aria-live="polite"></div><span class="atelier-inscription" aria-hidden="true">Small things, kept close.</span><div class="cinematic-note" aria-hidden="true"><b id="room-aside-label">A LITTLE NOTE FOR THIS HOUR</b><span id="room-aside-copy">${esc(context.aside)}</span></div><div class="cinematic-discovery" aria-hidden="true">Seven little things to find<br>Follow the lights ✳</div><span class="cinematic-issue" aria-hidden="true">A little place. Always here.</span></div>
+ <div class="room-dock"><span class="room-invitation">A little escape. Pick anything.</span><button type="button" id="take-me-anywhere" class="serendipity">Pick for this mood ✦</button><button id="home-menu-trigger" aria-haspopup="dialog">Explore the room ☰</button></div></div><dialog id="home-menu" class="home-picker home-menu"><form method="dialog"><button class="picker-close" aria-label="Close home menu">✕</button></form><span class="room-eyebrow">MAKE YOURSELF AT HOME</span><h2>A moment for you.</h2><nav class="room-shortcuts" aria-label="Explore Maha’s home">${objects.map(([id,name])=>`<button data-visit="${id}">${name} ↗</button>`).join('')}</nav>
  <section class="room-margin"><span class="room-eyebrow">HOW SHALL WE SPEND A MOMENT?</span><div class="mood-actions"><button data-mood="games" data-line="No talent required. A little silliness will do.">Make me smile</button><button data-mood="rest" data-line="You can put everything down for a minute.">A softer moment</button><button data-mood="travel" data-line="A small detour? No packing required.">Somewhere else</button></div><p id="mood-line" role="status">No right order. No catching up. This place is yours.</p></section>
  <footer class="room-footer"><p>Same little home.<br><em>Whatever kind of day.</em></p><div><button id="memory-trigger">Your keepsakes & backups ↗</button><button id="replay-opening">Replay the beginning ↶</button><small>Saved on this browser. No account, no sending.</small></div></footer></dialog>
+ <dialog id="room-light-overlay" class="home-picker room-light-picker"><form method="dialog"><button class="picker-close" aria-label="Close lighting menu">✕</button></form><span class="room-eyebrow">SET THE FEELING</span><h2>How should the light fall?</h2><div class="room-light-options" role="group" aria-label="Room lighting">${LIGHT_CHOICES.map(x=>`<button type="button" data-light-option="${x.id}" aria-pressed="${light===x.id}"><i aria-hidden="true"></i><strong>${x.name}</strong><small>${x.hint}</small></button>`).join('')}</div><p>These are lighting moods, not screen brightness controls.</p></dialog>
  <dialog id="home-world-overlay" class="home-picker"><form method="dialog"><button class="picker-close" aria-label="Close scenery selection">✕</button></form><span class="room-eyebrow">FAMILIAR THINGS. A DIFFERENT VIEW.</span><h2>Where are we today?</h2><div class="home-world-choices">${worlds.map(([id,name])=>`<button data-world="${id}" aria-pressed="${id===theme}"><span data-theme="${id}" class="theme-preview-art" aria-hidden="true"></span><strong>${name}</strong></button>`).join('')}</div></dialog></section>`;
  const room=root.querySelector('.new-home');
  const menu=root.querySelector('#home-menu');root.querySelector('#home-menu-trigger').onclick=()=>menu.showModal();
@@ -26,7 +32,14 @@ export function mountRoom(root,{chosen,visits,lastVisit,onReplay,onNewBouquet}){
  const refresh=()=>{const kept=store.get('keptLetters',[]),dreams=store.get('dreamPins',[]),wins=store.get('gameCompletions',{});root.querySelector('#room-traces').innerHTML=`${store.get('postcardPinned')?'<button class="trace-postcard" data-trace="travel">A postcard you kept ↗</button>':''}${Array.isArray(kept)&&kept.length?`<button class="trace-letter" data-trace="letters">${kept.length} kept ${kept.length===1?'letter':'letters'} ✉</button>`:''}${Array.isArray(dreams)&&dreams.length?`<button class="trace-tag" data-trace="travel">Next someday: ${esc(dreams.at(-1).name)}</button>`:''}${Object.values(wins||{}).some(Boolean)?'<button class="trace-star" data-trace="games" aria-label="Your arcade souvenir">✷</button>':''}`;root.querySelectorAll('[data-trace]').forEach(b=>b.onclick=()=>portal.open(b.dataset.trace,b));};
  const portal=makePortalSystem({room,frame:document.querySelector('#app'),visits,lastVisit,onReturn:refresh});refresh();
  root.querySelectorAll('[data-door]').forEach(b=>b.onclick=()=>portal.open(b.dataset.door,b));
- root.querySelector('#take-me-anywhere').onclick=()=>{const id=objects[Math.floor(Math.random()*objects.length)][0];const door=root.querySelector('[data-door="'+id+'"]');if(door)portal.open(id,door);};
+ root.querySelector('#take-me-anywhere').onclick=()=>{
+   // A meaningful suggestion for this hour rather than a random roulette.
+   const p=copyForRoom(visits).period;
+   const picks={morning:'garden',afternoon:'games',dusk:'music',night:'rest'};
+   const id=picks[p]||'letters';
+   const door=root.querySelector('[data-door="'+id+'"]');
+   if(door)portal.open(id,door);
+ };
  // A small tactile delight: the window changes its imaginary weather.
  // No geolocation, API, tracking or stored user data is involved.
  const skyModes=['natural','rain','night'];let skyIndex=0;
@@ -35,8 +48,22 @@ export function mountRoom(root,{chosen,visits,lastVisit,onReplay,onNewBouquet}){
  root.querySelectorAll('[data-visit]').forEach(b=>b.onclick=()=>openFromMenu(b.dataset.visit,b));
  root.querySelectorAll('[data-mood]').forEach(b=>b.onclick=()=>{root.querySelector('#mood-line').textContent=b.dataset.line;openFromMenu(b.dataset.mood,b,b.dataset.line)});
  root.querySelector('#room-bouquet').onclick=onNewBouquet;root.querySelector('#replay-opening').onclick=()=>{menu.close();onReplay()};
+ const lighting=root.querySelector('#room-light-overlay');
+ const lightButton=root.querySelector('#room-light-trigger');
+ lightButton.onclick=()=>lighting.showModal();
+ const updateLight=()=>{room.dataset.light=effectiveLight();lightButton.setAttribute('aria-label','Room lighting: '+(LIGHT_CHOICES.find(x=>x.id===light)?.name||light)+'. Change lighting');root.querySelectorAll('[data-light-option]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.lightOption===light)));};
+ root.querySelectorAll('[data-light-option]').forEach(b=>b.onclick=()=>{light=b.dataset.lightOption;store.set('roomLight',light);updateLight();lighting.close()});
+ updateLight();
+ const refreshMoments=()=>{
+   const now=copyForRoom(visits);
+   root.querySelector('#room-visit-label').textContent=now.label;
+   root.querySelector('#room-welcome').textContent=now.heading;
+   root.querySelector('#room-welcome-copy').textContent=now.body;
+   root.querySelector('#room-aside-copy').textContent=now.aside;
+   if(light==='auto')updateLight();
+ };
  const picker=root.querySelector('#home-world-overlay');root.querySelector('#theme-trigger').onclick=()=>picker.showModal();
  root.querySelectorAll('[data-world]').forEach(b=>b.onclick=()=>{theme=b.dataset.world;store.set('roomTheme',theme);room.dataset.theme=theme;/* Inline atelier artwork takes theme colours from CSS; no DOM reset required. */root.querySelectorAll('[data-world]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));picker.close()});
- const disposeLife=mountAtelierLife(room);const disposeCinema=mountCinematicHome(room);const disposePeek=mountPocketPeek(room);const disposeOriginalArt=mountOriginalRoomArt(room);const disposeMemory=mountMemoryTools(root);const timer=setInterval(()=>{root.querySelector('#clock-value').textContent=kuwaitParts().clock},60000);
+ const disposeLife=mountAtelierLife(room);const disposeCinema=mountCinematicHome(room);const disposePeek=mountPocketPeek(room);const disposeOriginalArt=mountOriginalRoomArt(room);const disposeMemory=mountMemoryTools(root);const timer=setInterval(()=>{root.querySelector('#clock-value').textContent=kuwaitParts().clock;refreshMoments()},60000);
  return ()=>{clearInterval(timer);disposeOriginalArt();disposePeek();disposeCinema();disposeLife();disposeMemory();portal.destroy()};
 }
