@@ -409,3 +409,90 @@
  .cinematic-room[data-theme="story"] .room-object.object-games{width:10%!important;height:14%!important}
  .cinematic-room[data-theme="story"] .room-object.object-music{width:10%!important;height:12%!important}
 }
+
+/* MAHA ARCADE — original tactile desk surfaces for real mechanics.
+ * Replaces the former tap-a-quote cabinet opening with something worth playing. */
+#portal-screen[data-place="games"] .arcade-app.arcade-active{
+ background:
+ radial-gradient(ellipse at 22% 3%,#f2d6a63d,transparent 41%),
+ linear-gradient(160deg,#e5d0ac,#bc9679 62%,#987a6f);
+ border:1px solid #af876e;border-radius:5px;
+ box-shadow:inset 0 0 35px #8e594228,0 16px 36px #65433625;
+ box-sizing:border-box;padding:clamp(9px,1.6vw,20px);
+}
+#portal-screen[data-place="games"] .arcade-game-bar{
+ background:#332e2c;color:#f1debd;border:1px solid #e6c8997c;
+ border-radius:4px;min-height:48px;padding:8px 12px;
+ font:750 10px system-ui,sans-serif;letter-spacing:.09em;
+}
+#portal-screen[data-place="games"] .arcade-game-bar button{
+ color:#f8e8cb!important;background:#68534b!important;
+ border:1px solid #bfa083a1!important;min-height:35px;padding:5px 10px;border-radius:3px;
+}
+#portal-screen[data-place="games"] .arcade-game-board{
+ min-height:0;background:#f6ebd4a8;border:1px solid #b49277;
+ border-radius:4px;box-shadow:inset 0 0 25px #996c542b;padding:clamp(7px,1vw,16px);
+}
+#portal-screen[data-place="games"] .mini-game{
+ max-width:850px;margin:auto;color:#57463c;gap:clamp(8px,1.5vh,16px);
+}
+#portal-screen[data-place="games"] .mini-game h2{
+ font:400 clamp(25px,2.7vw,41px)/1.09 Georgia,serif;letter-spacing:-.055em;
+}
+#portal-screen[data-place="games"] .game-kicker{
+ color:#8d654d;border-bottom:1px solid #bb9d7b87;
+ font:750 10px/1.4 system-ui,sans-serif;letter-spacing:.12em;
+}
+#portal-screen[data-place="games"] .chai-stage{
+ background:radial-gradient(ellipse at 52% 60%,#f9e7bc9d,transparent 63%);
+ filter:drop-shadow(0 15px 8px #6d4d3c78);
+}
+#portal-screen[data-place="games"] .chai-glass{
+ border-color:#9d7051;border-top-color:#f5dcc4;
+ box-shadow:inset 5px 0 #fff9ef90,inset -6px 0 #58372d30,0 11px 17px #5e483533;
+}
+#portal-screen[data-place="games"] .game-big-button{
+ background:#38574b;color:#f7e8c8;border-color:#dfbd87;
+ border-radius:5px;box-shadow:0 6px #28493a,0 11px 22px #35513d40;
+ font:750 14px/1.2 system-ui,sans-serif;min-height:53px;
+}
+#portal-screen[data-place="games"] .game-big-button:focus-visible,
+#portal-screen[data-place="games"] .sadya-slot:focus-visible,
+#portal-screen[data-place="games"] .baggage-game button:focus-visible{
+ outline:3px solid #f3b75f;outline-offset:3px;
+}
+#portal-screen[data-place="games"] .sadya-leaf{
+ max-height:380px;
+ filter:drop-shadow(0 15px 14px #3a603d66);
+}
+#portal-screen[data-place="games"] .sadya-dish{
+ border-radius:6px;border-color:#c7a988;background:#fff9e8;
+ box-shadow:0 3px 7px #7661422c;
+}
+#portal-screen[data-place="games"] .sadya-slot{
+ background:#faf7dc30;border:2px dashed #f9f3caad;
+}
+#portal-screen[data-place="games"] .sadya-slot.served{
+ background:#fbefccbf;box-shadow:0 3px 5px #375b402c;
+}
+#portal-screen[data-place="games"] .suitcase-scene{
+ background:
+ linear-gradient(135deg,#d4a47e,#926c5a 62%,#745449);
+ border-color:#5e483e;border-radius:20px;
+ box-shadow:inset 0 0 0 3px #e6ca9e,0 18px 23px #46352c65;
+}
+#portal-screen[data-place="games"] .bag-item{
+ background:#ffefd6;border:1px solid #ad977d;
+ border-radius:5px;
+}
+#portal-screen[data-place="games"] .arcade-control-row button{
+ border-radius:4px;background:#f3e2c6;border:1px solid #8c7565;
+}
+@media(max-width:759px){
+ #portal-screen[data-place="games"] .arcade-app.arcade-active{padding:6px}
+ #portal-screen[data-place="games"] .arcade-game-board{padding:5px}
+ #portal-screen[data-place="games"] .mini-game h2{font-size:clamp(20px,5.6vw,28px)}
+ #portal-screen[data-place="games"] .game-kicker{font-size:8px}
+ #portal-screen[data-place="games"] .sadya-leaf{min-height:125px}
+ #portal-screen[data-place="games"] .game-big-button{min-height:52px}
+}
