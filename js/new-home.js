@@ -32,7 +32,12 @@ export function mountRoom(root,{chosen,visits,lastVisit,onReplay,onNewBouquet}){
  const room=root.querySelector('.new-home');
  const menu=root.querySelector('#home-menu');root.querySelector('#home-menu-trigger').onclick=()=>menu.showModal();
  const openFromMenu=(id,source,line)=>{menu.close();portal.open(id,root.querySelector('#home-menu-trigger'),line)};
- const refresh=()=>{const kept=store.get('keptLetters',[]),dreams=store.get('dreamPins',[]),wins=store.get('gameCompletions',{});root.querySelector('#room-traces').innerHTML=`${store.get('postcardPinned')?'<button class="trace-postcard" data-trace="travel">See the postcard you pinned ↗</button>':''}${Array.isArray(kept)&&kept.length?`<button class="trace-letter" data-trace="letters">${kept.length} kept ${kept.length===1?'letter':'letters'} ✉</button>`:''}${Array.isArray(dreams)&&dreams.length?`<button class="trace-tag" data-trace="travel">Next someday: ${esc(dreams.at(-1).name)}</button>`:''}${Object.values(wins||{}).some(Boolean)?'<button class="trace-star" data-trace="games" aria-label="Your arcade souvenir">✷</button>':''}`;root.querySelectorAll('[data-trace]').forEach(b=>b.onclick=()=>portal.open(b.dataset.trace,b));};
+ const refresh=()=>{const kept=store.get('keptLetters',[]),dreams=store.get('dreamPins',[]),wins=store.get('gameCompletions',{});
+ const travelNote=room.querySelector('.object-travel .object-label small');
+ if(travelNote)travelNote.textContent=store.get('postcardPinned')
+   ? 'That postcard made it onto the wall. Open it again.'
+   : 'Every postcard has somewhere to take you.';
+root.querySelector('#room-traces').innerHTML=`${store.get('postcardPinned')?'<button class="trace-postcard" data-trace="travel">See the postcard you pinned ↗</button>':''}${Array.isArray(kept)&&kept.length?`<button class="trace-letter" data-trace="letters">${kept.length} kept ${kept.length===1?'letter':'letters'} ✉</button>`:''}${Array.isArray(dreams)&&dreams.length?`<button class="trace-tag" data-trace="travel">Next someday: ${esc(dreams.at(-1).name)}</button>`:''}${Object.values(wins||{}).some(Boolean)?'<button class="trace-star" data-trace="games" aria-label="Your arcade souvenir">✷</button>':''}`;root.querySelectorAll('[data-trace]').forEach(b=>b.onclick=()=>portal.open(b.dataset.trace,b));};
  const portal=makePortalSystem({room,frame:document.querySelector('#app'),visits,lastVisit,onReturn:refresh});refresh();
  root.querySelectorAll('[data-door]').forEach(b=>b.onclick=()=>portal.open(b.dataset.door,b));
  root.querySelector('#take-me-anywhere').onclick=()=>{
