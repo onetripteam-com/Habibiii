@@ -50,3 +50,22 @@ test('new assets are listed in offline shell and last in stylesheet order',()=>{
  assert.ok(html.lastIndexOf('experience-polish.css')>html.lastIndexOf('scene-polish.css'));
  for(const asset of ['experience-polish.css','whale-courier.svg','butterfly-courier.svg'])assert.ok(sw.includes(asset),asset);
 });
+
+test('Word Garden belongs to the upper indoor plant, never overlaps the bouquet hotspot',()=>{
+ const room=read('js/room-photo-stage.js');
+ const placements=[
+  ['story',41,12,16,20,43,57],
+  ['kerala',43,14,16,21,49,52],
+  ['bengaluru',40,12,18,21,46,54]
+ ];
+ for(const [scene,x,y,w,h,flowerX,flowerY] of placements){
+  assert.ok(room.includes('garden:['+x+','+y+','+w+','+h+']'),scene+' should place Garden over upper foliage');
+  assert.ok(y+h+10<flowerY,scene+' Garden and vase touch targets need a generous vertical gap');
+  assert.ok(flowerX>=0);
+ }
+ const css=read('css/arrival-and-kuwait.css');
+ assert.ok(css.includes('[data-door="garden"] .object-label'));
+ assert.ok(css.includes('left:calc(100% + 10px)!important'));
+ assert.match(css,/hover:none/);
+ assert.ok(room.includes("title:'The indoor palm · word garden'"));
+});
