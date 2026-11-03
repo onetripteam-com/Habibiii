@@ -1,5 +1,7 @@
 # Kuwait Room — replacement artwork brief
 
+> **Status — integrated 3 November 2026.** The user-approved Kuwait photograph is committed at `assets/rooms/maha-kuwait.webp`. The room scene, scene-picker thumbnail, touch targets, flower overlay and offline cache now reference it. The remaining text documents the original art direction and generation requirements, not pending instructions.
+
 ## Goal
 Replace the original Kuwait/Story photograph `assets/rooms/maha-living-room.webp` with an equally photorealistic but genuinely **different** interior. It must *not* be a palette-swapped Bangalore/Kerala living room. Give this room the feeling of a private, warm, contemporary Kuwaiti apartment overlooking the Gulf. Preserve tactile, physically plausible destinations (the interactive areas are native parts of the photograph, not floating buttons).
 
