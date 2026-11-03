@@ -96,11 +96,17 @@ async function run(engine,launcher,w,h){
     assert.ok(await page.locator('#room-pan-left').isVisible(),'The room needs simple navigation arrows');
     assert.ok(await page.locator('#room-pan-right').isVisible(),'The room needs simple navigation arrows');
     await page.locator('#room-pan-right').click();
-    assert.equal(await page.locator('.cinematic-room').getAttribute('data-peek'),'2');
+    await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.peek==='2');
+    await page.waitForTimeout(420);
     await page.locator('#room-pan-left').click();
+    await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.peek==='1');
+    await page.waitForTimeout(420);
     await page.locator('#room-pan-left').click();
-    assert.equal(await page.locator('.cinematic-room').getAttribute('data-peek'),'0');
+    await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.peek==='0');
+    await page.waitForTimeout(420);
     await page.locator('#room-pan-right').click();
+    await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.peek==='1');
+    await page.waitForTimeout(420);
   }
 
   assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,'Seven selected blooms must appear in the original vase');
@@ -348,15 +354,30 @@ async function run(engine,launcher,w,h){
    await page.locator('#cancel-flowers').click();
    await page.locator('.new-home').waitFor();
   }
-  if(w===393||w===402){
-   const flower=w===393?'rose':'iris';
+  if(w===360||w===393||w===402){
+   const flower=w===393?'rose':w===402?'iris':'jasmine';
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
    await page.locator('#room-bouquet').click();
    await page.locator('.f2-scene').waitFor();
    assert.ok(await page.locator('.f2-preview').isVisible(),'Live bouquet preview is visible');
    assert.ok(await page.locator('.f2-editor').isVisible(),'Interactive flower palette is visible');
+   const geometry=await page.locator('.f2-scene').evaluate(scene=>{
+     const box=el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height,bottom:r.bottom,right:r.right}};
+     const overall=box(scene),hero=box(scene.querySelector('.f2-preview'));
+     const arrangement=box(scene.querySelector('.f2-stage'));
+     const tray=box(scene.querySelector('.f2-editor'));
+     return {overall,hero,arrangement,tray,overflow:scene.scrollWidth-scene.clientWidth};
+   });
+   assert.ok(geometry.arrangement.h>125,'Flower preview needs real mobile space: '+JSON.stringify(geometry));
+   assert.ok(geometry.tray.y>=geometry.hero.bottom-2&&geometry.tray.bottom<=geometry.overall.bottom+3,
+     'Bouquet and flower tray must not overlap or disappear: '+JSON.stringify(geometry));
+   assert.ok(geometry.overflow<=2&&geometry.tray.right<=geometry.overall.right+2,
+     'Mobile flower studio must not scroll horizontally: '+JSON.stringify(geometry));
+   await page.screenshot({path:join(OUT,key+'-mobile-flora-before-pick.png'),animations:'disabled'});
    const scrollable=await page.locator('.f2-rail').evaluate(el=>el.scrollHeight>el.clientHeight);
    assert.ok(scrollable,'Thirteen flowers must scroll within the palette, not the page');
+   const scrolled=await page.locator('.f2-rail').evaluate(el=>{const before=el.scrollTop;el.scrollTop=el.scrollHeight;const after=el.scrollTop;el.scrollTop=0;return after-before});
+   assert.ok(scrolled>70,'Flower rail must scroll vertically on phone: '+scrolled);
    assert.ok(await page.locator('#cancel-flowers').isVisible(),'Returning to the saved bouquet must be possible');
    assert.equal(await page.locator('#flower-steps .f2-slot').count(),7,'Florist must have seven clear slots');
    if(engine==='chromium'&&w===393)await page.emulateMedia({reducedMotion:'no-preference'});
