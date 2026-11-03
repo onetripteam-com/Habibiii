@@ -359,7 +359,15 @@ async function run(engine,launcher,w,h){
    assert.ok(scrollable,'Thirteen flowers must scroll within the palette, not the page');
    assert.ok(await page.locator('#cancel-flowers').isVisible(),'Returning to the saved bouquet must be possible');
    assert.equal(await page.locator('#flower-steps .f2-slot').count(),7,'Florist must have seven clear slots');
+   if(engine==='chromium'&&w===393)await page.emulateMedia({reducedMotion:'no-preference'});
    await page.locator('[data-flower="'+flower+'"]').click();
+   if(engine==='chromium'&&w===393){
+     const flying=await page.locator('.f2-flight').evaluateAll(items=>items.some(el=>el.getAnimations().length>0));
+     assert.ok(flying,'Picking a flower should visibly fly into the preview vase when motion is enabled');
+     await page.waitForTimeout(740);
+     assert.equal(await page.locator('.f2-flight').count(),0,'Transient flight artwork should clean itself up');
+     await page.emulateMedia({reducedMotion:'reduce'});
+   }
    assert.equal(await page.locator('#flower-steps .is-picked').count(),1,'One selected flower fills one step');
    // The arrangement and glass vase share their SVG viewBox on iOS and desktop.
    const preview=await page.locator('.f2-bouquet').evaluate(el=>{
