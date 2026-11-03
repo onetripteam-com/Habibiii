@@ -317,7 +317,10 @@ async function run(engine,launcher,w,h){
     if(!bouquet||!vase)return {missing:true};
     const spot=svg=>{const pt=svg.createSVGPoint();pt.x=254;pt.y=450;return pt.matrixTransform(svg.getScreenCTM())};
     const a=spot(bouquet),b=spot(vase);
-    return {gap:Math.hypot(a.x-b.x,a.y-b.y),height:el.getBoundingClientRect().height};
+    return {gap:Math.hypot(a.x-b.x,a.y-b.y),height:el.getBoundingClientRect().height,
+      panel:el.closest('.flower-studio-preview')?.getBoundingClientRect().height,
+      intro:el.closest('.flower-studio-preview')?.querySelector('.flowers-top')?.getBoundingClientRect().height,
+      editor:document.querySelector('.flower-studio-editor')?.getBoundingClientRect().height};
    });
    assert.ok(!onDesk.missing&&onDesk.gap<6&&onDesk.height>180,
      'Desktop bouquet and vase must share the same rendered coordinates: '+JSON.stringify(onDesk));
@@ -344,7 +347,10 @@ async function run(engine,launcher,w,h){
     if(!bouquet||!vase)return {missing:true};
     const spot=svg=>{const pt=svg.createSVGPoint();pt.x=254;pt.y=450;return pt.matrixTransform(svg.getScreenCTM())};
     const a=spot(bouquet),b=spot(vase);
-    return {gap:Math.hypot(a.x-b.x,a.y-b.y),height:el.getBoundingClientRect().height};
+    return {gap:Math.hypot(a.x-b.x,a.y-b.y),height:el.getBoundingClientRect().height,
+      panel:el.closest('.flower-studio-preview')?.getBoundingClientRect().height,
+      intro:el.closest('.flower-studio-preview')?.querySelector('.flowers-top')?.getBoundingClientRect().height,
+      editor:document.querySelector('.flower-studio-editor')?.getBoundingClientRect().height};
    });
    assert.ok(!preview.missing&&preview.gap<6&&preview.height>70,
     'Chosen flower stems must sit in the preview vase instead of floating: '+JSON.stringify(preview));
