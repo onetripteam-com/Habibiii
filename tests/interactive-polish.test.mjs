@@ -7,12 +7,15 @@ test('mobile panorama uses finger tracking plus separate eased release',()=>{
  const js=read('js/pocket-peek.js');
  const css=read('css/experience-polish.css');
  assert.match(js,/setPointerCapture/);
- assert.match(js,/const settle=/);
- assert.match(js,/void layer\.offsetWidth/);
- assert.match(js,/set\(stopAt\(next\)\)/);
+ assert.match(js,/const animateTo=/);
  assert.match(js,/const onCancel=/);
+ assert.match(js,/blockClickUntil/);
+ assert.match(js,/ResizeObserver/);
+ assert.doesNotMatch(js,/stopAt|Math\.round\([^)]*\*4\)/);
  assert.match(css,/room-is-dragging/);
  assert.match(css,/touch-action:pan-y/);
+ const newCamera=read('css/arrival-and-kuwait.css');
+ assert.match(newCamera,/transition:none!important/);
 });
 test('all three photographed worlds render the current chosen bouquet, without Kuwait image ghosts',()=>{
  const room=read('js/room-photo-stage.js');
