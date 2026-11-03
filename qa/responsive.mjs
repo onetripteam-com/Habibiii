@@ -362,6 +362,8 @@ async function run(engine,launcher,w,h){
        });
        assert.ok(geometry.overflow<=2&&geometry.tabs.every(t=>t.w>=70),
          'Letters must be phone-friendly with no sideways scrolling: '+JSON.stringify(geometry));
+       assert.ok(geometry.height>h-125,
+         'The letter shelf must fill the screen vertically, not overflow beneath it: '+JSON.stringify(geometry));
        if(w===393)assert.ok(await page.locator('.postroom-side').isHidden(),'The desk must not crowd iPhone letters');
        await page.screenshot({path:join(OUT,key+'-letters-desk.png'),animations:'disabled'});
        await page.locator('[data-open-letter="hello-from-here"]').click();
@@ -369,7 +371,8 @@ async function run(engine,launcher,w,h){
        assert.ok((await page.locator('.reader-intro h1').innerText()).includes('An envelope with your name'),
          'Actual letters must remain readable');
        const readerSize=await page.locator('.postroom-reader').evaluate(el=>({overflow:el.scrollWidth-el.clientWidth,height:el.getBoundingClientRect().height}));
-       assert.ok(readerSize.overflow<=2&&readerSize.height>350,'Mobile letter reader must fit viewport: '+JSON.stringify(readerSize));
+       assert.ok(readerSize.overflow<=2&&readerSize.height>h-125,
+         'Opened stationery must use the full reading height rather than leaving blank screen below: '+JSON.stringify({readerSize,h}));
        await page.screenshot({path:join(OUT,key+'-letter-open.png'),animations:'disabled'});
        await page.locator('[data-keep-letter]').click();
        assert.equal(await page.locator('[data-keep-letter]').getAttribute('aria-pressed'),'true','Save letter with original state');
