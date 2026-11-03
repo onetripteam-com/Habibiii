@@ -21,58 +21,58 @@ const studioVaseMarkup=()=>`<svg class="studio-vase" viewBox="0 0 500 580" xmlns
  </svg>`;
 export function mountFlowers(root,flowers,onDone,onCancel=null){
  let chosen=[],complete=false,disposed=false;
- root.innerHTML=`<section class="scene flowers-scene flower-studio" data-source-scene="${['story','kerala','bengaluru'].includes(store.get('roomTheme'))?store.get('roomTheme'):'story'}" aria-label="The flower studio: choose seven blooms">
-  <div class="flower-studio-background" aria-hidden="true"></div>
-  <div class="flower-studio-layout">
-   <div class="flower-studio-preview">
-    <div class="flowers-top">
-     <div class="flower-intro"><span class="eyebrow">MAHA / THE FLOWER STUDIO <span class="studio-edition">A LITTLE ESCAPE · VOL. 07</span></span><h1>Make something <em>lovely.</em></h1><p id="flower-subtitle">Seven flowers. One little bunch. Pick the same one again if it's your favourite.</p></div>
-     <div class="flower-status-row">
-      <div class="flower-counter" id="flower-counter" aria-live="polite"><strong>0 <span>of 7</span></strong><span class="counter-caption">STEMS COLLECTED</span></div>
-      <div class="flower-status-note"><span id="flower-instruction">Start with whatever catches your eye.</span><small>Seven is the only rule.</small></div>
+ root.innerHTML=`<section class="scene f2-scene f2-scene-alt" data-source-scene="${['story','kerala','bengaluru'].includes(store.get('roomTheme'))?store.get('roomTheme'):'story'}" aria-label="The flower studio: choose seven blooms">
+  <div class="f2-backdrop" aria-hidden="true"></div>
+  <div class="f2-layout">
+   <div class="f2-preview">
+    <div class="f2-header">
+     <div class="f2-intro"><span class="eyebrow">MAHA / THE FLOWER STUDIO <span class="f2-edition">A LITTLE ESCAPE · VOL. 07</span></span><h1>Make something <em>lovely.</em></h1><p id="flower-subtitle">Seven flowers. One little bunch. Pick the same one again if it's your favourite.</p></div>
+     <div class="f2-status">
+      <div class="f2-counter" id="f2-counter" aria-live="polite"><strong>0 <span>of 7</span></strong><span class="f2-counter-caption">STEMS COLLECTED</span></div>
+      <div class="f2-status-note"><span id="flower-instruction">Start with whatever catches your eye.</span><small>Seven is the only rule.</small></div>
      </div>
-     <div id="flower-steps" class="flower-steps" role="group" aria-label="The seven places in your bouquet; tap a placed flower to remove it"></div>
+     <div id="f2-steps" class="f2-steps" role="group" aria-label="The seven places in your bouquet; tap a placed flower to remove it"></div>
     </div>
-    <div class="bouquet-display" id="bouquet-display">
-     <span class="bouquet-hint" id="bouquet-hint">Your bouquet grows here.<span aria-hidden="true">✳</span></span>
-     <div class="bouquet-growing" id="bouquet-growing"></div>
-     <div class="petals" aria-hidden="true"><i>✿</i><i>✿</i><i>✿</i><i>✿</i><i>✿</i></div>
+    <div class="f2-stage" id="f2-stage">
+     <span class="f2-empty" id="f2-empty">Your bouquet grows here.<span aria-hidden="true">✳</span></span>
+     <div class="f2-bouquet" id="f2-bouquet"></div>
+     <div class="f2-petals" aria-hidden="true"><i>✿</i><i>✿</i><i>✿</i><i>✿</i><i>✿</i></div>
     </div>
-    <span class="flower-studio-caption" aria-hidden="true"><i>✳</i> CHOSEN BY YOU · MADE TO KEEP</span>
+    <span class="f2-caption" aria-hidden="true"><i>✳</i> CHOSEN BY YOU · MADE TO KEEP</span>
    </div>
-   <div class="flower-bottom flower-studio-editor" id="flower-bottom">
-    <div class="shelf-heading"><span><small>THE FLOWER BAR</small> Find your seven.</span><span class="shelf-hint">13 BLOOMS · REPEATS WELCOME</span></div>
-    <div class="flower-browser flower-browser-v2"><div id="flower-rail" class="flower-rail" role="group" aria-label="Thirteen different flowers. Tap more than once to add repeats."></div></div>
-    <div class="flower-editor-footer">
-     <div class="meaning-line" id="meaning-line" aria-live="polite">Pick the ones you like. We'll worry about arranging them.</div>
-     <div class="flower-controls"><button type="button" class="text-button" id="undo-flower" disabled>↶ Undo last</button><button type="button" class="text-button" id="reset-flowers" disabled>Start over ↻</button><button type="button" class="text-button studio-exit" id="cancel-flowers" ${store.get('completed')?'':'hidden'}>← Back to room</button></div>
+   <div class="f2-editor flower-studio-editor" id="f2-editor">
+    <div class="f2-editor-head"><span><small>THE FLOWER BAR</small> Find your seven.</span><span class="f2-editor-hint">13 BLOOMS · REPEATS WELCOME</span></div>
+    <div class="f2-browser f2-browser-v2"><div id="f2-rail" class="f2-rail" role="group" aria-label="Thirteen different flowers. Tap more than once to add repeats."></div></div>
+    <div class="f2-footer">
+     <div class="f2-note" id="f2-note" aria-live="polite">Pick the ones you like. We'll worry about arranging them.</div>
+     <div class="f2-actions"><button type="button" class="f2-action" id="undo-flower" disabled>↶ Undo last</button><button type="button" class="f2-action" id="reset-flowers" disabled>Start over ↻</button><button type="button" class="f2-action f2-exit" id="cancel-flowers" ${store.get('completed')?'':'hidden'}>← Back to room</button></div>
     </div>
    </div>
   </div>
-  <div class="bouquet-final" id="bouquet-final" hidden><span class="eyebrow">ALL SEVEN, BEAUTIFULLY UNPLANNED</span><h2>That's your bunch. <span aria-hidden="true">✳</span></h2><p>Made by Maha. Obviously a very exclusive collection.</p><div class="final-controls"><button class="button button-outline" id="save-bouquet">Save as picture ↓</button><button class="button button-primary" id="carry-bouquet">Take them home ↗</button></div><p class="export-hint" id="export-hint"></p></div>
+  <div class="f2-final" id="f2-final" hidden><span class="eyebrow">ALL SEVEN, BEAUTIFULLY UNPLANNED</span><h2>That's your bunch. <span aria-hidden="true">✳</span></h2><p>Made by Maha. Obviously a very exclusive collection.</p><div class="f2-final-actions"><button class="button button-outline" id="save-bouquet">Save as picture ↓</button><button class="button button-primary" id="carry-bouquet">Take them home ↗</button></div><p class="f2-export-hint" id="f2-export-hint"></p></div>
  </section>`;
  const rail=root.querySelector('#flower-rail'),renderPlace=root.querySelector('#bouquet-growing'),display=root.querySelector('#bouquet-display');
  for(const f of flowers){
-  const btn=document.createElement('button');btn.type='button';btn.className='flower-option';btn.dataset.flower=f.id;btn.setAttribute('aria-pressed','false');btn.setAttribute('aria-label',`${f.name}: ${f.meaning}`);
-  btn.innerHTML=`<span class="flower-option-index" aria-hidden="true">${String(flowers.indexOf(f)+1).padStart(2,'0')}</span><span class="option-art">${flowerSVG(f.id)}</span><span class="flower-option-meta"><span class="option-label">${esc(f.name)}</span><span class="flower-add" aria-hidden="true">+ ADD</span></span><span class="picked-check" aria-hidden="true"></span>`;
+  const btn=document.createElement('button');btn.type='button';btn.className='f2-card';btn.dataset.flower=f.id;btn.setAttribute('aria-pressed','false');btn.setAttribute('aria-label',`${f.name}: ${f.meaning}`);
+  btn.innerHTML=`<span class="f2-card-index" aria-hidden="true">${String(flowers.indexOf(f)+1).padStart(2,'0')}</span><span class="f2-card-art">${flowerSVG(f.id)}</span><span class="f2-card-meta"><span class="f2-card-name">${esc(f.name)}</span><span class="f2-add" aria-hidden="true">+ ADD</span></span><span class="f2-picked" aria-hidden="true"></span>`;
   btn.addEventListener('click',()=>pick(f,btn));rail.append(btn);
  }
  function update(){
-  root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="counter-caption">picked by Maha</span>`;
-  root.querySelector('#flower-steps').innerHTML=Array.from({length:7},(_,i)=>{const id=chosen[i];const flower=flowers.find(f=>f.id===id);return id?`<button type="button" class="flower-step is-picked" data-remove-slot="${i}" title="Remove ${esc(flower?.name||'flower')}" aria-label="Remove ${esc(flower?.name||'flower')} from slot ${i+1}"><i aria-hidden="true">✳</i></button>`:`<span class="flower-step" aria-label="Empty flower slot ${i+1}"><i aria-hidden="true">${String(i+1).padStart(2,'0')}</i></span>`}).join('');
+  root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="f2-counter-caption">picked by Maha</span>`;
+  root.querySelector('#flower-steps').innerHTML=Array.from({length:7},(_,i)=>{const id=chosen[i];const flower=flowers.find(f=>f.id===id);return id?`<button type="button" class="f2-slot is-picked" data-remove-slot="${i}" title="Remove ${esc(flower?.name||'flower')}" aria-label="Remove ${esc(flower?.name||'flower')} from slot ${i+1}"><i aria-hidden="true">✳</i></button>`:`<span class="f2-slot" aria-label="Empty flower slot ${i+1}"><i aria-hidden="true">${String(i+1).padStart(2,'0')}</i></span>`}).join('');
   renderPlace.innerHTML=chosen.length?bouquetMarkup(chosen,{stage:complete?'final':'preview'})+(!complete?studioVaseMarkup():''):'';
-  rail.querySelectorAll('button').forEach(b=>{const count=chosen.filter(id=>id===b.dataset.flower).length;b.setAttribute('aria-pressed',String(count>0));b.disabled=complete;b.querySelector('.picked-check').textContent=count?`${count} PICKED`:'';b.querySelector('.flower-add').textContent=count?'+ AGAIN':'+ ADD';});
+  rail.querySelectorAll('button').forEach(b=>{const count=chosen.filter(id=>id===b.dataset.flower).length;b.setAttribute('aria-pressed',String(count>0));b.disabled=complete;b.querySelector('.f2-picked').textContent=count?`${count} PICKED`:'';b.querySelector('.f2-add').textContent=count?'+ AGAIN':'+ ADD';});
   root.querySelector('#undo-flower').disabled=!chosen.length||complete; root.querySelector('#reset-flowers').disabled=!chosen.length||complete;
   root.querySelector('#bouquet-hint').hidden=chosen.length>0;
-  root.querySelector('.flower-studio-preview').dataset.placed=String(chosen.length);
+  root.querySelector('.f2-preview').dataset.placed=String(chosen.length);
  }
  function updateInstruction(text){root.querySelector('#flower-instruction').textContent=text;}
  function pick(f,button){
   if(complete||chosen.length>=7) return;
-  chosen.push(f.id); root.querySelector("#flower-counter").classList.remove("counter-pop"); void root.querySelector("#flower-counter").offsetWidth; root.querySelector("#flower-counter").classList.add("counter-pop"); soundEffect('pick'); update(); const repeats=chosen.filter(id=>id===f.id).length;
+  chosen.push(f.id); root.querySelector("#flower-counter").classList.remove("f2-counter-pop"); void root.querySelector("#flower-counter").offsetWidth; root.querySelector("#flower-counter").classList.add("f2-counter-pop"); soundEffect('pick'); update(); const repeats=chosen.filter(id=>id===f.id).length;
   root.querySelector('#meaning-line').textContent=`${String(chosen.length).padStart(2,'0')} / 07 — ${repeats>1?`Another ${f.name.toLowerCase()}? You've made your choice, and I respect it.`:floristWords[f.id]||f.meaning}`;
   if(button&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
-   button.classList.remove('flower-just-picked');void button.offsetWidth;button.classList.add('flower-just-picked');
+   button.classList.remove('f2-card-pop');void button.offsetWidth;button.classList.add('f2-card-pop');
    const last=renderPlace.querySelector('.bouquet-bloom:last-child');if(last){last.classList.add('bloom-new');setTimeout(()=>last.classList.remove('bloom-new'),900)}
   }
   if(chosen.length===7) finish(); else updateInstruction(`${7-chosen.length} more to go`);
@@ -103,20 +103,20 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
  async function finish(){
   complete=true; store.set('flowers',chosen); soundEffect('complete');
   root.querySelector('#flower-rail').classList.add('shelf-out');
-  root.querySelector('.flower-intro').classList.add('flower-intro-fade');
-  root.querySelector('#flower-bottom').classList.add('flower-bottom-exit');
+  root.querySelector('.f2-intro').classList.add('f2-intro-fade');
+  root.querySelector('#flower-bottom').classList.add('f2-editor-exit');
   updateInstruction('Gathering them for you…');
   await delay(250); if(disposed) return;
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:false,stage:'gather'})+studioVaseMarkup();
-  display.classList.add('bouquet-gathering');
+  display.classList.add('f2-gathering');
   await delay(650); if(disposed) return;
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:true,stage:'final'});
-  display.classList.remove('bouquet-gathering');
-  display.classList.add('bouquet-wrapping');
+  display.classList.remove('f2-gathering');
+  display.classList.add('f2-wrapping');
   await delay(650); if(disposed) return;
   updateInstruction('All seven, ready to go.');
   root.querySelector('#flower-bottom').hidden=true;
-  root.querySelector('.flowers-scene').classList.add('is-complete');
+  root.querySelector('.f2-scene').classList.add('is-complete');
   root.querySelector('#bouquet-final').hidden=false;
   await move(root.querySelector('#bouquet-final'),{opacity:0,transform:'translateY(15px)'},{opacity:1,transform:'translateY(0)'},500);
  }
@@ -128,7 +128,7 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
  });
  root.querySelector('#carry-bouquet').addEventListener('click',async()=>{
   if(disposed) return;
-  const b=root.querySelector('.bouquet-growing');
+  const b=root.querySelector('.f2-bouquet');
   await move(b,{transform:'translate3d(0,0,0) scale(1)',opacity:1},{transform:'translate3d(37%, -30%, 0) scale(.28)',opacity:.25},740);
   if(!disposed){disposed=true; onDone(chosen);} 
  });
