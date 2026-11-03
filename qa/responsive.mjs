@@ -104,6 +104,18 @@ async function run(engine,launcher,w,h){
   }
 
   assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,'Seven selected blooms must appear in the original vase');
+  // Test the actual SVG rim point in photo coordinates, not only flower count.
+  // The Kuwait ceramic mouth is centred at ~830,582 in 1672×941 artwork.
+  const seated=await page.locator('.photographed-vase-flowers').evaluate(el=>{
+    const svg=el.querySelector('svg');
+    const pt=svg.createSVGPoint();pt.x=82;pt.y=108;
+    const screen=pt.matrixTransform(svg.getScreenCTM());
+    const plane=el.closest('.living-photo-plane').getBoundingClientRect();
+    return {x:(screen.x-plane.left)/plane.width,y:(screen.y-plane.top)/plane.height,scene:el.dataset.spriteScene};
+  });
+  assert.equal(seated.scene,'kuwait','New Kuwait photo must use its own rim compositing');
+  assert.ok(Math.abs(seated.x-830/1672)<.013&&Math.abs(seated.y-582/941)<.018,
+    'Live flower stems must meet the real Kuwait vase mouth: '+JSON.stringify(seated));
   assert.equal(await page.locator('.room-traces').isVisible(),false,'Avoid meaningless floating postcard labels on photo');
   assert.equal(await page.locator('#room-window').isVisible(),false,'Remove unexplained centre dot');
   assert.equal(await page.locator('.physical-movies').count(),1,'Cinema portal must be an actual screen');
@@ -294,6 +306,25 @@ async function run(engine,launcher,w,h){
      await page.locator('#portal-screen').waitFor({state:'hidden',timeout:16000});
    }
   }
+  if(w===1440){
+   // Desktop picker: a complete layout must still render the same live vase.
+   await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
+   await page.locator('#room-bouquet').click();
+   await page.locator('.flower-studio').waitFor();
+   await page.locator('[data-flower="jasmine"]').click();
+   const onDesk=await page.locator('.bouquet-growing').evaluate(el=>{
+    const bouquet=el.querySelector('.bouquet-svg'),vase=el.querySelector('.studio-vase');
+    if(!bouquet||!vase)return {missing:true};
+    const spot=svg=>{const pt=svg.createSVGPoint();pt.x=254;pt.y=450;return pt.matrixTransform(svg.getScreenCTM())};
+    const a=spot(bouquet),b=spot(vase);
+    return {gap:Math.hypot(a.x-b.x,a.y-b.y),height:el.getBoundingClientRect().height};
+   });
+   assert.ok(!onDesk.missing&&onDesk.gap<6&&onDesk.height>180,
+     'Desktop bouquet and vase must share the same rendered coordinates: '+JSON.stringify(onDesk));
+   await page.screenshot({path:join(OUT,key+'-flower-vase-desktop.png'),animations:'disabled'});
+   await page.locator('#cancel-flowers').click();
+   await page.locator('.new-home').waitFor();
+  }
   if(w===393||w===402){
    const flower=w===393?'rose':'iris';
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
@@ -307,6 +338,16 @@ async function run(engine,launcher,w,h){
    assert.equal(await page.locator('#flower-steps .flower-step').count(),7,'Florist must have seven clear slots');
    await page.locator('[data-flower="'+flower+'"]').click();
    assert.equal(await page.locator('#flower-steps .is-picked').count(),1,'One selected flower fills one step');
+   // The arrangement and glass vase share their SVG viewBox on iOS and desktop.
+   const preview=await page.locator('.bouquet-growing').evaluate(el=>{
+    const bouquet=el.querySelector('.bouquet-svg'),vase=el.querySelector('.studio-vase');
+    if(!bouquet||!vase)return {missing:true};
+    const spot=svg=>{const pt=svg.createSVGPoint();pt.x=254;pt.y=450;return pt.matrixTransform(svg.getScreenCTM())};
+    const a=spot(bouquet),b=spot(vase);
+    return {gap:Math.hypot(a.x-b.x,a.y-b.y),height:el.getBoundingClientRect().height};
+   });
+   assert.ok(!preview.missing&&preview.gap<6&&preview.height>70,
+    'Chosen flower stems must sit in the preview vase instead of floating: '+JSON.stringify(preview));
    assert.ok((await page.locator('#meaning-line').innerText()).includes('01 / 07'),'Every pick should carry its own line');
    await page.screenshot({path:join(OUT,key+'-flower-picker.png'),animations:'disabled'});
    await page.locator('[data-flower="'+flower+'"]').click();
