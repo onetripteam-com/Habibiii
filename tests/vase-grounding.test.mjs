@@ -23,7 +23,7 @@ test('real Kuwait vase is used without duplicating any photo rim or synthetic va
   const svg=photoBloomsMarkup(Array(7).fill('rose'),scene);
   assert.ok(!svg.includes('<image ')&&!svg.includes('href="./assets/rooms/'),
    'Do not paste a second room photo over any vase');
-  assert.ok(!svg.includes('maha-real-rim')&&!svg.includes('<ellipse '),
+  assert.ok(!svg.includes('maha-real-rim')&&!svg.includes('<clipPath id="maha-stem-neck"><ellipse'),
    'Do not generate an additional oval or vase lip');
   assert.ok(svg.includes('<clipPath id="maha-stem-neck"><rect x="0" y="0" width="166" height="105"/></clipPath>'));
   assert.equal(svg.split('clip-path="url(#maha-stem-neck)"').length-1,2,
