@@ -13,21 +13,49 @@ function paragraphs(lines){return (Array.isArray(lines)?lines:[lines]).map(s=>`<
 function bookmark(state,id){return Array.isArray(state)&&state.includes(id);}
 function renderAvatar(){return `<span class="sender-avatar" aria-hidden="true"><svg viewBox="0 0 42 42"><circle cx="21" cy="21" r="20" fill="#f0d4a8" stroke="#b97d5b"/><path d="M9 28Q13 20 18 25M24 25Q30 21 34 29" fill="none" stroke="#754c3c" stroke-width="1.8"/><path d="M13 16q2-3 6 0m6 0q2-3 5 0" stroke="#754c3c" stroke-width="2" fill="none"/><path d="M17 24q4 5 9-1" fill="none" stroke="#a9644e" stroke-width="2"/><path d="M6 11q8-15 25-6M10 5q15-6 26 6" fill="none" stroke="#7e8b67" stroke-width="2.4" stroke-linecap="round"/></svg></span>`;}
 function envelopeIcon(sealed){return `<span class="mail-envelope ${sealed?'with-seal':''}" aria-hidden="true"><span class="mail-flap"></span><span class="mail-insert"></span><span class="mail-front"></span>${sealed?'<span class="mail-wax">✶</span>':''}</span>`;}
-const openWhenEmoji={tired:'☁', 'miss-home':'⌂', 'great-news':'✳',nervous:'◈','cant-sleep':'☾',overthinking:'∞',laugh:'☺',stuck:'⇢','finished-big':'★',raining:'☂',birthday:'✶','first-vlog':'▶','forgot-yourself':'♡','missing-me':'✉'};
+const moodNames={tired:'Running on empty','miss-home':'Missing home','great-news':'Something wonderful','nervous':'A big day ahead','cant-sleep':'Wide awake','overthinking:'Too many thoughts',laugh:'Need a laugh',stuck:'Feeling stuck','finished-big':'You did the thing',raining:'Rainy day',birthday:'Your birthday','first-vlog':'Your first vlog','forgot-yourself':'A little unsure','missing-me':'Missing a friend'};
 export function mountLetters(host,{visits=1,lastVisit=null,onPlay=()=>{},onKeep=()=>{},onExit=()=>{}}={}){
- let disposed=false,activeTab=store.get('lettersTab','inbox'),current=null,page=0,asText=false,zoom=1,letters=[],config={senderName:'[MY NAME]',senderEmail:null,quietLetterDate:null};
+ let disposed=false,activeTab=store.get('lettersTab','inbox'),current=null,page=0,asText=false,zoom=1,letters=[],config={senderName:'Your friend',senderEmail:null,quietLetterDate:null};
+ const tabScroll={inbox:0,openWhen:0,keepsakes:0};
+ if(!['inbox','openWhen','keepsakes'].includes(activeTab))activeTab='inbox';
  const asState=()=>({visits,firstVisitAt:store.get('firstVisitAt',null),games:store.get('gameCompletions',{})});
  const now=()=>new Date();
  host.innerHTML=`<div class="mail-loading" role="status">Sorting very important stationery…</div>`;
  const list=()=>quietVariant(letters,config,now());
  const allKept=()=>store.get('keptLetters',[]);
- function header(){return `<div class="mail-heading"><div class="mail-postmark">✳ &nbsp; THE VERY UNOFFICIAL POST OFFICE &nbsp; ✳</div><div class="mail-header-row"><h1>Dear <em>Maha,</em></h1><span class="mail-mini-stamp" aria-hidden="true">✿<small>AIR MAIL</small></span></div><p>Some things are nicer in an envelope.</p></div>`;}
- function tabs(){return `<nav class="mail-tabs" aria-label="Letter sections"><button data-tab="inbox" ${activeTab==='inbox'?'aria-current="page"':''}>Inbox</button><button data-tab="openWhen" ${activeTab==='openWhen'?'aria-current="page"':''}>Open When</button><button data-tab="keepsakes" ${activeTab==='keepsakes'?'aria-current="page"':''}>Keepsakes <span>${allKept().length||''}</span></button></nav>`;}
+
+ function postIcon(kind){
+  const d={
+   letters:'M4 7.5 12 12l8-4.5M4 7.5 12 13l8-5.5M5 6h14a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Z',
+   when:'M12 2.8v2.2m0 14v2.2M2.8 12H5m14 0h2.2M5.4 5.4 7 7m10 10 1.6 1.6M18.6 5.4 17 7M7 17l-1.6 1.6M12 8.5v4.1l2.5 1.5M12 8a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z',
+   saved:'M6.5 4h11v16l-5.5-3.6L6.5 20V4'
+  }[kind]||'';
+  return `<svg class="postroom-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="${d}"/></svg>`;
+ }
+ function header(){
+  const available=list().filter(l=>l.section==='inbox'&&unlockStatus(l.unlock,asState(),now()).open).length;
+  return `<header class="mail-heading"><div class="mail-postmark"><span class="postroom-mark" aria-hidden="true">✳</span> A SMALL COLLECTION OF LETTERS <span class="postroom-edition">NO. 01 — FOR MAHA</span></div>
+   <div class="mail-header-row"><div class="postroom-title-copy"><h1>Letters, <em>for you.</em></h1><p>Some things are nicer to open slowly.</p></div>
+    <span class="mail-mini-stamp" aria-hidden="true"><span>MAHA</span><svg viewBox="0 0 56 56" fill="none"><path d="M28 9c-5 8-7 12-7 17a7 7 0 0 0 14 0c0-5-2-9-7-17ZM13 24c8 2 12 4 15 8M43 24c-8 2-12 4-15 8M13 42c8-7 14-8 15-8m15 8c-8-7-14-8-15-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="28" cy="31" r="5" fill="currentColor"/></svg><small>WITH CARE</small></span>
+   </div></header>`;
+ }
+ function tabs(){
+  const saved=list().filter(l=>bookmark(allKept(),l.id)).length;
+  const options=[['inbox','Letters',list().filter(l=>l.section==='inbox').length,'letters'],['openWhen','Open when…',null,'when'],['keepsakes','Saved',saved,'saved']];
+  return `<nav class="mail-tabs" aria-label="Choose a letter shelf">${options.map(([id,label,count,icon])=>`<button type="button" data-tab="${id}" ${activeTab===id?'aria-current="page"':''} aria-label="${esc(label)}${count===null?'':', '+count}">${postIcon(icon)}<span class="postroom-tab-name">${label}</span>${count===null?'':`<span class="postroom-tab-count" aria-hidden="true">${count}</span>`}</button>`).join('')}</nav>`;
+ }
  function itemMarkup(l){
   const state=asState(),status=unlockStatus(l.unlock,state,now()),read=store.get('readLetter:'+l.id,false),isKept=bookmark(allKept(),l.id),open=status.open;
-  const badge=open?(read?'Read':'New'):'Sealed';
-  return `<button class="mail-row ${open?'is-available':'is-sealed'}" data-open-letter="${esc(l.id)}" type="button" aria-label="${esc(l.title)}. ${open?read?'Read':'New':status.label}">
-   ${envelopeIcon(!open)}<span class="mail-row-words"><span class="mail-sender">${renderAvatar()}<span>${esc(config.senderName||'[MY NAME]')}</span></span><strong class="mail-subject">${esc(l.title)}</strong><span class="mail-preview">${esc(l.preview||'A little letter inside.')}</span><span class="mail-status ${open?read?'status-read':'status-new':'status-locked'}">${open?read?'✓ Read':'<i class="marigold-dot"></i> New':'✶ '+esc(status.label)}</span></span><span class="mail-row-edge">${isKept?'♥':'⌁'}</span>
+  const number=String(Math.max(1,list().findIndex(x=>x.id===l.id)+1)).padStart(2,'0');
+  const label=open?(read?'Read':'New'):'Sealed';
+  const mood=l.section==='openWhen'?moodNames[l.id.replace('when-','')]:null;
+  return `<button class="mail-row postroom-letter ${open?'is-available':'is-sealed'} ${read?'is-read':''}" data-open-letter="${esc(l.id)}" type="button" aria-label="${esc(l.title)}. ${open?(read?'Already read':'Ready to open'):status.label}">
+    <span class="postroom-letter-index" aria-hidden="true">NO. ${number}</span>
+    ${envelopeIcon(!open)}
+    <span class="mail-row-words"><span class="mail-sender">${mood?'FOR A DAY LIKE THIS':'A NOTE FROM '+esc(config.senderName||'YOUR FRIEND')}</span>
+      <strong class="mail-subject">${esc(l.title)}</strong><span class="mail-preview">${esc(l.preview||'A little note, just for you.')}</span>
+      <span class="mail-status ${open?read?'status-read':'status-new':'status-locked'}">${open?(read?'Opened before':'<i class="marigold-dot"></i> Ready to open'):'<span aria-hidden="true">✳</span> '+esc(status.label)}</span>
+    </span><span class="mail-row-edge" aria-hidden="true">${isKept?'SAVED':'↗'}</span>
   </button>`;
  }
  function awayShelf(){
@@ -37,25 +65,39 @@ export function mountLetters(host,{visits=1,lastVisit=null,onPlay=()=>{},onKeep=
   const line=unlocked.length?`These seals broke while you were away: ${unlocked.map(x=>x.title).join(' · ')}`:'The envelopes waited. No new seals yet, but the kettle is on.';
   return `<aside class="away-shelf" aria-label="While you were away"><span class="away-shelf-icon" aria-hidden="true">✉</span><div><strong>While you were away…</strong><p>${esc(line)}</p></div></aside>`;
  }
- function inbox(){const inboxLetters=list().filter(l=>l.section==='inbox');return `<div class="mail-inbox-list">${awayShelf()}<p class="mail-section-caption">DELIVERIES FOR MAHA <span>${inboxLetters.length} ENVELOPES</span></p>${inboxLetters.map(itemMarkup).join('')}<div class="mail-bottom-invite"><span>Or would you like to play something?</span><button class="mail-play-button" data-go-play type="button">Take me to the games ↗</button></div></div>`;}
- function openWhen(){return `<div class="when-collection"><p class="mail-section-caption">FOR EXACTLY THE SORT OF DAY YOU'RE HAVING</p><div class="when-bundle">${list().filter(l=>l.section==='openWhen').map(l=>`<div class="when-clip"><span class="when-symbol">${openWhenEmoji[l.id.replace('when-','')]||'♡'}</span>${itemMarkup(l)}</div>`).join('')}</div><p class="mail-draft-note">The envelopes will be here whenever you feel like opening one.</p></div>`;}
+
+ function inbox(){
+  const items=list().filter(l=>l.section==='inbox');
+  return `<section class="mail-inbox-list" aria-label="Letters waiting for Maha">${awayShelf()}<div class="mail-section-caption"><div><span class="postroom-section-kicker">THE LETTER SHELF / 01</span><h2>Little notes, <em>big or small.</em></h2><p>No need for a special occasion.</p></div><span class="postroom-section-count">${items.length} letters</span></div><div class="postroom-letter-grid">${items.map(itemMarkup).join('')}</div></section>`;
+ }
+ function openWhen(){
+  const items=list().filter(l=>l.section==='openWhen');
+  return `<section class="when-collection" aria-label="Letters for different moments"><div class="mail-section-caption"><div><span class="postroom-section-kicker">THE OTHER SHELF / 02</span><h2>For a day <em>like this.</em></h2><p>Choose how today feels. There's probably a letter for it.</p></div></div><div class="when-bundle">${items.map((l,i)=>`<div class="when-clip"><span class="when-symbol" aria-hidden="true">${String(i+1).padStart(2,'0')}</span>${itemMarkup(l)}</div>`).join('')}</div><p class="mail-draft-note">No order. No deadline. Just open whichever feels right.</p></section>`;
+ }
  function keepsakes(){
   const selected=list().filter(l=>bookmark(allKept(),l.id));
-  return `<div class="mail-keepsakes"><p class="mail-section-caption">THE ONES YOU DECIDED TO KEEP</p>${selected.length?selected.map(itemMarkup).join(''):'<p class="mail-keepsake-empty">No saved letters yet. Read one, tap ♡, and it will find its way here.</p>'}
-   <div class="future-note"><span class="future-note-pin">✿</span><h2>A note to future me</h2><p>This one stays on this device. No sending, no postmarks.</p><label class="sr-only" for="future-note-text">Write a note to your future self</label><textarea id="future-note-text" rows="5" placeholder="Dear future Maha, remember…">${esc(store.get('futureNote',''))}</textarea><span class="future-save-indicator" role="status">Saved privately on this device</span></div></div>`;
+  return `<section class="mail-keepsakes" aria-label="Your saved letters"><div class="mail-section-caption"><div><span class="postroom-section-kicker">THE KEEPSAKE SHELF / 03</span><h2>The ones <em>you kept.</em></h2><p>Saved here on this device, for another day.</p></div><span class="postroom-section-count">${selected.length} saved</span></div>
+   <div class="postroom-letter-grid">${selected.length?selected.map(itemMarkup).join(''):'<div class="mail-keepsake-empty"><span aria-hidden="true">✳</span><h3>A little space for your favourites.</h3><p>When a letter feels worth keeping, open it and tap Save. It will be here.</p></div>'}</div>
+   <div class="future-note"><span class="future-note-pin" aria-hidden="true">✳</span><span class="postroom-section-kicker">ONE FROM YOU, TO YOU</span><h2>A note for another day</h2><p>Write anything you want future Maha to remember. Only this device keeps it.</p><label class="sr-only" for="future-note-text">A private note to future Maha</label><textarea id="future-note-text" rows="4" placeholder="Dear future Maha, remember…">${esc(store.get('futureNote',''))}</textarea><span class="future-save-indicator" role="status">Automatically saved on this device</span></div></section>`;
  }
  // Hide unfinished email settings; enable the button only when there is a real address.
  function footer(){
   const active=Boolean(config.senderEmail&&/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.senderEmail));
   return active?`<div class="mail-footer"><button type="button" class="mail-writeback" data-writeback>✍ Write back ↗</button></div>`:'';
  }
+
  function renderList(){
   current=null;
-  host.innerHTML=`<div class="letterbox-app">${header()}${tabs()}<div class="mail-scroll" id="mail-scroll">${activeTab==='inbox'?inbox():activeTab==='openWhen'?openWhen():keepsakes()}</div>${footer()}</div>`;
+  const savedPosition=tabScroll[activeTab]||0;
+  host.innerHTML=`<div class="letterbox-app postroom" data-shelf="${activeTab}">
+   <aside class="postroom-side" aria-hidden="true"><div class="postroom-side-top"><span class="postroom-side-num">THE LITTLE ESCAPE / VOL. 01</span><span class="postroom-side-spark">✳</span></div><div class="postroom-side-art"><span class="postroom-side-halo"></span><span class="postroom-desk-letter"></span><span class="postroom-desk-envelope"><i></i></span><span class="postroom-desk-seal">M</span><span class="postroom-desk-flower">✳</span></div><div class="postroom-side-bottom"><span class="postroom-side-title">A little postbox<br><i>with your name on it.</i></span><p>For ordinary days, silly stories, and the things that don't fit in a text.</p><span class="postroom-side-rule"></span><span class="postroom-side-foot">FROM A FRIEND · KEPT WITH CARE</span></div></aside>
+   <section class="postroom-library" aria-label="Maha's letters">${header()}${tabs()}<div class="mail-scroll" id="mail-scroll">${activeTab==='inbox'?inbox():activeTab==='openWhen'?openWhen():keepsakes()}</div>${footer()}</section>
+  </div>`;
   bindList();
+  const scroll=host.querySelector('#mail-scroll');if(scroll)scroll.scrollTop=savedPosition;
  }
  function bindList(){
-  host.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{activeTab=b.dataset.tab;store.set('lettersTab',activeTab);soundEffect('paper');renderList();}));
+  host.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.tab===activeTab)return;tabScroll[activeTab]=host.querySelector('#mail-scroll')?.scrollTop||0;activeTab=b.dataset.tab;store.set('lettersTab',activeTab);soundEffect('paper');renderList();}));
   host.querySelectorAll('[data-open-letter]').forEach(b=>b.addEventListener('click',()=>openEnvelope(b.dataset.openLetter,b)));
   host.querySelector('[data-go-play]')?.addEventListener('click',onPlay);
   host.querySelector('[data-writeback]')?.addEventListener('click',writeBack);
@@ -76,6 +118,7 @@ export function mountLetters(host,{visits=1,lastVisit=null,onPlay=()=>{},onKeep=
    const el=button.querySelector('.mail-status');if(el)el.setAttribute('aria-live','polite');soundEffect('undo');return;
   }
   if(current||disposed)return;
+  tabScroll[activeTab]=host.querySelector('#mail-scroll')?.scrollTop||0;
   current=l;page=0;asText=false;zoom=1;store.set('readLetter:'+l.id,true);soundEffect('paper');
   button.classList.add('mail-opening');
   await new Promise(r=>setTimeout(r,window.matchMedia('(prefers-reduced-motion: reduce)').matches?65:590));
