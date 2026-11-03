@@ -527,3 +527,48 @@
   grid-template-rows:minmax(0,51%) minmax(0,49%)!important;
  }
 }
+
+/* Desktop+mobile regression: legacy .app-frame .flower-bottom assigned grid-row:2
+   and .bouquet-display assigned grid-column:2. In the new nested studio these
+   rules created *implicit* tracks (1100px editor / zero-height bouquet).
+   Explicitly place each NEW grid child, never inherit old scene coordinates. */
+#app .flowers-scene.flower-studio .flower-studio-layout{
+ grid-template-rows:minmax(0,1fr)!important;
+}
+#app .flowers-scene.flower-studio .flower-studio-layout>.flower-studio-preview{
+ grid-column:1!important;grid-row:1!important;
+ align-self:stretch!important;height:100%!important;min-height:0!important;
+}
+#app .flowers-scene.flower-studio .flower-studio-layout>.flower-studio-editor{
+ grid-column:2!important;grid-row:1!important;
+ align-self:stretch!important;height:100%!important;min-height:0!important;
+}
+#app .flowers-scene.flower-studio .flower-studio-preview>.flowers-top{
+ grid-column:1!important;grid-row:1!important;
+}
+#app .flowers-scene.flower-studio .flower-studio-preview>.bouquet-display{
+ grid-column:1!important;grid-row:2!important;
+}
+#app .flowers-scene.flower-studio .flower-studio-preview>.flower-studio-caption{
+ grid-column:1!important;grid-row:3!important;
+}
+@media(max-width:899px){
+ #app .flowers-scene.flower-studio:not(.is-complete) .flower-studio-layout{
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:minmax(0,55%) minmax(0,45%)!important;
+ }
+ #app .flowers-scene.flower-studio .flower-studio-layout>.flower-studio-preview{
+  grid-column:1!important;grid-row:1!important;
+ }
+ #app .flowers-scene.flower-studio .flower-studio-layout>.flower-studio-editor{
+  grid-column:1!important;grid-row:2!important;
+ }
+ #app .flowers-scene.flower-studio.is-complete .flower-studio-layout{
+  grid-template-rows:minmax(0,1fr)!important;
+ }
+}
+@media(max-width:899px) and (max-height:690px){
+ #app .flowers-scene.flower-studio:not(.is-complete) .flower-studio-layout{
+  grid-template-rows:minmax(0,51%) minmax(0,49%)!important;
+ }
+}
