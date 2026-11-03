@@ -85,6 +85,23 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.table-bouquet .real-vase').count(),1,'Bouquet must live in a physical vase');
   assert.ok(await page.locator('.object-movies').isVisible(),'The cinema remains a reachable scene hotspot');
   assert.ok(await page.locator('#room-bouquet').isVisible(),'Photographed vase must remain interactive');
+  const gardenSpacing=await page.locator('.living-photo-plane').evaluate(plane=>{
+    const g=plane.querySelector('[data-door="garden"]').getBoundingClientRect();
+    const v=plane.querySelector('#room-bouquet').getBoundingClientRect();
+    const flowers=plane.querySelector('.photographed-vase-flowers').getBoundingClientRect();
+    return {gardenBottom:g.bottom,vaseTop:v.top,flowersTop:flowers.top};
+  });
+  assert.ok(gardenSpacing.gardenBottom+16<gardenSpacing.flowersTop,
+    'Word Garden hotspot must be on high leaves, not over the flowers: '+JSON.stringify(gardenSpacing));
+  assert.ok(gardenSpacing.gardenBottom+32<gardenSpacing.vaseTop,
+    'Word Garden and the real vase must have distinct hit areas: '+JSON.stringify(gardenSpacing));
+  if(w>=760){
+    await page.locator('[data-door="garden"]').focus();
+    const tip=await page.locator('[data-door="garden"] .object-label').boundingBox();
+    assert.ok(tip&&tip.bottom+10<gardenSpacing.flowersTop,
+      'Word Garden tooltip must appear beside upper plant, above the bouquet');
+    await page.locator('[data-door="garden"]').evaluate(el=>el.blur());
+  }
   if(w===1440){
     await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.originalArt==='false');
     assert.ok(await page.locator('.photographed-vase-flowers .photo-blooms').isVisible(),'Seven flowers must grow from photographed vase opening');
@@ -218,6 +235,14 @@ async function run(engine,launcher,w,h){
    assert.ok(await page.locator('.photographed-vase-flowers').isVisible(),id+' must keep the live bouquet');
    assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,id+' must show seven user-selected blooms');
    assert.equal(await page.locator('.photographed-vase-flowers').getAttribute('data-vase-scene'),id,'Bouquet must follow current scene');
+   const plant=await page.locator('.living-photo-plane').evaluate(plane=>{
+     const g=plane.querySelector('[data-door="garden"]').getBoundingClientRect();
+     const v=plane.querySelector('#room-bouquet').getBoundingClientRect();
+     const f=plane.querySelector('.photographed-vase-flowers').getBoundingClientRect();
+     return {gardenBottom:g.bottom,vaseTop:v.top,flowersTop:f.top};
+   });
+   assert.ok(plant.gardenBottom+16<plant.flowersTop&&plant.gardenBottom+32<plant.vaseTop,
+     id+' Garden must stay high on leaves, never crowd the bouquet: '+JSON.stringify(plant));
    assert.equal(await page.locator('.photographed-vase-flowers svg image').count(),0,
      id+' must not paste a duplicate photo rim');
    assert.equal(await page.locator('#room-bouquet .real-vase').isVisible(),false,
