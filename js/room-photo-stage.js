@@ -38,10 +38,9 @@ export function mountLivingRoomPhoto(room,chosen=[]){
  flowerLayer.className='photographed-vase-flowers';
  flowerLayer.innerHTML=photoBloomsMarkup(chosen);
  layer.append(flowerLayer);
- const vineLayer=document.createElement('div');
- vineLayer.className='living-leaf-sway';
- vineLayer.setAttribute('aria-hidden','true');
- layer.append(vineLayer);
+ // Do not add the legacy photo-sampled leaf layer. It reused an older
+ // room photograph, creating translucent duplicate foliage over Kuwait.
+ // The real photograph already contains the leaves in their proper position.
  const atmosphere=document.createElement('div');
  atmosphere.className='scene-atmosphere';
  atmosphere.setAttribute('aria-hidden','true');
