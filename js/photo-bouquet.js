@@ -1,7 +1,7 @@
 /** Living botanical bouquet aligned to the mouth of each photographed vase.
  * Flowers remain separately identifiable by species, but form one compact
  * bunch with converging stems and actual foliage—not seven spread-out icons.
- * The Kuwait rim is sampled from the same photograph, pixel-for-pixel.
+ * Never draw or resample a vase rim: the vase is already in the room photo.
  */
 import {photoBloomHead} from './botanical.js';
 export function photoBloomsMarkup(chosen=[],scene='story'){
@@ -24,10 +24,10 @@ export function photoBloomsMarkup(chosen=[],scene='story'){
   const [x,y]=spots[i];
   return '<g transform="translate('+x+' '+y+')">'+photoBloomHead(id,i)+'</g>';
  }).join('');
- const rim='<defs><clipPath id="maha-real-rim"><ellipse cx="82" cy="108" rx="'+(scene==='kuwait'?36:43)+'" ry="'+(scene==='kuwait'?6.8:7.5)+'"/></clipPath></defs>';
- return '<svg class="photo-blooms" viewBox="0 0 166 125" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'+
- rim+'<g class="photo-flower-stems">'+stems+'</g><g class="photo-flower-leaves">'+leaves+'</g><g class="photo-flower-heads">'+blooms+'</g>'+
- (scene==='kuwait'?'<image href="./assets/rooms/maha-kuwait.webp" x="-667" y="-417" width="1509" height="849" preserveAspectRatio="none" clip-path="url(#maha-real-rim)"/>':
-  scene==='story'?'<image href="./assets/rooms/maha-living-room.webp" x="-862" y="-479" width="1672" height="941" preserveAspectRatio="none" clip-path="url(#maha-real-rim)"/>':'')+
- '</svg>';
+ // The real vase's visible opening is already baked into each photograph.
+ // Crop only the lower ends of stems/foliage as they enter its mouth; never
+ // paint an extra photo ellipse or SVG ceramic on top of the real vase.
+ const neckMask='<defs><clipPath id="maha-stem-neck"><rect x="0" y="0" width="166" height="105"/></clipPath></defs>';
+ return '<svg class="photo-blooms" data-scene="'+scene+'" viewBox="0 0 166 125" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'+
+ neckMask+'<g class="photo-flower-stems" clip-path="url(#maha-stem-neck)">'+stems+'</g><g class="photo-flower-leaves" clip-path="url(#maha-stem-neck)">'+leaves+'</g><g class="photo-flower-heads">'+blooms+'</g></svg>';
 }
