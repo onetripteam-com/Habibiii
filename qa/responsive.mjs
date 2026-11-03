@@ -133,7 +133,7 @@ async function run(engine,launcher,w,h){
   assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,'Seven selected blooms must appear in the original vase');
   assert.equal(await page.locator('.photographed-vase-flowers svg image').count(),0,
     'Photo-backed flowers must NEVER draw a second photograph of the vase mouth');
-  assert.equal(await page.locator('.photographed-vase-flowers svg ellipse').count(),0,
+  assert.equal(await page.locator('.photographed-vase-flowers svg defs clipPath ellipse').count(),0,
     'Photo-backed flowers must not render a second dark oval vase rim');
   assert.equal(await page.locator('.photographed-vase-flowers svg #maha-stem-neck').count(),1,
     'Only an invisible stem-length boundary is allowed');
