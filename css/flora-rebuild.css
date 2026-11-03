@@ -489,7 +489,7 @@
  transform-box:fill-box;transform-origin:50% 50%;
  animation:f2-ribbon-tie .62s cubic-bezier(.16,.75,.2,1) .33s both;
 }
-#app .f2-stage.f2-wrapping .bouquet-tag{
+#app .f2-stage.f2-wrapping .tag-write{
  animation:f2-tag-arrive .52s ease-out .58s both;
 }
 @keyframes f2-paper-fold{
@@ -608,7 +608,7 @@
  #app .f2-card-art .botanical.flower-head-svg,
  #app .f2-stage.f2-wrapping .paper-fold,
  #app .f2-stage.f2-wrapping .ribbon-tie,
- #app .f2-stage.f2-wrapping .bouquet-tag{
+ #app .f2-stage.f2-wrapping .tag-write{
   animation:none!important;transform:none!important;
  }
  #app .f2-scene.is-complete .f2-layout{transition:none!important}
