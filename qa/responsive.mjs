@@ -312,6 +312,16 @@ async function run(engine,launcher,w,h){
    await page.locator('#room-bouquet').click();
    await page.locator('.flower-studio').waitFor();
    await page.locator('[data-flower="jasmine"]').click();
+   // Regression: the editor used to inherit grid-row:2 from the OLD layout,
+   // shrinking the bouquet to 0px and pushing flower cards offscreen.
+   const panels=await page.locator('.flower-studio-layout').evaluate(el=>{
+     const a=el.querySelector('.flower-studio-preview').getBoundingClientRect();
+     const b=el.querySelector('.flower-studio-editor').getBoundingClientRect();
+     const self=el.getBoundingClientRect();
+     return {preview:{left:a.left,right:a.right,height:a.height},editor:{left:b.left,right:b.right,height:b.height},layout:{left:self.left,right:self.right,height:self.height}};
+   });
+   assert.ok(panels.editor.left>=panels.preview.right-5&&panels.preview.height>panels.layout.height*.75,
+     'Desktop needs two columns without implicit overflow rows: '+JSON.stringify(panels));
    const onDesk=await page.locator('.bouquet-growing').evaluate(el=>{
     const bouquet=el.querySelector('.bouquet-svg'),vase=el.querySelector('.studio-vase');
     if(!bouquet||!vase)return {missing:true};
