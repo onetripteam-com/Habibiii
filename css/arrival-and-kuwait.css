@@ -84,3 +84,28 @@
 #app .cinematic-room[data-room-photo-scene="original"] .photographed-vase-flowers .photo-blooms image{
  display:none!important;
 }
+
+/* The Garden belongs to the tall *indoor plant*, not the window or table vase.
+   Show its tooltip beside the upper leaves so it never falls over flowers.
+   The hotspot itself is positioned per scene by room-photo-stage.js. */
+#app .cinematic-room[data-room-photo-scene="original"] .living-photo-plane [data-door="garden"] .object-label{
+ left:calc(100% + 10px)!important;
+ top:8%!important;
+ right:auto!important;
+ bottom:auto!important;
+ transform:translate(0,0)!important;
+ min-width:140px!important;
+ max-width:195px!important;
+ width:max-content!important;
+ text-align:left!important;
+}
+#app .cinematic-room[data-room-photo-scene="original"] .living-photo-plane [data-door="garden"]:is(:hover,:focus-visible) .object-label{
+ transform:translate(0,0)!important;
+}
+/* A tapped leaf opens Word Garden immediately. A lingering iOS :hover
+   must never leave its large word-card floating over the room. */
+@media (hover:none) and (pointer:coarse){
+ #app .cinematic-room[data-room-photo-scene="original"] .living-photo-plane [data-door="garden"] .object-label{
+  display:none!important;
+ }
+}
