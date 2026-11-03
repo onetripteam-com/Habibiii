@@ -38,6 +38,21 @@ test('approved Kuwait flowers reach the native photographic vase mouth',()=>{
   'The rim composite must sample the real vase opening, not the old photo');
 });
 
+test('Photographic flowers form a compact living bouquet, not seven flat icons spread outside the vase',()=>{
+ const picks=['rose','peony','lily','orchid','sunflower','jasmine','tulip'];
+ const html=photoBloomsMarkup(picks,'kuwait');
+ const heads=[...html.matchAll(/data-species="([^"]+)"/g)].map(x=>x[1]);
+ assert.deepEqual(heads,picks);
+ assert.match(html,/class="photo-flower-leaves"/);
+ assert.match(html,/radialGradient/);
+ const source=read('js/photo-bouquet.js');
+ assert.match(source,/photoBloomHead\(id,i\)/);
+ const points=[...source.matchAll(/\[(\d+),(\d+)\]/g)].slice(0,7).map(x=>[Number(x[1]),Number(x[2])]);
+ assert.equal(points.length,7);
+ const xs=points.map(p=>p[0]);
+ assert.ok(Math.max(...xs)-Math.min(...xs)<85,'Flower heads should be grouped over one ceramic neck');
+});
+
 test('flower-selection preview includes a vase with the same 500×580 SVG geometry',()=>{
  const source=read('js/flowers.js'),css=read('css/flora-rebuild.css');
  assert.match(source,/const studioVaseMarkup=/);
