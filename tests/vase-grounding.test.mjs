@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
+import {photoBloomsMarkup} from '../js/photo-bouquet.js';
 const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 
 test('approved Kuwait flowers reach the native photographic vase mouth',()=>{
@@ -19,6 +20,12 @@ test('approved Kuwait flowers reach the native photographic vase mouth',()=>{
  const rimX=1672*left+82*scale,rimY=941*top+letterbox+108*scale;
  assert.ok(Math.abs(rimX-830)<4,'Flower neck x must align with Kuwait vase: '+rimX);
  assert.ok(Math.abs(rimY-582)<4,'Flower neck y must align with Kuwait vase: '+rimY);
+ const output=photoBloomsMarkup(Array(7).fill('rose'),'kuwait');
+ assert.ok(output.includes('<ellipse cx="82" cy="108" rx="49" ry="6.8"/>'),
+  'A real SVG clipPath should cover the correct ceramic opening');
+ assert.ok(!output.includes('${scene'), 'Never leak JavaScript expressions into SVG attributes');
+ assert.ok(output.includes('maha-kuwait.webp'));
+ assert.equal((output.match(/clip-path="url\(#maha-real-rim\)"/g)||[]).length,1);
  const sprite=read('js/photo-bouquet.js');
  assert.match(sprite,/scene==='kuwait'/);
  assert.ok(sprite.includes('href="./assets/rooms/maha-kuwait.webp"'));
