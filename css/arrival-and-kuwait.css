@@ -33,7 +33,9 @@
 #app .cinematic-room[data-theme="story"][data-kuwait-photo="ready"] .photographed-vase-flowers{
  /* Native 1672×941 photo: vase lip centred x≈830,y≈582.
     The SVG local rim (82,108) meets that lip at every screen width. */
- left:44.2%!important;top:48.0%!important;width:11.0%!important;height:17.0%!important;
+ /* Recalibrated for full-sized blossoms: 15% plane width, with the
+    SVG rim at photo-native (830,582) on 1672×941 for every viewport. */
+ left:42.23%!important;top:43.30%!important;width:15.0%!important;height:22.5%!important;
  opacity:1!important;overflow:visible!important;
  filter:saturate(.90) brightness(.95) drop-shadow(0 2px 2px #382a2155)!important;
 }
