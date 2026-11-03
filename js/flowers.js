@@ -88,7 +88,7 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
   chosen=[]; soundEffect('undo'); update(); root.querySelector('#meaning-line').textContent='Fresh start. Take your time.'; updateInstruction('Choose your flowers');
  });
  async function finish(){
-  complete=true; store.set('flowers',chosen); soundEffect('complete');
+  complete=true; root.querySelector('.flowers-scene').classList.add('is-complete'); store.set('flowers',chosen); soundEffect('complete');
   root.querySelector('#flower-rail').classList.add('shelf-out');
   root.querySelector('.flower-intro').classList.add('flower-intro-fade');
   root.querySelector('#flower-bottom').classList.add('flower-bottom-exit');
