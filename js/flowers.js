@@ -26,7 +26,7 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
   <div class="f2-layout">
    <div class="f2-preview">
     <div class="f2-header">
-     <div class="f2-intro"><span class="eyebrow">MAHA / THE FLOWER STUDIO <span class="f2-edition">A LITTLE ESCAPE · VOL. 07</span></span><h1>Make something <em>lovely.</em></h1><p id="flower-subtitle">Seven flowers. One little bunch. Pick the same one again if it's your favourite.</p></div>
+     <div class="f2-intro"><span class="eyebrow">MAHA / THE FLOWER STUDIO <span class="f2-edition">A LITTLE ESCAPE · VOL. 07</span></span><h1>Flowers for <em>today.</em></h1><p id="flower-subtitle">Seven little picks. Repeats very welcome.</p></div>
      <div class="f2-status">
       <div class="f2-counter" id="flower-counter" aria-live="polite"><strong>0 <span>of 7</span></strong><span class="f2-counter-caption">STEMS COLLECTED</span></div>
       <div class="f2-status-note"><span id="flower-instruction">Start with whatever catches your eye.</span><small>Seven is the only rule.</small></div>
@@ -61,6 +61,9 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
   root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="f2-counter-caption">picked by Maha</span>`;
   root.querySelector('#flower-steps').innerHTML=Array.from({length:7},(_,i)=>{const id=chosen[i];const flower=flowers.find(f=>f.id===id);return id?`<button type="button" class="f2-slot is-picked" data-remove-slot="${i}" title="Remove ${esc(flower?.name||'flower')}" aria-label="Remove ${esc(flower?.name||'flower')} from slot ${i+1}"><i aria-hidden="true">✳</i></button>`:`<span class="f2-slot" aria-label="Empty flower slot ${i+1}"><i aria-hidden="true">${String(i+1).padStart(2,'0')}</i></span>`}).join('');
   renderPlace.innerHTML=(chosen.length?bouquetMarkup(chosen,{stage:complete?'final':'preview'}):'')+(!complete?studioVaseMarkup():'');
+  // One artboard for both stems and vase: crop excess empty SVG margins
+  // without ever changing their shared coordinate system or saved species.
+  if(!complete)renderPlace.querySelectorAll(':scope > svg').forEach(svg=>svg.setAttribute('viewBox','40 80 420 500'));
   rail.querySelectorAll('button').forEach(b=>{const count=chosen.filter(id=>id===b.dataset.flower).length;b.setAttribute('aria-pressed',String(count>0));b.disabled=complete;b.querySelector('.f2-picked').textContent=count?`${count} PICKED`:'';b.querySelector('.f2-add').textContent=count?'+ AGAIN':'+ ADD';});
   root.querySelector('#undo-flower').disabled=!chosen.length||complete; root.querySelector('#reset-flowers').disabled=!chosen.length||complete;
   root.querySelector('#bouquet-hint').hidden=chosen.length>0;
@@ -131,6 +134,7 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
   updateInstruction('Gathering them for you…');
   await delay(250); if(disposed) return;
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:false,stage:'gather'})+studioVaseMarkup();
+  renderPlace.querySelectorAll(':scope > svg').forEach(svg=>svg.setAttribute('viewBox','40 80 420 500'));
   display.classList.add('f2-gathering');
   await delay(650); if(disposed) return;
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:true,stage:'final'});
