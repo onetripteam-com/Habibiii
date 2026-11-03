@@ -29,7 +29,7 @@ async function run(engine,launcher,w,h){
  const page=await context.newPage(),errors=[],missing=[];
  page.setDefaultTimeout(12000);
  page.on('pageerror',e=>errors.push(e.message));
- page.on('response',r=>{if(r.url().startsWith(BASE)&&r.status()>=400&&!r.url().endsWith('/assets/rooms/maha-kuwait.webp'))missing.push(r.url()+':'+r.status())});
+ page.on('response',r=>{if(r.url().startsWith(BASE)&&r.status()>=400)missing.push(r.url()+':'+r.status())});
  const key=`${engine}-${w}x${h}`;
  try{
   await page.goto(BASE,{waitUntil:'domcontentloaded'});
@@ -37,7 +37,12 @@ async function run(engine,launcher,w,h){
   assert.ok(await page.locator('.room-heading h1').isVisible());
   assert.equal(await page.locator('[data-door]').count(),7);
   assert.ok(await page.locator('.living-photo-plane .living-photo-image').isVisible(),'Exact original image must be mounted in the live room');
-  assert.equal((await page.request.get(new URL('./assets/rooms/maha-living-room.webp',BASE).href)).status(),200,'Original chosen room image must be stored locally');
+  assert.equal((await page.request.get(new URL('./assets/rooms/maha-kuwait.webp',BASE).href)).status(),200,'New Kuwait photograph must be stored locally');
+  await page.waitForFunction(()=>{
+   const img=document.querySelector('.living-photo-plane .living-photo-image');
+   return img?.getAttribute('src')?.endsWith('/maha-kuwait.webp')&&img.complete&&img.naturalWidth>=1600;
+  },null,{timeout:16000});
+  assert.equal(await page.locator('.cinematic-room').getAttribute('data-kuwait-photo'),'ready','Live Kuwait scene must use the approved image');
   assert.equal(await page.locator('.living-photo-plane .living-hit-area').count(),8,'All seven physical objects plus the real vase must share the same image plane');
   if(w<760){
     assert.ok(await page.locator('#room-pan-left').isVisible());
@@ -293,12 +298,21 @@ async function run(engine,launcher,w,h){
    const flower=w===393?'rose':'iris';
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
    await page.locator('#room-bouquet').click();
-   await page.locator('.flowers-scene').waitFor();
+   await page.locator('.flowers-scene.flower-studio').waitFor();
+   assert.ok(await page.locator('.flower-studio-preview').isVisible(),'Live bouquet preview is visible');
+   assert.ok(await page.locator('.flower-studio-editor').isVisible(),'Interactive flower palette is visible');
+   const scrollable=await page.locator('.flower-rail').evaluate(el=>el.scrollHeight>el.clientHeight);
+   assert.ok(scrollable,'Thirteen flowers must scroll within the palette, not the page');
+   assert.ok(await page.locator('#cancel-flowers').isVisible(),'Returning to the saved bouquet must be possible');
    assert.equal(await page.locator('#flower-steps .flower-step').count(),7,'Florist must have seven clear slots');
    await page.locator('[data-flower="'+flower+'"]').click();
    assert.equal(await page.locator('#flower-steps .is-picked').count(),1,'One selected flower fills one step');
    assert.ok((await page.locator('#meaning-line').innerText()).includes('01 / 07'),'Every pick should carry its own line');
    await page.screenshot({path:join(OUT,key+'-flower-picker.png'),animations:'disabled'});
+   await page.locator('[data-flower="'+flower+'"]').click();
+   assert.equal(await page.locator('#flower-steps .is-picked').count(),2,'Two taps select two actual flower slots');
+   await page.locator('[data-remove-slot="0"]').click();
+   assert.equal(await page.locator('#flower-steps .is-picked').count(),1,'Tapping a selected slot removes only that stem');
    for(let i=1;i<7;i++)await page.locator('[data-flower="'+flower+'"]').click();
    await page.locator('#carry-bouquet').waitFor({state:'visible',timeout:18000});
    await page.locator('#carry-bouquet').click();
