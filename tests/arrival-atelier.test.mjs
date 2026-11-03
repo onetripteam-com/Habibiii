@@ -15,16 +15,16 @@ test('No, Never and Not at all are distinct replies, never forced hugs',()=>{
 });
 
 test('flower studio uses current-room photography, not fake baked-in flower cards',()=>{
- const css=read('css/botanical-studio.css');
+ const css=read('css/flora-rebuild.css');
  assert.match(css,/--studio-photo/);
- assert.match(css,/\.flower-studio-background/);
+ assert.match(css,/\.f2-backdrop/);
  assert.match(read('js/flowers.js'),/chosen\.push\(f\.id\)/);
  assert.match(read('js/flowers.js'),/flower-steps/);
  const index=read('index.html');
- assert.ok(index.indexOf('botanical-studio.css')>index.indexOf('experience-polish.css'));
+ assert.ok(index.indexOf('flora-rebuild.css')>index.indexOf('experience-polish.css'));
  assert.ok(!index.includes('atelier-photo.css'));
  const sw=read('sw.js');
- assert.ok(sw.includes('botanical-studio.css'));
+ assert.ok(sw.includes('flora-rebuild.css'));
 });
 
 test('new Kuwait artwork is optional until placed, with safe fallback and flowers matching the active image',()=>{
