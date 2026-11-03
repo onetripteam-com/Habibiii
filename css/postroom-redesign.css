@@ -687,3 +687,28 @@
   animation:none!important;transition:none!important;
  }
 }
+
+/* FULL-HEIGHT LETTER WORLD: the old generic rule
+   #portal-screen .portal-content{position:relative} had accidentally replaced
+   the absolute portal frame. As a result the reader was only as tall as its
+   text, leaving 250–300px of bare background beneath the controls.
+   Give THIS portal a bounded stage without changing any other destination. */
+#portal-screen[data-place="letters"] .portal-place > .portal-content{
+ position:absolute!important;
+ box-sizing:border-box!important;
+ top:calc(61px + env(safe-area-inset-top,0px))!important;
+ bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;
+ left:50%!important;right:auto!important;
+ width:min(calc(100% - 42px),1430px)!important;max-width:none!important;
+ height:auto!important;max-height:none!important;min-height:0!important;
+ padding:0 14px!important;
+ transform:translateX(-50%)!important;
+}
+@media(max-width:759px){
+ #portal-screen[data-place="letters"] .portal-place > .portal-content{
+  top:calc(57px + env(safe-area-inset-top,0px))!important;
+  bottom:0!important;left:0!important;right:0!important;
+  width:100%!important;height:auto!important;max-height:none!important;
+  padding:0!important;transform:none!important;
+ }
+}
