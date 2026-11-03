@@ -457,8 +457,10 @@ async function run(engine,launcher,w,h){
      'The completed action sheet may not cover the floral arrangement: '+JSON.stringify(finished));
    assert.ok(finished.cardHeight<185&&finished.card.bottom<=finished.scene.bottom+1,
      'Finished bouquet controls must fit in a compact mobile dock: '+JSON.stringify(finished));
-   assert.equal(finished.flowerCardViewBox,'0 0 160 150',
-     'Flower cards should show uncropped, stem-free botanical heads');
+   const fittedBox=finished.flowerCardViewBox?.split(/\s+/).map(Number)||[];
+   assert.ok(fittedBox.length===4&&fittedBox.every(Number.isFinite)&&
+      fittedBox[2]>80&&Math.abs(fittedBox[2]-fittedBox[3])<.1,
+     'Flower card viewBox must be auto-fitted to the actual petals: '+finished.flowerCardViewBox);
    assert.ok(finished.headerColor.includes('16, 46, 44'),
      'MAHA identity and audio controls need an opaque dark contrast header: '+finished.headerColor);
    assert.ok(finished.viewportOverflow<=2,'Completion UI must not introduce sideways scroll');
