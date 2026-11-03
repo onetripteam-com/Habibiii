@@ -162,7 +162,7 @@ export function photoBloomHead(id,index=0){
  const species=Object.prototype.hasOwnProperty.call(COLORS,id)?id:'rose';
  const stamp='maha-photo-'+species+'-'+index;
  const angle=[-15,7,-4,11,-8,13,-7][index%7];
- const scale=species==='lavender'?.245:species==='sunflower'?.23:species==='peony'?.215:.235;
+ const scale=species==='lavender'?.30:species==='sunflower'?.295:species==='peony'?.28:.30;
  return '<g data-species="'+species+'" transform="rotate('+angle+') scale('+scale+')">'+bloom(species,stamp)+'</g>';
 }
 export function bouquetMarkup(ids,{wrapped=false,stage='preview',vase=false,forExport=false}={}){
