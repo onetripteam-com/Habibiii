@@ -426,7 +426,7 @@
  #app .flowers-scene.flower-studio .flower-option,
  #app .flowers-scene.flower-studio .flower-step,
  #app .flowers-scene.flower-studio .flower-studio-background{
-   animation:none!important;transition:none!important;filter:none!important;
+   animation:none!important;transition:none!important;
  }
  #app .flowers-scene.flower-studio .flower-option .option-art .botanical{animation:none!important}
 }
