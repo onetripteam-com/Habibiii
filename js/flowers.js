@@ -56,6 +56,21 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
   const btn=document.createElement('button');btn.type='button';btn.className='f2-card';btn.dataset.flower=f.id;btn.setAttribute('aria-pressed','false');btn.setAttribute('aria-label',`${f.name}: ${f.meaning}`);
   btn.innerHTML=`<span class="f2-card-index" aria-hidden="true">${String(flowers.indexOf(f)+1).padStart(2,'0')}</span><span class="f2-card-art">${flowerHeadSVG(f.id)}</span><span class="f2-card-meta"><span class="f2-card-name">${esc(f.name)}</span><span class="f2-add" aria-hidden="true">+ ADD</span></span><span class="f2-picked" aria-hidden="true"></span>`;
   btn.addEventListener('click',()=>pick(f,btn));rail.append(btn);
+  // Each species has a different silhouette. Fit the SVG artboard to its
+  // *actual painted geometry* so petals never disappear behind the card footer.
+  // The fallback viewBox still renders if a browser refuses getBBox().
+  const svg=btn.querySelector('.flower-head-svg');
+  const paint=svg?.querySelector('.flower-head-paint');
+  if(svg&&paint){
+   try{
+    const b=paint.getBBox();
+    if(b.width>0&&b.height>0&&Number.isFinite(b.x+b.y)){
+     const size=Math.max(84,b.width,b.height)*1.19;
+     const cx=b.x+b.width/2,cy=b.y+b.height/2;
+     svg.setAttribute('viewBox',[cx-size/2,cy-size/2,size,size].map(n=>Number(n.toFixed(2))).join(' '));
+    }
+   }catch{/* Initial viewBox remains usable in browsers without SVG geometry measurement. */}
+  }
  }
  function update(){
   root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="f2-counter-caption">picked by Maha</span>`;
