@@ -72,6 +72,38 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
    }catch{/* Initial viewBox remains usable in browsers without SVG geometry measurement. */}
   }
  }
+ // Different browsers resolve nested SVG gradients and transforms with
+ // different intrinsic boxes. Fit using the ACTUAL painted pixels, not
+ // getBBox() alone. This prevents the rose, tulip, sunflower, etc. from
+ // being chopped by the card divider on iPhone Safari.
+ const fitVisibleBlossoms=()=>{
+  for(const card of rail.querySelectorAll('.f2-card')){
+   const svg=card.querySelector('.flower-head-svg');
+   const paint=svg?.querySelector('.flower-head-paint');
+   const area=card.querySelector('.f2-card-art');
+   if(!svg||!paint||!area)continue;
+   // Reset before re-measuring, including after phone orientation changes.
+   svg.style.setProperty('animation','none','important');
+   svg.style.setProperty('transform','none','important');
+   svg.style.setProperty('transform-origin','center center','important');
+   const ar=area.getBoundingClientRect(),sr=svg.getBoundingClientRect(),br=paint.getBoundingClientRect();
+   if(ar.width<20||ar.height<20||br.width<1||br.height<1)continue;
+   const factor=Math.min(1,(ar.width-16)/br.width,(ar.height-16)/br.height);
+   if(!Number.isFinite(factor)||factor<=0)continue;
+   const sx=sr.left+sr.width/2,sy=sr.top+sr.height/2;
+   const tx=ar.left+ar.width/2-(sx+((br.left+br.right)/2-sx)*factor);
+   const ty=ar.top+ar.height/2-(sy+((br.top+br.bottom)/2-sy)*factor);
+   svg.style.setProperty('transform',
+    'translate3d('+tx.toFixed(2)+'px,'+ty.toFixed(2)+'px,0) scale('+factor.toFixed(4)+')','important');
+  }
+ };
+ fitVisibleBlossoms();
+ let resizeCardFrame=0;
+ const onCardResize=()=>{
+  if(resizeCardFrame)return;
+  resizeCardFrame=requestAnimationFrame(()=>{resizeCardFrame=0;if(!disposed)fitVisibleBlossoms()});
+ };
+ window.addEventListener('resize',onCardResize,{passive:true});
  function update(){
   root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="f2-counter-caption">picked by Maha</span>`;
   root.querySelector('#flower-steps').innerHTML=Array.from({length:7},(_,i)=>{const id=chosen[i];const flower=flowers.find(f=>f.id===id);return id?`<button type="button" class="f2-slot is-picked" data-remove-slot="${i}" title="Remove ${esc(flower?.name||'flower')}" aria-label="Remove ${esc(flower?.name||'flower')} from slot ${i+1}"><i aria-hidden="true">✳</i></button>`:`<span class="f2-slot" aria-label="Empty flower slot ${i+1}"><i aria-hidden="true">${String(i+1).padStart(2,'0')}</i></span>`}).join('');
@@ -179,5 +211,5 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
   if(!disposed){disposed=true; onDone(chosen);} 
  });
  update();
- return ()=>{disposed=true;for(const orb of flights)orb.remove();flights.clear();};
+ return ()=>{disposed=true;window.removeEventListener('resize',onCardResize);if(resizeCardFrame)cancelAnimationFrame(resizeCardFrame);for(const orb of flights)orb.remove();flights.clear();};
 }
