@@ -52,7 +52,9 @@ async function run(engine,launcher,w,h){
     await page.waitForFunction(origin=>getComputedStyle(document.querySelector('.living-photo-plane')).transform!==origin,origin,{timeout:3000});
     const after=await page.locator('.living-photo-plane').evaluate(el=>getComputedStyle(el).transform);
     assert.notEqual(origin,after,'Photo should pan when tapping a direction arrow');
+    await page.waitForTimeout(440);
     await page.locator('#room-pan-left').click();
+    await page.waitForTimeout(440);
   }
 
 
@@ -109,6 +111,25 @@ async function run(engine,launcher,w,h){
     await page.waitForTimeout(420);
   }
 
+  if(engine==='chromium'&&w===393){
+   await page.emulateMedia({reducedMotion:'no-preference'});
+   const duration=await page.locator('.living-photo-plane').evaluate(el=>getComputedStyle(el).transitionDuration);
+   assert.equal(duration,'0s','Mobile finger tracking must not have a lagging CSS transition');
+   const hotspot=await page.locator('#room-bouquet').boundingBox();
+   assert.ok(hotspot&&hotspot.width>15,'Photographed vase must have a physical touch target');
+   const x=hotspot.x+hotspot.width*.5,y=hotspot.y+hotspot.height*.37;
+   const first=await page.locator('.cinematic-room').evaluate(el=>Number.parseFloat(el.style.getPropertyValue('--photo-pan-px'))||0);
+   await page.mouse.move(x,y);
+   await page.mouse.down();
+   await page.mouse.move(x-93,y,{steps:17});
+   await page.waitForTimeout(40);
+   const tracking=await page.locator('.cinematic-room').evaluate(el=>Number.parseFloat(el.style.getPropertyValue('--photo-pan-px'))||0);
+   assert.ok(Math.abs(tracking-first)>35,'Dragging from a physical room object should move the photograph immediately');
+   await page.mouse.up();
+   await page.waitForTimeout(470);
+   assert.ok(await page.locator('.new-home').isVisible(),'Horizontal swiping must not open the flower portal');
+   await page.emulateMedia({reducedMotion:'reduce'});
+  }
   assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,'Seven selected blooms must appear in the original vase');
   // Test the actual SVG rim point in photo coordinates, not only flower count.
   // The Kuwait ceramic mouth is centred at ~830,582 in 1672×941 artwork.
@@ -226,6 +247,7 @@ async function run(engine,launcher,w,h){
          const current=Number(await page.locator('.cinematic-room').getAttribute('data-peek'));
          if(current===desired)break;
          await page.locator(current>desired?'#room-pan-left':'#room-pan-right').click();
+         await page.waitForTimeout(445);
        }
      }
      await door.click();
