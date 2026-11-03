@@ -20,7 +20,7 @@ test('modern editor follows selected room instead of baking in fake clickable im
  const studio=read('css/botanical-studio.css');
  assert.match(studio,/data-source-scene="kerala"/);
  assert.match(studio,/data-source-scene="bengaluru"/);
- assert.match(studio,/data-source-scene="story"/);
+ assert.match(studio,/--studio-photo:url\('\.\.\/assets\/rooms\/maha-kuwait\.webp'\)/);
  assert.match(studio,/\.flower-studio-background/);
  assert.match(studio,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
  assert.match(studio,/\.flower-option:active/);
