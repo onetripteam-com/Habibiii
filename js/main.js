@@ -18,7 +18,7 @@ async function init(){
  function sceneHug(revisit=false){transition('hug',()=>{unmount=mountHug(root,hug,revisit?()=>sceneRoom(store.get('flowers',[])):sceneFlowers);});}
  function sceneFlowers(){transition('flowers',()=>{unmount=mountFlowers(root,flowerList,chosen=>{
   store.set('flowers',chosen);store.set('completed',true);sceneRoom(chosen);
- });});}
+ },()=>{const previous=store.get('flowers',[]);if(Array.isArray(previous)&&previous.length===7)sceneRoom(previous)});});}
  function sceneRoom(chosen){
   transition('room',()=>{unmount=mountRoom(root,{flowers:{today:todayLines},chosen,lastVisit:previousVisit,visits,onReplay:()=>sceneHug(true),onNewBouquet:sceneFlowers});});
   store.set('lastVisit',Date.now());
