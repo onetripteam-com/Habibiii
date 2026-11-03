@@ -24,7 +24,7 @@ export function photoBloomsMarkup(chosen=[],scene='story'){
   const [x,y]=spots[i];
   return '<g transform="translate('+x+' '+y+')">'+photoBloomHead(id,i)+'</g>';
  }).join('');
- const rim='<defs><clipPath id="maha-real-rim"><ellipse cx="82" cy="108" rx="'+(scene==='kuwait'?49:43)+'" ry="'+(scene==='kuwait'?6.8:7.5)+'"/></clipPath></defs>';
+ const rim='<defs><clipPath id="maha-real-rim"><ellipse cx="82" cy="108" rx="'+(scene==='kuwait'?36:43)+'" ry="'+(scene==='kuwait'?6.8:7.5)+'"/></clipPath></defs>';
  return '<svg class="photo-blooms" viewBox="0 0 166 125" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'+
  rim+'<g class="photo-flower-stems">'+stems+'</g><g class="photo-flower-leaves">'+leaves+'</g><g class="photo-flower-heads">'+blooms+'</g>'+
  (scene==='kuwait'?'<image href="./assets/rooms/maha-kuwait.webp" x="-667" y="-417" width="1509" height="849" preserveAspectRatio="none" clip-path="url(#maha-real-rim)"/>':
