@@ -96,11 +96,16 @@ async function run(engine,launcher,w,h){
   assert.ok(gardenSpacing.gardenBottom+32<gardenSpacing.vaseTop,
     'Word Garden and the real vase must have distinct hit areas: '+JSON.stringify(gardenSpacing));
   if(w>=760){
-    await page.locator('[data-door="garden"]').focus();
-    const tip=await page.locator('[data-door="garden"] .object-label').boundingBox();
-    assert.ok(tip&&tip.bottom+10<gardenSpacing.flowersTop,
-      'Word Garden tooltip must appear beside upper plant, above the bouquet');
-    await page.locator('[data-door="garden"]').evaluate(el=>el.blur());
+    await page.locator('[data-door="garden"]').hover();
+    const tip=await page.locator('[data-door="garden"] .object-label').evaluate(el=>{
+      const r=el.getBoundingClientRect(),s=getComputedStyle(el);
+      return {left:r.left,top:r.top,right:r.right,bottom:r.bottom,
+        display:s.display,visibility:s.visibility,opacity:s.opacity,position:s.position};
+    });
+    assert.ok(tip.display!=='none'&&tip.visibility==='visible'&&
+      Number(tip.opacity)>.5&&tip.bottom+10<gardenSpacing.flowersTop,
+      'Garden hover label must appear beside indoor plant, not over bouquet: '+JSON.stringify({tip,gardenSpacing}));
+    await page.mouse.move(0,0);
   }
   if(w===1440){
     await page.waitForFunction(()=>document.querySelector('.cinematic-room')?.dataset.originalArt==='false');
