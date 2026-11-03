@@ -21,18 +21,18 @@ test('real Kuwait vase is used without duplicating any photo rim or synthetic va
   'Selected flowers must remain aligned with the real photographed neck');
  for(const scene of ['kuwait','story','kerala','bengaluru']){
   const svg=photoBloomsMarkup(Array(7).fill('rose'),scene);
-  assert.doesNotMatch(svg,/<image\\b|href="\\.\\/assets\\/rooms\\//,
-   'Never paste a second copy of any room image over the vase');
-  assert.doesNotMatch(svg,/maha-real-rim|<ellipse\\b/,
-   'Never draw an additional dark oval / vase rim');
-  assert.match(svg,/<clipPath id="maha-stem-neck"><rect x="0" y="0" width="166" height="105"\\/><\\/clipPath>/);
-  assert.equal((svg.match(/clip-path="url\\(#maha-stem-neck\\)"/g)||[]).length,2,
-   'Only stems and leaves should be clipped at the real vase neck');
-  assert.equal((svg.match(/data-species="/g)||[]).length,7);
+  assert.ok(!svg.includes('<image ')&&!svg.includes('href="./assets/rooms/'),
+   'Do not paste a second room photo over any vase');
+  assert.ok(!svg.includes('maha-real-rim')&&!svg.includes('<ellipse '),
+   'Do not generate an additional oval or vase lip');
+  assert.ok(svg.includes('<clipPath id="maha-stem-neck"><rect x="0" y="0" width="166" height="105"/></clipPath>'));
+  assert.equal(svg.split('clip-path="url(#maha-stem-neck)"').length-1,2,
+   'Clip stems and leaves only where they enter the actual vase');
+  assert.equal(svg.split('data-species="').length-1,7);
  }
- assert.match(css,/#room-bouquet \\.real-vase/);
- assert.match(css,/display:none!important/);
- assert.match(css,/\\.photo-blooms image/);
+ assert.ok(css.includes('#room-bouquet .real-vase'));
+ assert.ok(css.includes('display:none!important'));
+ assert.ok(css.includes('.photo-blooms image'));
 });
 
 test('Photographic flowers form a compact living bouquet, not seven flat icons spread outside the vase',()=>{
