@@ -133,17 +133,28 @@ export function mountLetters(host,{visits=1,lastVisit=null,onPlay=()=>{},onKeep=
  }
  function readerPage(){return current.kind==='handwritten'?handwrittenPage():`<article class="letter-verse">${paragraphs([current.pages?.[page]||''])}</article>`;}
  function readerFoot(){const last=page===totalPages()-1;return `<div class="reader-pagination"><button data-prev-page type="button" ${page===0?'disabled':''} aria-label="Previous page">← Earlier</button><span class="reader-page-index">${page+1} / ${totalPages()}</span><button data-next-page type="button" ${last?'disabled':''} aria-label="Next page">Next →</button></div>`;}
+
  function renderReader(){
   if(!current)return;
-  const kept=bookmark(allKept(),current.id);
-  host.innerHTML=`<div class="letter-reader"><div class="reader-navigation"><button type="button" data-back-letters>← Letters</button><span class="reader-privacy">PERSONAL DELIVERY · KUWAIT</span></div><div class="reader-paper"><span class="reader-tape" aria-hidden="true"></span><div class="reader-intro"><span class="reader-dateline">${esc(niceDate(current.date))} · FROM ${esc(config.senderName)}</span><h1>${esc(current.title)}</h1>${current.draft?'<span class="reader-draft">DRAFT · ADD YOUR OWN MEMORIES</span>':''}</div><div class="reader-page" id="reader-page">${readerPage()}</div>${page===totalPages()-1&&current.kind!=='handwritten'?(current.malayalam?`<p class="reader-malayalam">${esc(current.malayalam)}</p>`:'')+(current.ps?`<p class="reader-postscript"><strong>P.S.</strong> ${esc(current.ps)}</p>`:''):''}</div><div class="reader-bottom">${readerFoot()}<button class="reader-heart ${kept?'is-kept':''}" data-keep-letter type="button" aria-pressed="${kept}">${kept?'♥ Kept':'♡ Keep'}</button></div></div>`;
+  const kept=bookmark(allKept(),current.id),last=page===totalPages()-1;
+  host.innerHTML=`<div class="letter-reader postroom-reader">
+   <div class="reader-navigation"><button type="button" data-back-letters><span aria-hidden="true">←</span> Back to letters</button><span class="reader-privacy">A NOTE, ONLY FOR MAHA <span aria-hidden="true">✳</span></span></div>
+   <div class="postroom-reader-stage"><div class="postroom-paper-shadow" aria-hidden="true"></div>
+   <div class="reader-paper"><span class="reader-tape" aria-hidden="true"></span>
+    <div class="reader-intro"><span class="reader-dateline">${current.date?esc(niceDate(current.date))+' · ':''}FROM ${esc(config.senderName||'YOUR FRIEND')}</span><h1>${esc(current.title)}</h1>${current.draft?'<span class="reader-draft">A LETTER STILL BEING WRITTEN</span>':''}</div>
+    <div class="reader-page" id="reader-page">${readerPage()}</div>
+    ${last&&current.kind!=='handwritten'?(current.malayalam?`<p class="reader-malayalam">${esc(current.malayalam)}</p>`:'')+(current.ps?`<p class="reader-postscript"><strong>P.S.</strong> ${esc(current.ps)}</p>`:''):''}
+    <div class="postroom-reader-signoff" aria-hidden="true"><span>✳</span> END OF THIS PAGE</div>
+   </div></div>
+   <div class="reader-bottom">${readerFoot()}<button class="reader-heart ${kept?'is-kept':''}" data-keep-letter type="button" aria-pressed="${kept}"><span class="postroom-bookmark-icon" aria-hidden="true">${postIcon('saved')}</span><span class="postroom-save-label">${kept?'Saved':'Save letter'}</span></button></div>
+  </div>`;
   bindReader();
  }
  function bindReader(){
   host.querySelector('[data-back-letters]')?.addEventListener('click',()=>{soundEffect('paper');renderList();});
   host.querySelector('[data-keep-letter]')?.addEventListener('click',()=>{
    const kept=allKept();const next=kept.includes(current.id)?kept.filter(x=>x!==current.id):[...kept,current.id];store.set('keptLetters',next);store.set('keptLetter',next.length>0);onKeep();soundEffect('pick');
-   const b=host.querySelector('[data-keep-letter]');b.classList.toggle('is-kept',next.includes(current.id));b.setAttribute('aria-pressed',String(next.includes(current.id)));b.textContent=next.includes(current.id)?'♥ Kept':'♡ Keep';
+   const b=host.querySelector('[data-keep-letter]');b.classList.toggle('is-kept',next.includes(current.id));b.setAttribute('aria-pressed',String(next.includes(current.id)));const label=b.querySelector('.postroom-save-label');if(label)label.textContent=next.includes(current.id)?'Saved':'Save letter';
   });
   host.querySelector('[data-prev-page]')?.addEventListener('click',()=>pageTurn(-1));
   host.querySelector('[data-next-page]')?.addEventListener('click',()=>pageTurn(1));
