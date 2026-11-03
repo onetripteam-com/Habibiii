@@ -131,6 +131,16 @@ async function run(engine,launcher,w,h){
    await page.emulateMedia({reducedMotion:'reduce'});
   }
   assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,'Seven selected blooms must appear in the original vase');
+  assert.equal(await page.locator('.photographed-vase-flowers svg image').count(),0,
+    'Photo-backed flowers must NEVER draw a second photograph of the vase mouth');
+  assert.equal(await page.locator('.photographed-vase-flowers svg ellipse').count(),0,
+    'Photo-backed flowers must not render a second dark oval vase rim');
+  assert.equal(await page.locator('.photographed-vase-flowers svg #maha-stem-neck').count(),1,
+    'Only an invisible stem-length boundary is allowed');
+  assert.equal(await page.locator('#room-bouquet .real-vase').isVisible(),false,
+    'The original photographed ceramic must not have a second synthetic vase on top');
+  assert.ok(await page.locator('#room-bouquet').isVisible(),
+    'Hiding duplicate vase artwork must not disable the bouquet hotspot');
   // Test the actual SVG rim point in photo coordinates, not only flower count.
   // The Kuwait ceramic mouth is centred at ~830,582 in 1672×941 artwork.
   const seated=await page.locator('.photographed-vase-flowers').evaluate(el=>{
@@ -208,6 +218,10 @@ async function run(engine,launcher,w,h){
    assert.ok(await page.locator('.photographed-vase-flowers').isVisible(),id+' must keep the live bouquet');
    assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,id+' must show seven user-selected blooms');
    assert.equal(await page.locator('.photographed-vase-flowers').getAttribute('data-vase-scene'),id,'Bouquet must follow current scene');
+   assert.equal(await page.locator('.photographed-vase-flowers svg image').count(),0,
+     id+' must not paste a duplicate photo rim');
+   assert.equal(await page.locator('#room-bouquet .real-vase').isVisible(),false,
+     id+' must show only its photographed vase');
    await page.screenshot({path:join(OUT,key+'-'+id+'.png'),animations:'disabled'});
    if(id==='kerala')await page.locator('#theme-trigger').click();
   }
