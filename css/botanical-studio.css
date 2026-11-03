@@ -444,9 +444,10 @@
 /* 2026-11-03: bouquet preview must LOOK planted, not like loose floating stems.
    Exact 500×580 SVG coordinates shared by bouquet and its glass-vase foreground. */
 #app .flowers-scene.flower-studio .bouquet-growing .studio-vase{
- position:absolute!important;inset:0!important;z-index:2;
+ position:absolute!important;inset-block:0!important;left:50%!important;right:auto!important;z-index:2;
  display:block!important;width:100%!important;height:100%!important;
- max-width:none!important;max-height:none!important;
+ max-width:min(100%,570px)!important;max-height:100%!important;
+ transform:translateX(-50%)!important;
  overflow:visible;pointer-events:none!important;
  filter:drop-shadow(0 9px 11px #061d204c);
 }
