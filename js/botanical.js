@@ -145,6 +145,17 @@ function bouquetDefs(u){return `<defs>
  <linearGradient id="kraftRight" x1="1" y1="0" x2="0" y2="1"><stop stop-color="#fff8e8"/><stop offset=".57" stop-color="#f1dfc8"/><stop offset="1" stop-color="#cbb398"/></linearGradient>
  <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e3a394"/><stop offset="1" stop-color="#ad5d5e"/></linearGradient>
  </defs>`;}
+/** Compact, gradient-petalled version of the same botanical artwork used in
+ * the flower studio. This replaces the flat-icon flowerheads in photo rooms.
+ * Each head still exposes data-species so saved bouquets remain inspectable.
+ */
+export function photoBloomHead(id,index=0){
+ const species=Object.prototype.hasOwnProperty.call(COLORS,id)?id:'rose';
+ const stamp='maha-photo-'+species+'-'+index;
+ const angle=[-15,7,-4,11,-8,13,-7][index%7];
+ const scale=species==='lavender'?.245:species==='sunflower'?.23:species==='peony'?.215:.235;
+ return '<g data-species="'+species+'" transform="rotate('+angle+') scale('+scale+')">'+bloom(species,stamp)+'</g>';
+}
 export function bouquetMarkup(ids,{wrapped=false,stage='preview',vase=false,forExport=false}={}){
  const selected=Array.isArray(ids)?ids.slice(0,7):[];
  const u=uid();
