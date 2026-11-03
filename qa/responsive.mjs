@@ -433,6 +433,26 @@ async function run(engine,launcher,w,h){
    assert.equal(await page.locator('#flower-steps .is-picked').count(),1,'Tapping a selected slot removes only that stem');
    for(let i=1;i<7;i++)await page.locator('[data-flower="'+flower+'"]').click();
    await page.locator('#carry-bouquet').waitFor({state:'visible',timeout:18000});
+   const finished=await page.locator('.f2-scene').evaluate(scene=>{
+    const rect=e=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom,width:r.width,height:r.height}};
+    const header=document.querySelector('.app-header'),card=scene.querySelector('.f2-final');
+    return {stage:rect(scene.querySelector('.f2-stage')),card:rect(card),scene:rect(scene),
+     cardHeight:card.offsetHeight,headerColor:getComputedStyle(header).backgroundColor,
+     bouquetVisible:!!scene.querySelector('.f2-stage .bouquet-svg'),
+     viewportOverflow:scene.scrollWidth-scene.clientWidth,
+     flowerCardViewBox:scene.querySelector('.f2-card .flower-head-svg')?.getAttribute('viewBox')};
+   });
+   assert.ok(finished.bouquetVisible,'Completed bouquet must remain visibly rendered in the preview');
+   assert.ok(finished.stage.bottom<=finished.card.y+3,
+     'The completed action sheet may not cover the floral arrangement: '+JSON.stringify(finished));
+   assert.ok(finished.cardHeight<185&&finished.card.bottom<=finished.scene.bottom+1,
+     'Finished bouquet controls must fit in a compact mobile dock: '+JSON.stringify(finished));
+   assert.equal(finished.flowerCardViewBox,'0 0 160 150',
+     'Flower cards should show uncropped, stem-free botanical heads');
+   assert.ok(finished.headerColor.includes('16, 46, 44'),
+     'MAHA identity and audio controls need an opaque dark contrast header: '+finished.headerColor);
+   assert.ok(finished.viewportOverflow<=2,'Completion UI must not introduce sideways scroll');
+   await page.screenshot({path:join(OUT,key+'-finished-bouquet-unobscured.png'),animations:'disabled'});
    await page.locator('#carry-bouquet').click();
    await page.locator('.new-home').waitFor();
    assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('maha.escape.v1.flowers'))),Array(7).fill(flower));
