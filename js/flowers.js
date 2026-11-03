@@ -1,5 +1,5 @@
 import {store} from './store.js';
-import {flowerSVG,bouquetMarkup,downloadBouquet} from './botanical.js';
+import {flowerSVG,flowerHeadSVG,bouquetMarkup,downloadBouquet} from './botanical.js';
 import {soundEffect} from './audio.js';
 import {move,delay} from './animation.js';
 const esc=x=>String(x).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
@@ -49,12 +49,12 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
     </div>
    </div>
   </div>
-  <div class="f2-final" id="bouquet-final" hidden><span class="eyebrow">ALL SEVEN, BEAUTIFULLY UNPLANNED</span><h2>That's your bunch. <span aria-hidden="true">✳</span></h2><p>Made by Maha. Obviously a very exclusive collection.</p><div class="f2-final-actions"><button class="button button-outline" id="save-bouquet">Save as picture ↓</button><button class="button button-primary" id="carry-bouquet">Take them home ↗</button></div><p class="f2-export-hint" id="export-hint"></p></div>
+  <div class="f2-final" id="bouquet-final" hidden><span class="eyebrow">SEVEN FLOWERS · MADE BY MAHA</span><h2>One lovely bunch. <span aria-hidden="true">✳</span></h2><p>Handpicked by you. No further approval needed.</p><div class="f2-final-actions"><button class="button button-outline" id="save-bouquet">Save as picture ↓</button><button class="button button-primary" id="carry-bouquet">Take them home ↗</button></div><p class="f2-export-hint" id="export-hint"></p></div>
  </section>`;
  const rail=root.querySelector('#flower-rail'),renderPlace=root.querySelector('#bouquet-growing'),display=root.querySelector('#bouquet-display');
  for(const f of flowers){
   const btn=document.createElement('button');btn.type='button';btn.className='f2-card';btn.dataset.flower=f.id;btn.setAttribute('aria-pressed','false');btn.setAttribute('aria-label',`${f.name}: ${f.meaning}`);
-  btn.innerHTML=`<span class="f2-card-index" aria-hidden="true">${String(flowers.indexOf(f)+1).padStart(2,'0')}</span><span class="f2-card-art">${flowerSVG(f.id)}</span><span class="f2-card-meta"><span class="f2-card-name">${esc(f.name)}</span><span class="f2-add" aria-hidden="true">+ ADD</span></span><span class="f2-picked" aria-hidden="true"></span>`;
+  btn.innerHTML=`<span class="f2-card-index" aria-hidden="true">${String(flowers.indexOf(f)+1).padStart(2,'0')}</span><span class="f2-card-art">${flowerHeadSVG(f.id)}</span><span class="f2-card-meta"><span class="f2-card-name">${esc(f.name)}</span><span class="f2-add" aria-hidden="true">+ ADD</span></span><span class="f2-picked" aria-hidden="true"></span>`;
   btn.addEventListener('click',()=>pick(f,btn));rail.append(btn);
  }
  function update(){
@@ -140,12 +140,16 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:true,stage:'final'});
   display.classList.remove('f2-gathering');
   display.classList.add('f2-wrapping');
-  await delay(650); if(disposed) return;
+  // The wrapping paper, ribbon and label arrive in sequence, not one flat pop.
+  // CSS owns this gentle reveal and disables it when reduced motion is chosen.
+  await delay(matchMedia('(prefers-reduced-motion: reduce)').matches?80:1000); if(disposed) return;
   updateInstruction('All seven, ready to go.');
   root.querySelector('#flower-bottom').hidden=true;
   root.querySelector('.f2-scene').classList.add('is-complete');
   root.querySelector('#bouquet-final').hidden=false;
-  await move(root.querySelector('#bouquet-final'),{opacity:0,transform:'translateY(15px)'},{opacity:1,transform:'translateY(0)'},500);
+  const finalPanel=root.querySelector('#bouquet-final');
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches)
+   await move(finalPanel,{opacity:0,transform:'translateY(24px)'},{opacity:1,transform:'translateY(0)'},460);
  }
  root.querySelector('#save-bouquet').addEventListener('click',async(e)=>{
   const button=e.currentTarget; button.disabled=true; button.textContent='Making your picture…';
