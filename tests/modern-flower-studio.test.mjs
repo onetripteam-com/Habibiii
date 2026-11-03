@@ -17,16 +17,16 @@ test('approved real Kuwait scene is present, optimised and offline-ready',()=>{
  assert.ok(sw.includes("'./assets/rooms/maha-kuwait.webp'"),'available offline');
 });
 test('modern editor follows selected room instead of baking in fake clickable imagery',()=>{
- const studio=read('css/botanical-studio.css');
+ const studio=read('css/flora-rebuild.css');
  assert.match(studio,/data-source-scene="kerala"/);
  assert.match(studio,/data-source-scene="bengaluru"/);
- assert.match(studio,/--studio-photo:url\('\.\.\/assets\/rooms\/maha-kuwait\.webp'\)/);
- assert.match(studio,/\.flower-studio-background/);
+ assert.match(studio,/--f2-photo:url\('\.\.\/assets\/rooms\/maha-kuwait\.webp'\)/);
+ assert.match(studio,/\.f2-backdrop/);
  assert.match(studio,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
- assert.match(studio,/\.flower-option:active/);
+ assert.match(studio,/\.f2-card:active/);
  assert.match(studio,/prefers-reduced-motion:reduce/);
  const html=read('index.html');
- assert.ok(html.includes('botanical-studio.css')&&!html.includes('atelier-photo.css'));
+ assert.ok(html.includes('flora-rebuild.css')&&!html.includes('atelier-photo.css'));
 });
 test('flower builder keeps all seven slots and allows precise touch removal and cancellation',()=>{
  const js=read('js/flowers.js');
@@ -35,7 +35,7 @@ test('flower builder keeps all seven slots and allows precise touch removal and 
  assert.match(js,/data-remove-slot/);
  assert.match(js,/chosen\.splice\(index,1\)/);
  assert.match(js,/onCancel/);
- assert.match(js,/studio-exit/);
+ assert.match(js,/f2-exit/);
  assert.match(js,/bouquetMarkup\(chosen/);
  assert.match(js,/downloadBouquet\(chosen\)/);
  assert.match(js,/store\.set\('flowers',chosen\)/);
