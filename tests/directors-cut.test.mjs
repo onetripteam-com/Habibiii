@@ -29,7 +29,7 @@ test('synthesized FM voices are gesture-activated and use no external audio',()=
 test('letters and radio have no draft brackets and names are honest',()=>{
  const letters=obj('content/letters.json');assert.equal(letters.letters.length,20);assert.doesNotMatch(JSON.stringify(letters),/\[(?:ADD|YOUR|REPLACE|MY)\b/i);
  assert.ok(letters.letters.every(x=>Array.isArray(x.pages)&&x.pages.length>=2));
- const conf=obj('content/config.json');assert.equal(conf.senderEmail,null);assert.equal(conf.senderName,'Your long-distance nuisance');
+ const conf=obj('content/config.json');assert.equal(conf.senderEmail,null);assert.equal(conf.senderName,'Your friend');
  const radio=obj('content/radio.json');assert.equal(radio.stations.length,5);assert.ok(radio.stations.every(x=>x.introAudio===null&&x.ambientAudio===null));
  assert.doesNotMatch(JSON.stringify(radio),/\[YOUR VOICE NOTE/i);
 });
