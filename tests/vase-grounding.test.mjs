@@ -21,7 +21,7 @@ test('approved Kuwait flowers reach the native photographic vase mouth',()=>{
  assert.ok(Math.abs(rimX-830)<4,'Flower neck x must align with Kuwait vase: '+rimX);
  assert.ok(Math.abs(rimY-582)<4,'Flower neck y must align with Kuwait vase: '+rimY);
  const output=photoBloomsMarkup(Array(7).fill('rose'),'kuwait');
- assert.ok(output.includes('<ellipse cx="82" cy="108" rx="49" ry="6.8"/>'),
+ assert.ok(output.includes('<ellipse cx="82" cy="108" rx="36" ry="6.8"/>'),
   'A real SVG clipPath should cover the correct ceramic opening');
  assert.ok(!output.includes('${scene'), 'Never leak JavaScript expressions into SVG attributes');
  assert.ok(output.includes('maha-kuwait.webp'));
