@@ -395,6 +395,16 @@ async function run(engine,launcher,w,h){
      'Bouquet and flower tray must not overlap or disappear: '+JSON.stringify(geometry));
    assert.ok(geometry.overflow<=2&&geometry.tray.right<=geometry.overall.right+2,
      'Mobile flower studio must not scroll horizontally: '+JSON.stringify(geometry));
+   const specimen=await page.locator('.f2-card').first().evaluate(card=>{
+     const artwork=card.querySelector('.f2-card-art').getBoundingClientRect();
+     const bloom=card.querySelector('.flower-head-svg > g')?.getBoundingClientRect();
+     return {art:{left:artwork.left,right:artwork.right,top:artwork.top,bottom:artwork.bottom},
+      bloom:bloom?{left:bloom.left,right:bloom.right,top:bloom.top,bottom:bloom.bottom}:null};
+   });
+   assert.ok(specimen.bloom&&specimen.bloom.left>=specimen.art.left-2&&
+      specimen.bloom.right<=specimen.art.right+2&&
+      specimen.bloom.top>=specimen.art.top-2&&specimen.bloom.bottom<=specimen.art.bottom+2,
+     'Petals must not be cut off by the flower card divider: '+JSON.stringify(specimen));
    await page.screenshot({path:join(OUT,key+'-mobile-flora-before-pick.png'),animations:'disabled'});
    const scrollable=await page.locator('.f2-rail').evaluate(el=>el.scrollHeight>el.clientHeight);
    assert.ok(scrollable,'Thirteen flowers must scroll within the palette, not the page');
