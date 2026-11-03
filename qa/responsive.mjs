@@ -43,6 +43,17 @@ async function run(engine,launcher,w,h){
    return img?.getAttribute('src')?.endsWith('/maha-kuwait.webp')&&img.complete&&img.naturalWidth>=1600;
   },null,{timeout:16000});
   assert.equal(await page.locator('.cinematic-room').getAttribute('data-kuwait-photo'),'ready','Live Kuwait scene must use the approved image');
+  const photoLayers=await page.locator('.living-photo-plane').evaluate(plane=>({
+   oldPlantLayers:plane.querySelectorAll('.living-leaf-sway').length,
+   oldCurtainDisplay:getComputedStyle(plane,'::before').display,
+   oldCurtainContent:getComputedStyle(plane,'::before').content,
+   activePhoto:plane.querySelector('.living-photo-image')?.getAttribute('src')
+  }));
+  assert.equal(photoLayers.oldPlantLayers,0,'No old-photo leaf mirror may sit over the Kuwait plant');
+  assert.ok(photoLayers.oldCurtainDisplay==='none'||photoLayers.oldCurtainContent==='none',
+   'Photo-backed curtain cutout must be absent: '+JSON.stringify(photoLayers));
+  assert.ok(photoLayers.activePhoto.endsWith('/maha-kuwait.webp'));
+
   assert.equal(await page.locator('.living-photo-plane .living-hit-area').count(),8,'All seven physical objects plus the real vase must share the same image plane');
   if(w<760){
     assert.ok(await page.locator('#room-pan-left').isVisible());
@@ -240,6 +251,15 @@ async function run(engine,launcher,w,h){
    await page.waitForFunction(name=>{const img=document.querySelector('.living-photo-image');return img?.getAttribute('src')?.endsWith(name)&&img.complete&&img.naturalWidth>1000},photo);
    const loaded=true;
    assert.ok(loaded,id+' must render an original locally packaged scene');
+   const ghosts=await page.locator('.living-photo-plane').evaluate(plane=>({
+    leafCopies:plane.querySelectorAll('.living-leaf-sway').length,
+    curtainDisplay:getComputedStyle(plane,'::before').display,
+    curtainContent:getComputedStyle(plane,'::before').content
+   }));
+   assert.equal(ghosts.leafCopies,0,id+' must not reuse copied plant fragments');
+   assert.ok(ghosts.curtainDisplay==='none'||ghosts.curtainContent==='none',
+     id+' must not reuse the former room curtain photo: '+JSON.stringify(ghosts));
+
    assert.ok(await page.locator('.photographed-vase-flowers').isVisible(),id+' must keep the live bouquet');
    assert.equal(await page.locator('.photographed-vase-flowers .photo-flower-heads g[data-species]').count(),7,id+' must show seven user-selected blooms');
    assert.equal(await page.locator('.photographed-vase-flowers').getAttribute('data-vase-scene'),id,'Bouquet must follow current scene');
