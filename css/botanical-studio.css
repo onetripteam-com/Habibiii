@@ -430,3 +430,13 @@
  }
  #app .flowers-scene.flower-studio .flower-option .option-art .botanical{animation:none!important}
 }
+
+/* Reuse the APPROVED Kuwait photo in the scene chooser too, even while
+   Kerala or Bengaluru is active. The same photo is used in the live room. */
+.theme-preview-art[data-theme="story"]{
+ background-image:url('../assets/rooms/maha-kuwait.webp')!important;
+ background-position:center center!important;
+}
+#app .cinematic-room[data-theme="story"][data-kuwait-photo="ready"] .living-photo-image{
+ filter:brightness(var(--scene-exposure,1)) saturate(var(--scene-saturation,1)) contrast(1.065)!important;
+}
