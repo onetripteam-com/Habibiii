@@ -24,7 +24,8 @@ test('all three photographed worlds render the current chosen bouquet, without K
  assert.match(room,/flowerLayer\.hidden=false/);
  assert.match(room,/photoBloomsMarkup\(chosen,spriteScene\)/);
  assert.doesNotMatch(room,/flowerLayer\.hidden=id!=='story'/);
- assert.match(petals,/scene==='story'/);
+ assert.match(petals,/maha-stem-neck/);
+ assert.doesNotMatch(petals,/<image href=|maha-real-rim/);
  for(const scene of ['story','kerala','bengaluru'])assert.ok(css.includes('data-theme="'+scene+'"'),scene);
 });
 test('courier is a genuine illustrated whale with four decorative butterflies',()=>{
