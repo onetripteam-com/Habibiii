@@ -114,3 +114,22 @@
   display:none!important;
  }
 }
+
+/* PHOTO INTEGRITY — no copied pieces of a different room photograph.
+   Legacy curtain/plant sways used background-image:maha-living-room.webp
+   even when the active photo was Kuwait, Kerala or Bengaluru. Their masked
+   duplicates were visible as translucent mirrored leaves in real screenshots.
+   The selected room photograph must be one uninterrupted image; keep only
+   gradient-based lighting and the real bouquet overlay. */
+#app .cinematic-room[data-room-photo-scene="original"] .living-photo-plane::before,
+#app .cinematic-room[data-room-photo-scene="original"] .living-leaf-sway,
+#app .cinematic-room[data-room-photo-scene="original"] .living-leaf-sway::before,
+#app .cinematic-room[data-room-photo-scene="original"] .living-leaf-sway::after{
+ content:none!important;
+ display:none!important;
+ background:none!important;
+ background-image:none!important;
+ clip-path:none!important;
+ animation:none!important;
+ filter:none!important;
+}
