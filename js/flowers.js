@@ -20,7 +20,7 @@ const studioVaseMarkup=()=>`<svg class="studio-vase" viewBox="0 0 500 580" xmlns
  <path d="M223 564Q259 570 291 562" fill="none" stroke="#f5fff2" stroke-opacity=".26" stroke-width="3" stroke-linecap="round"/>
  </svg>`;
 export function mountFlowers(root,flowers,onDone,onCancel=null){
- let chosen=[],complete=false,disposed=false;
+ let chosen=[],complete=false,disposed=false;const flights=new Set();
  root.innerHTML=`<section class="scene f2-scene" data-source-scene="${['story','kerala','bengaluru'].includes(store.get('roomTheme'))?store.get('roomTheme'):'story'}" aria-label="The flower studio: choose seven blooms">
   <div class="f2-backdrop" aria-hidden="true"></div>
   <div class="f2-layout">
@@ -60,17 +60,40 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
  function update(){
   root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="f2-counter-caption">picked by Maha</span>`;
   root.querySelector('#flower-steps').innerHTML=Array.from({length:7},(_,i)=>{const id=chosen[i];const flower=flowers.find(f=>f.id===id);return id?`<button type="button" class="f2-slot is-picked" data-remove-slot="${i}" title="Remove ${esc(flower?.name||'flower')}" aria-label="Remove ${esc(flower?.name||'flower')} from slot ${i+1}"><i aria-hidden="true">✳</i></button>`:`<span class="f2-slot" aria-label="Empty flower slot ${i+1}"><i aria-hidden="true">${String(i+1).padStart(2,'0')}</i></span>`}).join('');
-  renderPlace.innerHTML=chosen.length?bouquetMarkup(chosen,{stage:complete?'final':'preview'})+(!complete?studioVaseMarkup():''):'';
+  renderPlace.innerHTML=(chosen.length?bouquetMarkup(chosen,{stage:complete?'final':'preview'}):'')+(!complete?studioVaseMarkup():'');
   rail.querySelectorAll('button').forEach(b=>{const count=chosen.filter(id=>id===b.dataset.flower).length;b.setAttribute('aria-pressed',String(count>0));b.disabled=complete;b.querySelector('.f2-picked').textContent=count?`${count} PICKED`:'';b.querySelector('.f2-add').textContent=count?'+ AGAIN':'+ ADD';});
   root.querySelector('#undo-flower').disabled=!chosen.length||complete; root.querySelector('#reset-flowers').disabled=!chosen.length||complete;
   root.querySelector('#bouquet-hint').hidden=chosen.length>0;
   root.querySelector('.f2-preview').dataset.placed=String(chosen.length);
  }
  function updateInstruction(text){root.querySelector('#flower-instruction').textContent=text;}
+ // One picked bloom flies from its physical card to its position in the vase.
+ // Transient only; does not change the existing bouquet SVG or saved data.
+ function flyPick(f,button){
+  if(!button||typeof Element.prototype.animate!=='function'||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const from=button.getBoundingClientRect();
+  const bloom=renderPlace.querySelector('.bouquet-bloom:last-child');
+  const to=bloom?.getBoundingClientRect()||display.getBoundingClientRect();
+  const orb=document.createElement('div');
+  orb.className='f2-flight';orb.setAttribute('aria-hidden','true');
+  orb.innerHTML=flowerSVG(f.id);
+  const sx=from.left+from.width*.5,sy=from.top+from.height*.43;
+  const ex=to.left+to.width*.5,ey=to.top+to.height*.5;
+  orb.style.left=(sx-27)+'px';orb.style.top=(sy-39)+'px';
+  document.body.append(orb);flights.add(orb);
+  const dx=ex-sx,dy=ey-sy;
+  const a=orb.animate([
+   {transform:'translate3d(0,0,0) rotate(-9deg) scale(.85)',opacity:.94,offset:0},
+   {transform:'translate3d('+(dx*.53)+'px,'+(dy*.52-23)+'px,0) rotate(9deg) scale(1.06)',opacity:1,offset:.54},
+   {transform:'translate3d('+dx+'px,'+dy+'px,0) rotate(0) scale(.28)',opacity:0,offset:1}
+  ],{duration:650,easing:'cubic-bezier(.19,.77,.2,1)',fill:'forwards'});
+  a.onfinish=a.oncancel=()=>{orb.remove();flights.delete(orb)};
+ }
  function pick(f,button){
   if(complete||chosen.length>=7) return;
   chosen.push(f.id); root.querySelector("#flower-counter").classList.remove("f2-counter-pop"); void root.querySelector("#flower-counter").offsetWidth; root.querySelector("#flower-counter").classList.add("f2-counter-pop"); soundEffect('pick'); update(); const repeats=chosen.filter(id=>id===f.id).length;
   root.querySelector('#meaning-line').textContent=`${String(chosen.length).padStart(2,'0')} / 07 — ${repeats>1?`Another ${f.name.toLowerCase()}? You've made your choice, and I respect it.`:floristWords[f.id]||f.meaning}`;
+  flyPick(f,button);
   if(button&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
    button.classList.remove('f2-card-pop');void button.offsetWidth;button.classList.add('f2-card-pop');
    const last=renderPlace.querySelector('.bouquet-bloom:last-child');if(last){last.classList.add('bloom-new');setTimeout(()=>last.classList.remove('bloom-new'),900)}
@@ -133,5 +156,5 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
   if(!disposed){disposed=true; onDone(chosen);} 
  });
  update();
- return ()=>{disposed=true;};
+ return ()=>{disposed=true;for(const orb of flights)orb.remove();flights.clear();};
 }
