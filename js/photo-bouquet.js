@@ -28,7 +28,7 @@ export function photoBloomsMarkup(chosen=[],scene='story'){
  // A clipped strip of the same photograph lies in front of the stem ends,
  // so they actually disappear *inside* the photographed rim.
  return '<svg class="photo-blooms" viewBox="0 0 166 125" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">'+
- '<defs><clipPath id="maha-real-rim"><ellipse cx="82" cy="108" rx="${scene==='kuwait'?49:43}" ry="${scene==='kuwait'?6.8:7.5}"/></clipPath></defs>'+
+ '<defs><clipPath id="maha-real-rim"><ellipse cx="82" cy="108" rx="'+(scene==='kuwait'?49:43)+'" ry="'+(scene==='kuwait'?6.8:7.5)+'"/></clipPath></defs>'+
  '<g class="photo-flower-stems">'+stems+'</g><g class="photo-flower-heads">'+petals+'</g>'+
  // Each source photograph needs its OWN front rim. Kuwait's new ceramic is
  // centred near (830,582) in the native 1672x941 photo, NOT at the legacy rim.
