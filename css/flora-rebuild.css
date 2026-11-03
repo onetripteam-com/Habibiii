@@ -18,10 +18,13 @@
  --f2-photo:url('../assets/rooms/maha-bengaluru.webp');--f2-accent:#f1d19e;
 }
 #app .f2-backdrop{
- position:absolute;inset:-18px;z-index:0;pointer-events:none;
+ position:absolute;inset:0;z-index:0;pointer-events:none;
  background:linear-gradient(122deg,#092a2acc,#152f29ad 57%,#adab9073),var(--f2-photo) center / cover no-repeat;
- filter:blur(16px) saturate(.91);
- transform:scale(1.04);
+ /* Never enlarge a positioned child beyond the scene box: even with
+    overflow:hidden, iOS includes it in scrollWidth and rubber-bands. */
+ filter:blur(12px) saturate(.91);
+ transform:none;
+ clip-path:inset(0);
 }
 #app .f2-layout{
  position:absolute;inset:0;z-index:1;
