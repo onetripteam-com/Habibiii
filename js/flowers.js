@@ -6,6 +6,19 @@ const esc=x=>String(x).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 const floristWords={
  rose:'The classic. Yes, it earned that reputation.',peony:'A little dramatic. In the nicest possible way.',sunflower:'Bringing its own sunshine. Very efficient.',tulip:'All neat lines and quiet confidence.',lily:'The elegant one who never needs to announce it.',orchid:'A bit fancy. Completely allowed.',hibiscus:'A little Kerala sunshine has arrived.',lotus:'Taking its own time. Good idea.',jasmine:'Small flower. Entire room changed.',marigold:'The unofficial festival committee is here.',daisy:'The easy-going one. No big introduction.',lavender:'That is a very good excuse to slow down.',iris:'A little colour with opinions.'
 };
+// The seven live SVG flowers remain selectable; this glass silhouette is
+// foreground occlusion for the preview, not a baked-in image or another bouquet.
+// It shares the 500×580 viewBox of bouquetMarkup so stems visibly enter the mouth.
+const studioVaseMarkup=()=>`<svg class="studio-vase" viewBox="0 0 500 580" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+ <defs><linearGradient id="maha-studio-glass" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d9eee5" stop-opacity=".80"/><stop offset=".32" stop-color="#7eb1a2" stop-opacity=".83"/><stop offset=".72" stop-color="#315f5d" stop-opacity=".94"/><stop offset="1" stop-color="#132f37" stop-opacity=".97"/></linearGradient>
+ <linearGradient id="maha-studio-lip" x1="0" y1="0" x2="1" y2=".5"><stop stop-color="#e3f8ed"/><stop offset=".45" stop-color="#9dbeb2"/><stop offset="1" stop-color="#456a69"/></linearGradient></defs>
+ <path d="M207 451C210 470 199 481 192 503L182 545C177 567 193 575 219 576H288C313 573 326 561 318 540L306 503C302 486 296 470 301 451Z" fill="url(#maha-studio-glass)" stroke="#d6eee4" stroke-opacity=".65" stroke-width="2.5"/>
+ <path d="M209 453Q236 466 299 452" fill="none" stroke="#e8f9ec" stroke-opacity=".65" stroke-width="2.2"/>
+ <ellipse cx="254" cy="450" rx="49" ry="10" fill="#1a3c3b" fill-opacity=".81" stroke="url(#maha-studio-lip)" stroke-width="5"/>
+ <path d="M205 450Q252 464 302 450" fill="none" stroke="#e2f2e7" stroke-opacity=".74" stroke-width="2.1"/>
+ <path d="M206 483Q195 528 199 551M215 477Q212 517 211 546" fill="none" stroke="#f3fff2" stroke-opacity=".22" stroke-width="5" stroke-linecap="round"/>
+ <path d="M223 564Q259 570 291 562" fill="none" stroke="#f5fff2" stroke-opacity=".26" stroke-width="3" stroke-linecap="round"/>
+ </svg>`;
 export function mountFlowers(root,flowers,onDone,onCancel=null){
  let chosen=[],complete=false,disposed=false;
  root.innerHTML=`<section class="scene flowers-scene flower-studio" data-source-scene="${['story','kerala','bengaluru'].includes(store.get('roomTheme'))?store.get('roomTheme'):'story'}" aria-label="The flower studio: choose seven blooms">
@@ -47,7 +60,7 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
  function update(){
   root.querySelector('#flower-counter').innerHTML=`<strong>${chosen.length} <span>of 7</span></strong><span class="counter-caption">picked by Maha</span>`;
   root.querySelector('#flower-steps').innerHTML=Array.from({length:7},(_,i)=>{const id=chosen[i];const flower=flowers.find(f=>f.id===id);return id?`<button type="button" class="flower-step is-picked" data-remove-slot="${i}" title="Remove ${esc(flower?.name||'flower')}" aria-label="Remove ${esc(flower?.name||'flower')} from slot ${i+1}"><i aria-hidden="true">✳</i></button>`:`<span class="flower-step" aria-label="Empty flower slot ${i+1}"><i aria-hidden="true">${String(i+1).padStart(2,'0')}</i></span>`}).join('');
-  renderPlace.innerHTML=chosen.length?bouquetMarkup(chosen,{stage:complete?'final':'preview'}):'';
+  renderPlace.innerHTML=chosen.length?bouquetMarkup(chosen,{stage:complete?'final':'preview'})+(!complete?studioVaseMarkup():''):'';
   rail.querySelectorAll('button').forEach(b=>{const count=chosen.filter(id=>id===b.dataset.flower).length;b.setAttribute('aria-pressed',String(count>0));b.disabled=complete;b.querySelector('.picked-check').textContent=count?`${count} PICKED`:'';b.querySelector('.flower-add').textContent=count?'+ AGAIN':'+ ADD';});
   root.querySelector('#undo-flower').disabled=!chosen.length||complete; root.querySelector('#reset-flowers').disabled=!chosen.length||complete;
   root.querySelector('#bouquet-hint').hidden=chosen.length>0;
@@ -94,7 +107,7 @@ export function mountFlowers(root,flowers,onDone,onCancel=null){
   root.querySelector('#flower-bottom').classList.add('flower-bottom-exit');
   updateInstruction('Gathering them for you…');
   await delay(250); if(disposed) return;
-  renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:false,stage:'gather'});
+  renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:false,stage:'gather'})+studioVaseMarkup();
   display.classList.add('bouquet-gathering');
   await delay(650); if(disposed) return;
   renderPlace.innerHTML=bouquetMarkup(chosen,{wrapped:true,stage:'final'});
