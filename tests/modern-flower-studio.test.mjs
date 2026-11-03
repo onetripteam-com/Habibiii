@@ -26,7 +26,7 @@ test('modern editor follows selected room instead of baking in fake clickable im
  assert.match(studio,/\.flower-option:active/);
  assert.match(studio,/prefers-reduced-motion:reduce/);
  const html=read('index.html');
- assert.ok(html.lastIndexOf('botanical-studio.css')>html.lastIndexOf('atelier-photo.css'));
+ assert.ok(html.includes('botanical-studio.css')&&!html.includes('atelier-photo.css'));
 });
 test('flower builder keeps all seven slots and allows precise touch removal and cancellation',()=>{
  const js=read('js/flowers.js');
