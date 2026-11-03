@@ -12,7 +12,7 @@ test('approved real Kuwait scene is present, optimised and offline-ready',()=>{
  const stage=read('js/room-photo-stage.js');
  assert.match(stage,/image\.src=generatedKuwait/);
  assert.match(stage,/maha-kuwait\.webp/);
- assert.match(stage,/flowers:\[41,57,15,22\]/);
+ assert.match(stage,/flowers:\[43,57,14,27\]/);
  const sw=read('sw.js');
  assert.ok(sw.includes("'./assets/rooms/maha-kuwait.webp'"),'available offline');
 });
