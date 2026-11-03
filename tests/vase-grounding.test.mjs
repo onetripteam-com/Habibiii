@@ -42,7 +42,7 @@ test('flower-selection preview includes a vase with the same 500×580 SVG geomet
  const source=read('js/flowers.js'),css=read('css/flora-rebuild.css');
  assert.match(source,/const studioVaseMarkup=/);
  assert.match(source,/class="studio-vase" viewBox="0 0 500 580"/);
- assert.match(source,/bouquetMarkup\(chosen,\{stage:complete\?'final':'preview'\}\)\+\(!complete\?studioVaseMarkup\(\):''\)/);
+ assert.match(source,/renderPlace\.innerHTML=\(chosen\.length\?bouquetMarkup\(chosen,\{stage:complete\?'final':'preview'\}\):''\)\+\(!complete\?studioVaseMarkup\(\):''\)/);
  assert.match(source,/stage:'gather'\}\)\+studioVaseMarkup\(\)/);
  assert.match(source,/bouquetMarkup\(chosen,\{wrapped:true,stage:'final'\}\)/);
  assert.match(css,/\.f2-bouquet>\.studio-vase/);
