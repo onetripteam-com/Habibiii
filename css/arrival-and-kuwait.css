@@ -47,3 +47,23 @@
  animation:none!important;transform:none!important;
  transform-origin:50% 100%!important;
 }
+
+/* MOBILE CAMERA — JS owns every frame. Never CSS-ease each finger update:
+   the old 680ms transition was repeatedly restarting mid-drag (rubber-banding).
+   Stage, photograph and physical hotspots share one composited transform. */
+@media(max-width:759px){
+ #app .cinematic-room[data-room-photo-scene="original"] .living-photo-plane{
+  transform:translate3d(calc(-50% + var(--photo-pan-px,0px)),-50%,0)!important;
+  transition:none!important;
+  backface-visibility:hidden;
+  will-change:transform;
+ }
+ #app .cinematic-room[data-room-photo-scene="original"] .living-photo-plane.room-is-dragging{
+  transition:none!important;
+ }
+ #app .cinematic-room[data-room-photo-scene="original"] .inhabited-room,
+ #app .cinematic-room[data-room-photo-scene="original"] .living-photo-plane .living-hit-area{
+  touch-action:pan-y!important;
+  overscroll-behavior-x:contain;
+ }
+}
