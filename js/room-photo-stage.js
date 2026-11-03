@@ -53,7 +53,7 @@ export function mountLivingRoomPhoto(room,chosen=[]){
  stage.insertBefore(layer,stage.querySelector('#room-traces'));
  const areas={
   rest:{x:2,y:43,w:35,h:45,title:'The sofa · somewhere to rest'},
-  garden:{x:39,y:23,w:18,h:37,title:'The living plants · word garden'},
+  garden:{x:41,y:12,w:16,h:20,title:'The indoor palm · word garden'},
   movies:{x:87,y:5,w:13,h:29,title:'The projector screen · cinema'},
   travel:{x:60,y:17,w:26,h:22,title:'The travel wall · passport & map'},
   letters:{x:67,y:39,w:17,h:17,title:'The letter desk · letters'},
@@ -88,7 +88,7 @@ export function mountLivingRoomPhoto(room,chosen=[]){
  }
  const oldImage=room.querySelector('.cinematic-photo');
  const sceneImages={story:'maha-kuwait.webp',kerala:'maha-kerala.webp',bengaluru:'maha-bengaluru.webp'};
- const placements={story:{flowers:[43,57,14,27],garden:[39,19,19,39],letters:[64,35,20,21],music:[87,42,13,20],games:[61,76,17,18],travel:[61,13,25,24],movies:[86,4,14,33],rest:[0,39,38,51]},kerala:{rest:[0,43,39,43],garden:[39,18,20,36],movies:[84,7,16,38],travel:[62,13,24,29],letters:[65,36,19,23],music:[88,41,12,20],games:[59,72,20,20],flowers:[49,52,17,32]},bengaluru:{rest:[0,46,41,42],garden:[38,18,23,38],movies:[84,5,16,37],travel:[60,15,24,28],letters:[64,39,19,23],music:[88,43,12,18],games:[59,70,23,23],flowers:[46,54,19,30]}};
+ const placements={story:{flowers:[43,57,14,27],garden:[41,12,16,20],letters:[64,35,20,21],music:[87,42,13,20],games:[61,76,17,18],travel:[61,13,25,24],movies:[86,4,14,33],rest:[0,39,38,51]},kerala:{rest:[0,43,39,43],garden:[43,14,16,21],movies:[84,7,16,38],travel:[62,13,24,29],letters:[65,36,19,23],music:[88,41,12,20],games:[59,72,20,20],flowers:[49,52,17,32]},bengaluru:{rest:[0,46,41,42],garden:[40,12,18,21],movies:[84,5,16,37],travel:[60,15,24,28],letters:[64,39,19,23],music:[88,43,12,18],games:[59,70,23,23],flowers:[46,54,19,30]}};
  function syncFlowers(id){
   // The old photo rim cutout must not be pasted into a new Kuwait vase.
   const spriteScene=id==='story'&&room.dataset.kuwaitPhoto==='ready'?'kuwait':id;
