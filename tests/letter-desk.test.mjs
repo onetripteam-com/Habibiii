@@ -42,7 +42,7 @@ test('new postroom CSS is last, available offline and supports phones',()=>{
  assert.ok(index.indexOf('postroom-redesign.css')>index.indexOf('flora-rebuild.css'));
  assert.ok(sw.includes("'./css/postroom-redesign.css'"));
  assert.ok(sw.includes("'./assets/letters/ink-sprig.svg'"));
- assert.match(css,/ink-sprig\\.svg/);
+ assert.match(css,/ink-sprig\.svg/);
  assert.match(css,/postroom-reader-signoff/);
  assert.match(css,/@media\(max-width:759px\)/);
  assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
