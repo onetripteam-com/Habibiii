@@ -16,7 +16,7 @@ const server=createServer(async(req,res)=>{
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const BASE='http://127.0.0.1:'+server.address().port+'/';
-const sizes=[[360,740],[393,852],[402,874],[768,1024],[1280,720],[1440,900],[1920,1080]];
+const sizes=[[360,740],[393,852],[402,874],[768,1024],[1280,720],[1440,900],[1674,843],[1920,1080]];
 const reports=[];let failed=0;
 async function run(engine,launcher,w,h){
  const browser=await launcher.launch({headless:true});
@@ -306,31 +306,41 @@ async function run(engine,launcher,w,h){
      await page.locator('#portal-screen').waitFor({state:'hidden',timeout:16000});
    }
   }
-  if(w===1440){
+  if(w===1440||w===1674){
    // Desktop picker: a complete layout must still render the same live vase.
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
    await page.locator('#room-bouquet').click();
-   await page.locator('.flower-studio').waitFor();
+   await page.locator('.f2-scene').waitFor();
    await page.locator('[data-flower="jasmine"]').click();
    // Regression: the editor used to inherit grid-row:2 from the OLD layout,
    // shrinking the bouquet to 0px and pushing flower cards offscreen.
-   const panels=await page.locator('.flower-studio-layout').evaluate(el=>{
-     const a=el.querySelector('.flower-studio-preview').getBoundingClientRect();
-     const b=el.querySelector('.flower-studio-editor').getBoundingClientRect();
+   const panels=await page.locator('.f2-layout').evaluate(el=>{
+     const a=el.querySelector('.f2-preview').getBoundingClientRect();
+     const b=el.querySelector('.f2-editor').getBoundingClientRect();
      const self=el.getBoundingClientRect();
      return {preview:{left:a.left,right:a.right,height:a.height},editor:{left:b.left,right:b.right,height:b.height},layout:{left:self.left,right:self.right,height:self.height}};
    });
    assert.ok(panels.editor.left>=panels.preview.right-5&&panels.preview.height>panels.layout.height*.75,
      'Desktop needs two columns without implicit overflow rows: '+JSON.stringify(panels));
-   const onDesk=await page.locator('.bouquet-growing').evaluate(el=>{
+   const full=await page.locator('.f2-scene').evaluate(scene=>{
+     const s=scene.getBoundingClientRect(),layout=scene.querySelector('.f2-layout').getBoundingClientRect();
+     const preview=scene.querySelector('.f2-preview').getBoundingClientRect();
+     const editor=scene.querySelector('.f2-editor').getBoundingClientRect();
+     return {scene:{x:s.left,width:s.width,right:s.right},layout:{x:layout.left,right:layout.right,width:layout.width},
+       preview:{x:preview.left,right:preview.right,width:preview.width},editor:{x:editor.left,right:editor.right,width:editor.width}};
+   });
+   assert.ok(full.layout.width>full.scene.width*.96&&full.editor.right>full.scene.right-85&&full.preview.width>full.scene.width*.40,
+     'Flora Studio must use the WHOLE screen, not only left half: '+JSON.stringify(full));
+   await page.screenshot({path:join(OUT,key+'-full-flora-studio.png'),animations:'disabled'});
+   const onDesk=await page.locator('.f2-bouquet').evaluate(el=>{
     const bouquet=el.querySelector('.bouquet-svg'),vase=el.querySelector('.studio-vase');
     if(!bouquet||!vase)return {missing:true};
     const spot=svg=>{const pt=svg.createSVGPoint();pt.x=254;pt.y=450;return pt.matrixTransform(svg.getScreenCTM())};
     const a=spot(bouquet),b=spot(vase);
     return {gap:Math.hypot(a.x-b.x,a.y-b.y),height:el.getBoundingClientRect().height,
-      panel:el.closest('.flower-studio-preview')?.getBoundingClientRect().height,
-      intro:el.closest('.flower-studio-preview')?.querySelector('.flowers-top')?.getBoundingClientRect().height,
-      editor:document.querySelector('.flower-studio-editor')?.getBoundingClientRect().height};
+      panel:el.closest('.f2-preview')?.getBoundingClientRect().height,
+      intro:el.closest('.f2-preview')?.querySelector('.f2-header')?.getBoundingClientRect().height,
+      editor:document.querySelector('.f2-editor')?.getBoundingClientRect().height};
    });
    assert.ok(!onDesk.missing&&onDesk.gap<6&&onDesk.height>180,
      'Desktop bouquet and vase must share the same rendered coordinates: '+JSON.stringify(onDesk));
@@ -342,25 +352,25 @@ async function run(engine,launcher,w,h){
    const flower=w===393?'rose':'iris';
    await page.locator('#room-bouquet').scrollIntoViewIfNeeded();
    await page.locator('#room-bouquet').click();
-   await page.locator('.flowers-scene.flower-studio').waitFor();
-   assert.ok(await page.locator('.flower-studio-preview').isVisible(),'Live bouquet preview is visible');
-   assert.ok(await page.locator('.flower-studio-editor').isVisible(),'Interactive flower palette is visible');
-   const scrollable=await page.locator('.flower-rail').evaluate(el=>el.scrollHeight>el.clientHeight);
+   await page.locator('.f2-scene').waitFor();
+   assert.ok(await page.locator('.f2-preview').isVisible(),'Live bouquet preview is visible');
+   assert.ok(await page.locator('.f2-editor').isVisible(),'Interactive flower palette is visible');
+   const scrollable=await page.locator('.f2-rail').evaluate(el=>el.scrollHeight>el.clientHeight);
    assert.ok(scrollable,'Thirteen flowers must scroll within the palette, not the page');
    assert.ok(await page.locator('#cancel-flowers').isVisible(),'Returning to the saved bouquet must be possible');
-   assert.equal(await page.locator('#flower-steps .flower-step').count(),7,'Florist must have seven clear slots');
+   assert.equal(await page.locator('#flower-steps .f2-slot').count(),7,'Florist must have seven clear slots');
    await page.locator('[data-flower="'+flower+'"]').click();
    assert.equal(await page.locator('#flower-steps .is-picked').count(),1,'One selected flower fills one step');
    // The arrangement and glass vase share their SVG viewBox on iOS and desktop.
-   const preview=await page.locator('.bouquet-growing').evaluate(el=>{
+   const preview=await page.locator('.f2-bouquet').evaluate(el=>{
     const bouquet=el.querySelector('.bouquet-svg'),vase=el.querySelector('.studio-vase');
     if(!bouquet||!vase)return {missing:true};
     const spot=svg=>{const pt=svg.createSVGPoint();pt.x=254;pt.y=450;return pt.matrixTransform(svg.getScreenCTM())};
     const a=spot(bouquet),b=spot(vase);
     return {gap:Math.hypot(a.x-b.x,a.y-b.y),height:el.getBoundingClientRect().height,
-      panel:el.closest('.flower-studio-preview')?.getBoundingClientRect().height,
-      intro:el.closest('.flower-studio-preview')?.querySelector('.flowers-top')?.getBoundingClientRect().height,
-      editor:document.querySelector('.flower-studio-editor')?.getBoundingClientRect().height};
+      panel:el.closest('.f2-preview')?.getBoundingClientRect().height,
+      intro:el.closest('.f2-preview')?.querySelector('.f2-header')?.getBoundingClientRect().height,
+      editor:document.querySelector('.f2-editor')?.getBoundingClientRect().height};
    });
    assert.ok(!preview.missing&&preview.gap<6&&preview.height>70,
     'Chosen flower stems must sit in the preview vase instead of floating: '+JSON.stringify(preview));
