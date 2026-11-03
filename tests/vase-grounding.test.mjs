@@ -47,7 +47,7 @@ test('flower-selection preview includes a vase with the same 500×580 SVG geomet
  assert.match(source,/bouquetMarkup\(chosen,\{wrapped:true,stage:'final'\}\)/);
  assert.match(css,/\.f2-bouquet>\.studio-vase/);
  assert.match(css,/transform:translate\(-50%,-50%\)!important/);
- assert.match(css,/grid-template-rows:minmax\(0,48%\) minmax\(0,52%\)/);
+ assert.match(css,/grid-template-rows:minmax\(0,52%\) minmax\(0,48%\)/);
 });
 
 test('Kuwait vase touch zone follows the new ceramic without moving other portals',()=>{
