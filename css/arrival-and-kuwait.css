@@ -69,3 +69,18 @@
   overscroll-behavior-x:contain;
  }
 }
+
+/* Photograph-backed rooms have a real ceramic vase in the image itself.
+   Never show the legacy decorative SVG vase or the previously duplicated
+   photo-sampled rim over it. The hotspot stays present and clickable. */
+#app .cinematic-room[data-room-photo-scene="original"] #room-bouquet .real-vase,
+#app .cinematic-room[data-room-photo-scene="original"] #room-bouquet .vase-glass,
+#app .cinematic-room[data-room-photo-scene="original"] #room-bouquet .vase-mouth,
+#app .cinematic-room[data-room-photo-scene="original"] #room-bouquet .vase-lip{
+ display:none!important;
+ visibility:hidden!important;
+ opacity:0!important;
+}
+#app .cinematic-room[data-room-photo-scene="original"] .photographed-vase-flowers .photo-blooms image{
+ display:none!important;
+}
