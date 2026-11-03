@@ -16,7 +16,7 @@ test('No, Never and Not at all are distinct replies, never forced hugs',()=>{
 
 test('flower studio uses current-room photography, not fake baked-in flower cards',()=>{
  const css=read('css/flora-rebuild.css');
- assert.match(css,/--studio-photo/);
+ assert.match(css,/--f2-photo/);
  assert.match(css,/\.f2-backdrop/);
  assert.match(read('js/flowers.js'),/chosen\.push\(f\.id\)/);
  assert.match(read('js/flowers.js'),/flower-steps/);
