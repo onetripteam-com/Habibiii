@@ -21,35 +21,35 @@ const studioVaseMarkup=()=>`<svg class="studio-vase" viewBox="0 0 500 580" xmlns
  </svg>`;
 export function mountFlowers(root,flowers,onDone,onCancel=null){
  let chosen=[],complete=false,disposed=false;
- root.innerHTML=`<section class="scene f2-scene f2-scene-alt" data-source-scene="${['story','kerala','bengaluru'].includes(store.get('roomTheme'))?store.get('roomTheme'):'story'}" aria-label="The flower studio: choose seven blooms">
+ root.innerHTML=`<section class="scene f2-scene" data-source-scene="${['story','kerala','bengaluru'].includes(store.get('roomTheme'))?store.get('roomTheme'):'story'}" aria-label="The flower studio: choose seven blooms">
   <div class="f2-backdrop" aria-hidden="true"></div>
   <div class="f2-layout">
    <div class="f2-preview">
     <div class="f2-header">
      <div class="f2-intro"><span class="eyebrow">MAHA / THE FLOWER STUDIO <span class="f2-edition">A LITTLE ESCAPE · VOL. 07</span></span><h1>Make something <em>lovely.</em></h1><p id="flower-subtitle">Seven flowers. One little bunch. Pick the same one again if it's your favourite.</p></div>
      <div class="f2-status">
-      <div class="f2-counter" id="f2-counter" aria-live="polite"><strong>0 <span>of 7</span></strong><span class="f2-counter-caption">STEMS COLLECTED</span></div>
+      <div class="f2-counter" id="flower-counter" aria-live="polite"><strong>0 <span>of 7</span></strong><span class="f2-counter-caption">STEMS COLLECTED</span></div>
       <div class="f2-status-note"><span id="flower-instruction">Start with whatever catches your eye.</span><small>Seven is the only rule.</small></div>
      </div>
-     <div id="f2-steps" class="f2-steps" role="group" aria-label="The seven places in your bouquet; tap a placed flower to remove it"></div>
+     <div id="flower-steps" class="f2-steps" role="group" aria-label="The seven places in your bouquet; tap a placed flower to remove it"></div>
     </div>
-    <div class="f2-stage" id="f2-stage">
-     <span class="f2-empty" id="f2-empty">Your bouquet grows here.<span aria-hidden="true">✳</span></span>
-     <div class="f2-bouquet" id="f2-bouquet"></div>
+    <div class="f2-stage" id="bouquet-display">
+     <span class="f2-empty" id="bouquet-hint">Your bouquet grows here.<span aria-hidden="true">✳</span></span>
+     <div class="f2-bouquet" id="bouquet-growing"></div>
      <div class="f2-petals" aria-hidden="true"><i>✿</i><i>✿</i><i>✿</i><i>✿</i><i>✿</i></div>
     </div>
     <span class="f2-caption" aria-hidden="true"><i>✳</i> CHOSEN BY YOU · MADE TO KEEP</span>
    </div>
-   <div class="f2-editor flower-studio-editor" id="f2-editor">
+   <div class="f2-editor" id="flower-bottom">
     <div class="f2-editor-head"><span><small>THE FLOWER BAR</small> Find your seven.</span><span class="f2-editor-hint">13 BLOOMS · REPEATS WELCOME</span></div>
-    <div class="f2-browser f2-browser-v2"><div id="f2-rail" class="f2-rail" role="group" aria-label="Thirteen different flowers. Tap more than once to add repeats."></div></div>
+    <div class="f2-browser f2-browser-v2"><div id="flower-rail" class="f2-rail" role="group" aria-label="Thirteen different flowers. Tap more than once to add repeats."></div></div>
     <div class="f2-footer">
-     <div class="f2-note" id="f2-note" aria-live="polite">Pick the ones you like. We'll worry about arranging them.</div>
+     <div class="f2-note" id="meaning-line" aria-live="polite">Pick the ones you like. We'll worry about arranging them.</div>
      <div class="f2-actions"><button type="button" class="f2-action" id="undo-flower" disabled>↶ Undo last</button><button type="button" class="f2-action" id="reset-flowers" disabled>Start over ↻</button><button type="button" class="f2-action f2-exit" id="cancel-flowers" ${store.get('completed')?'':'hidden'}>← Back to room</button></div>
     </div>
    </div>
   </div>
-  <div class="f2-final" id="f2-final" hidden><span class="eyebrow">ALL SEVEN, BEAUTIFULLY UNPLANNED</span><h2>That's your bunch. <span aria-hidden="true">✳</span></h2><p>Made by Maha. Obviously a very exclusive collection.</p><div class="f2-final-actions"><button class="button button-outline" id="save-bouquet">Save as picture ↓</button><button class="button button-primary" id="carry-bouquet">Take them home ↗</button></div><p class="f2-export-hint" id="f2-export-hint"></p></div>
+  <div class="f2-final" id="bouquet-final" hidden><span class="eyebrow">ALL SEVEN, BEAUTIFULLY UNPLANNED</span><h2>That's your bunch. <span aria-hidden="true">✳</span></h2><p>Made by Maha. Obviously a very exclusive collection.</p><div class="f2-final-actions"><button class="button button-outline" id="save-bouquet">Save as picture ↓</button><button class="button button-primary" id="carry-bouquet">Take them home ↗</button></div><p class="f2-export-hint" id="export-hint"></p></div>
  </section>`;
  const rail=root.querySelector('#flower-rail'),renderPlace=root.querySelector('#bouquet-growing'),display=root.querySelector('#bouquet-display');
  for(const f of flowers){
