@@ -69,3 +69,19 @@ test('Word Garden belongs to the upper indoor plant, never overlaps the bouquet 
  assert.match(css,/hover:none/);
  assert.ok(room.includes("title:'The indoor palm · word garden'"));
 });
+
+test('the three photo rooms never paste legacy photo cutouts over plants or curtains',()=>{
+ const room=read('js/room-photo-stage.js');
+ const css=read('css/arrival-and-kuwait.css');
+ assert.doesNotMatch(room,/className='living-leaf-sway'/,
+  'Photo-plane must not mount old image-sampled plant layers');
+ assert.match(css,/\.living-photo-plane::before,/);
+ assert.match(css,/\.living-leaf-sway::before,/);
+ assert.match(css,/\.living-leaf-sway::after\{/);
+ assert.match(css,/content:none!important/);
+ assert.match(css,/background-image:none!important/);
+ assert.match(css,/animation:none!important/);
+ // Intentional light gradients remain: the fix must not delete atmosphere.
+ assert.match(room,/className='scene-atmosphere'/);
+ assert.match(room,/layer\.append\(atmosphere\)/);
+});
