@@ -337,8 +337,9 @@ async function run(engine,launcher,w,h){
          assert.ok(width>700,'Garden should be a spacious writing canvas');
        }
        if(scene==='letters'){
-         const columns=await page.locator('.mail-inbox-list').evaluate(el=>getComputedStyle(el).gridTemplateColumns);
-         assert.ok(columns.includes(' '),'Inbox should have two letter columns on PC');
+         const columns=await page.locator('.postroom-letter-grid').evaluate(el=>getComputedStyle(el).gridTemplateColumns);
+         assert.ok(columns.includes(' '),'Letters must have a spacious two-column shelf on PC');
+         assert.ok(await page.locator('.postroom-side').isVisible(),'Desktop Letters needs its illustrated writing desk');
        }
      }
 
@@ -347,6 +348,43 @@ async function run(engine,launcher,w,h){
        assert.ok(contentWidth>=w*.82,'Panoramic '+scene+' must use desktop width, not old 780px cap: '+contentWidth);
      }
 
+     if(scene==='letters'){
+       const letterStudio=page.locator('.letterbox-app.postroom');
+       await letterStudio.waitFor({state:'visible'});
+       assert.equal(await page.locator('.postroom-letter-grid [data-open-letter]').count(),5,'Five original inbox letters still exist');
+       for(const title of ['Letters','Open when…','Saved']){
+         assert.ok((await page.locator('.mail-tabs').innerText()).includes(title),'Clear letter shelf: '+title);
+       }
+       const geometry=await letterStudio.evaluate(el=>{
+         const r=el.getBoundingClientRect();
+         const tabs=[...el.querySelectorAll('.mail-tabs button')].map(b=>b.getBoundingClientRect());
+         return {width:r.width,height:r.height,overflow:el.scrollWidth-el.clientWidth,tabs:tabs.map(t=>({w:t.width,left:t.left,right:t.right}))};
+       });
+       assert.ok(geometry.overflow<=2&&geometry.tabs.every(t=>t.w>=70),
+         'Letters must be phone-friendly with no sideways scrolling: '+JSON.stringify(geometry));
+       if(w===393)assert.ok(await page.locator('.postroom-side').isHidden(),'The desk must not crowd iPhone letters');
+       await page.screenshot({path:join(OUT,key+'-letters-desk.png'),animations:'disabled'});
+       await page.locator('[data-open-letter="hello-from-here"]').click();
+       await page.locator('.letter-reader.postroom-reader').waitFor({state:'visible',timeout:7000});
+       assert.ok((await page.locator('.reader-intro h1').innerText()).includes('An envelope with your name'),
+         'Actual letters must remain readable');
+       const readerSize=await page.locator('.postroom-reader').evaluate(el=>({overflow:el.scrollWidth-el.clientWidth,height:el.getBoundingClientRect().height}));
+       assert.ok(readerSize.overflow<=2&&readerSize.height>350,'Mobile letter reader must fit viewport: '+JSON.stringify(readerSize));
+       await page.screenshot({path:join(OUT,key+'-letter-open.png'),animations:'disabled'});
+       await page.locator('[data-keep-letter]').click();
+       assert.equal(await page.locator('[data-keep-letter]').getAttribute('aria-pressed'),'true','Save letter with original state');
+       await page.locator('[data-back-letters]').click();
+       await page.locator('[data-tab="keepsakes"]').click();
+       assert.ok(await page.locator('[data-open-letter="hello-from-here"]').isVisible(),'Saved shelf must contain kept letter');
+       await page.locator('#future-note-text').fill('A little reminder for future Maha.');
+       await page.locator('[data-tab="openWhen"]').click();
+       assert.equal(await page.locator('.when-clip [data-open-letter]').count(),14,'All Open When moments remain intact');
+       await page.screenshot({path:join(OUT,key+'-open-when-desk.png'),animations:'disabled'});
+       await page.locator('[data-tab="keepsakes"]').click();
+       assert.equal(await page.locator('#future-note-text').inputValue(),'A little reminder for future Maha.',
+         'Private note must persist across switching');
+       await page.locator('[data-tab="inbox"]').click();
+     }
      if(scene==='music'){
        const ambience=page.locator('[data-ambience]');
        assert.ok(await ambience.isVisible(),'FM should expose a real locally playable atmosphere');
