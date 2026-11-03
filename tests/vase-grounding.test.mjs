@@ -39,15 +39,15 @@ test('approved Kuwait flowers reach the native photographic vase mouth',()=>{
 });
 
 test('flower-selection preview includes a vase with the same 500×580 SVG geometry',()=>{
- const source=read('js/flowers.js'),css=read('css/botanical-studio.css');
+ const source=read('js/flowers.js'),css=read('css/flora-rebuild.css');
  assert.match(source,/const studioVaseMarkup=/);
  assert.match(source,/class="studio-vase" viewBox="0 0 500 580"/);
  assert.match(source,/bouquetMarkup\(chosen,\{stage:complete\?'final':'preview'\}\)\+\(!complete\?studioVaseMarkup\(\):''\)/);
  assert.match(source,/stage:'gather'\}\)\+studioVaseMarkup\(\)/);
  assert.match(source,/bouquetMarkup\(chosen,\{wrapped:true,stage:'final'\}\)/);
- assert.match(css,/\.bouquet-growing \.studio-vase/);
- assert.match(css,/transform:translateX\(-50%\)!important/);
- assert.match(css,/grid-template-rows:minmax\(0,52%\) minmax\(0,48%\)/);
+ assert.match(css,/\.f2-bouquet>\.studio-vase/);
+ assert.match(css,/transform:translate\(-50%,-50%\)!important/);
+ assert.match(css,/grid-template-rows:minmax\(0,48%\) minmax\(0,52%\)/);
 });
 
 test('Kuwait vase touch zone follows the new ceramic without moving other portals',()=>{
