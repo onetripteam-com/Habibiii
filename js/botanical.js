@@ -103,6 +103,15 @@ function leafShape(x,y,angle,length=48,width=19,shade='#708c6c'){
  return `<g transform="translate(${n(x)} ${n(y)}) rotate(${angle})"><path d="M0 0Q${-width*.86} ${-length*.48} 0 ${-length}Q${width*1.13} ${-length*.53} 0 0Z" fill="${shade}" stroke="#4d6956" stroke-opacity=".5" stroke-width="1.6"/><path d="M0 0Q3 ${-length*.46} 0 ${-length*.91}" stroke="#d0d8aa" stroke-opacity=".63" stroke-width="1.35" fill="none"/></g>`;
 }
 const uid=()=>`m${++serial}`;
+/** A centered, head-only specimen for small touch cards.
+ * The original stem SVG uses a tall 150×216 artboard and was clipped
+ * by the card's footer; an isolated blossom viewBox keeps every petal visible.
+ */
+export function flowerHeadSVG(id,klass=''){
+ const species=Object.prototype.hasOwnProperty.call(COLORS,id)?id:'rose';
+ const token=uid();
+ return '<svg class="botanical flower-head-svg '+klass+'" viewBox="0 0 160 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+species+' flower"><g transform="translate(80 78) scale(.79)">'+bloom(species,token)+'</g></svg>';
+}
 export function flowerSVG(id,klass=''){
  const idd=uid();
  return `<svg class="botanical ${klass}" viewBox="0 0 150 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${id} flower"><path d="M75 90Q61 146 79 212" stroke="#69845e" stroke-width="4.5" stroke-linecap="round" fill="none"/>${leafShape(72,158,-53,38,14)}${leafShape(78,177,44,33,13)}<g transform="translate(75 80) scale(.73)">${bloom(id,idd)}</g></svg>`;
