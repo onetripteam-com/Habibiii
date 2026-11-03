@@ -110,7 +110,7 @@ const uid=()=>`m${++serial}`;
 export function flowerHeadSVG(id,klass=''){
  const species=Object.prototype.hasOwnProperty.call(COLORS,id)?id:'rose';
  const token=uid();
- return '<svg class="botanical flower-head-svg '+klass+'" viewBox="0 0 160 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+species+' flower"><g transform="translate(80 78) scale(.79)">'+bloom(species,token)+'</g></svg>';
+ return '<svg class="botanical flower-head-svg '+klass+'" viewBox="-90 -90 180 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="'+species+' flower"><g class="flower-head-paint">'+bloom(species,token)+'</g></svg>';
 }
 export function flowerSVG(id,klass=''){
  const idd=uid();
