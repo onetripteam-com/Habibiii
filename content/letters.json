@@ -6,7 +6,7 @@
       "title": "An envelope with your name on it",
       "kind": "typed",
       "section": "inbox",
-      "preview": "Yes, someone built a mailbox instead of sending a text.",
+      "preview": "I built a postbox instead of sending one very normal message.",
       "unlock": {
         "type": "always"
       },
@@ -21,7 +21,7 @@
       "title": "In defence of ordinary Tuesdays",
       "kind": "typed",
       "section": "inbox",
-      "preview": "Big days have photographers, cake, and people making speeches. Ordinary Tuesdays.",
+      "preview": "An argument in favour of days when absolutely nothing happens.",
       "unlock": {
         "type": "always"
       },
@@ -36,7 +36,7 @@
       "title": "The fifth time? Suspicious.",
       "kind": "typed",
       "section": "inbox",
-      "preview": "Five visits. I had not prepared an award ceremony for this, which is deeply unpro.",
+      "preview": "A tiny surprise for coming back. Still no actual cake.",
       "unlock": {
         "type": "visits",
         "n": 5
@@ -52,7 +52,7 @@
       "title": "A page that deserves real handwriting",
       "kind": "typed",
       "section": "inbox",
-      "preview": "I originally wanted to put a handwritten page here. A proper one, with crossing-o.",
+      "preview": "Some things deserve ink, paper and a few crossed-out words.",
       "unlock": {
         "type": "daysAfterFirstVisit",
         "n": 30
@@ -67,7 +67,7 @@
       "title": "A letter for later-later",
       "kind": "typed",
       "section": "inbox",
-      "preview": "Oh, hello from the future. 2027 sounded far away when I started building this. Th.",
+      "preview": "A little envelope with a future date on it.",
       "unlock": {
         "type": "date",
         "on": "2027-07-07"
@@ -83,7 +83,7 @@
       "title": "When your battery is at 3%",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "If you're tired, I'm not going to turn this into a five-step improvement plan. Yo.",
+      "preview": "No checklist. No lecture. Just a gentler minute.",
       "unlock": {
         "type": "always"
       },
@@ -98,7 +98,7 @@
       "title": "When you miss home",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "Rain, distance and the bits of home a map cannot hold.",
+      "preview": "For the things a map can't quite hold.",
       "unlock": {
         "type": "always"
       },
@@ -113,7 +113,7 @@
       "title": "When you have great news",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "Stop reading and tell me everything.",
+      "preview": "First of all, why haven't you told me everything?",
       "unlock": {
         "type": "always"
       },
@@ -128,7 +128,7 @@
       "title": "When something big is tomorrow",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "The night before something important is a ridiculous time. Suddenly the clock get.",
+      "preview": "The evening before something important deserves company.",
       "unlock": {
         "type": "always"
       },
@@ -143,7 +143,7 @@
       "title": "When sleep is avoiding you",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "So your brain has opened a conference when everybody else has gone home. Very inc.",
+      "preview": "Apparently your brain scheduled a meeting at midnight.",
       "unlock": {
         "type": "always"
       },
@@ -158,7 +158,7 @@
       "title": "When your brain opens 47 tabs",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "I've been informed there's a committee meeting in your head, and the agenda has f.",
+      "preview": "For when every thought brings five more friends.",
       "unlock": {
         "type": "always"
       },
@@ -173,7 +173,7 @@
       "title": "When you need a laugh",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "Congratulations. You've been appointed head of a completely fictional airport. Ev.",
+      "preview": "A fictional airport. One exhausted pigeon. That's all.",
       "unlock": {
         "type": "always"
       },
@@ -188,7 +188,7 @@
       "title": "When you feel stuck",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "People say 'take the next step' as if steps come with helpful glowing arrows pain.",
+      "preview": "For days when the next step isn't obvious.",
       "unlock": {
         "type": "always"
       },
@@ -203,7 +203,7 @@
       "title": "When you finish something big",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "Hold on. You finished it? Whatever the thing was, I hope you gave yourself a mome.",
+      "preview": "You did the thing. There will be an unofficial award.",
       "unlock": {
         "type": "always"
       },
@@ -218,7 +218,7 @@
       "title": "When it is raining",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "Rain in Kerala has a very different personality from rain elsewhere. Sometimes it.",
+      "preview": "For rain, windows and the art of doing very little.",
       "unlock": {
         "type": "always"
       },
@@ -233,7 +233,7 @@
       "title": "When it is your birthday",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "Happy birthday, Maha. I considered writing something elegant and mature, but I kn.",
+      "preview": "No grand speech. Just a birthday note that sounds like us.",
       "unlock": {
         "type": "always"
       },
@@ -248,7 +248,7 @@
       "title": "When you post your first vlog",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "You posted your first travel vlog? Wait. This is an event. Where is the premiere?.",
+      "preview": "An entirely unofficial premiere for your very first video.",
       "unlock": {
         "type": "always"
       },
@@ -263,7 +263,7 @@
       "title": "When you forget who you are",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "I could list a hundred grand things I think about you, but I suspect you'd roll y.",
+      "preview": "You don't have to be a perfect version of anyone.",
       "unlock": {
         "type": "always"
       },
@@ -278,7 +278,7 @@
       "title": "When you miss me",
       "kind": "openWhen",
       "section": "openWhen",
-      "preview": "Oh? You miss me? I will need this remarkable statement signed and witnessed. A sc.",
+      "preview": "I'll need that statement witnessed, please.",
       "unlock": {
         "type": "always"
       },
@@ -293,7 +293,7 @@
       "title": "For a big day",
       "kind": "typed",
       "section": "quiet",
-      "preview": "Just a note for a day that matters. Keep the practical things close: what you nee.",
+      "preview": "A small note for a day that matters.",
       "unlock": {
         "type": "always"
       },
