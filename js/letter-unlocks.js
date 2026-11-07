@@ -15,10 +15,37 @@ export function dayNumber(ymd){
 export function kuwaitDaysApart(from,to){return dayNumber(to)-dayNumber(from);}
 function stateVisits(state){return Number.isFinite(+state?.visits)?Math.max(0,Math.floor(+state.visits)):0;}
 function firstDay(state){try{return state?.firstVisitAt?kuwaitDay(state.firstVisitAt):null;}catch{return null;}}
+/** Christmas and Easter dates use Kuwait's calendar day; no device locale drift.
+ * Malankara churches celebrate Christmas on Dec 25 and, for these dates,
+ * Easter according to the Gregorian Paschal calculation. */
+export function festivalDay(name,year){
+ const y=Math.trunc(Number(year));
+ if(!Number.isInteger(y)||y<1900||y>2199)return null;
+ if(name==='christmas')return `${y}-12-25`;
+ if(name!=='easter')return null;
+ const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4;
+ const f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30;
+ const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k+700)%7;
+ const m=Math.floor((a+11*h+22*l)/451);
+ const n=h+l-7*m+114,month=Math.floor(n/31),day=n%31+1;
+ return `${y}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+}
+export function festivalVisible(name,now=new Date(),daysBefore=21,daysAfter=10){
+ const today=kuwaitDay(now),target=festivalDay(name,Number(today.slice(0,4)));
+ if(!target)return false;
+ const offset=dayNumber(today)-dayNumber(target);
+ return offset>=-daysBefore&&offset<=daysAfter;
+}
 export function unlockStatus(rule,state={},now=new Date()){
  if(!rule||rule.type==='always')return {open:true,label:'Ready to open',remaining:0};
  const today=kuwaitDay(now);const todayN=dayNumber(today);
  switch(rule.type){
+  case 'festival':{
+   const target=festivalDay(rule.name,Number(today.slice(0,4)));
+   if(!target)return {open:false,label:'Occasion not configured',remaining:null};
+   const n=Math.max(0,dayNumber(target)-todayN);
+   return {open:n===0,label:n===0?'Ready to open':`Opens on ${rule.name==='christmas'?'Christmas Day':'Easter Sunday'}`,remaining:n};
+  }
   case 'date':{
    const target=dayNumber(rule.on);
    if(!Number.isFinite(target))return {open:false,label:'Date not configured',remaining:null};

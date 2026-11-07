@@ -1,7 +1,7 @@
 /** The Post Office: paper envelopes, data-driven letters, and device-only keepsakes. */
 import {store} from './store.js';
 import {soundEffect,startSound} from './audio.js';
-import {unlockStatus,unlocks,newlyUnlocked,quietLetterState,kuwaitDay} from './letter-unlocks.js';
+import {unlockStatus,unlocks,newlyUnlocked,quietLetterState,kuwaitDay,festivalVisible} from './letter-unlocks.js';
 const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const byId=(letters,id)=>letters.find(l=>l.id===id);
 const niceDate=value=>{try{return new Intl.DateTimeFormat('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'Asia/Kuwait'}).format(new Date(`${value}T12:00:00Z`));}catch{return value||'';}};
@@ -21,7 +21,7 @@ export function mountLetters(host,{visits=1,lastVisit=null,onPlay=()=>{},onKeep=
  const asState=()=>({visits,firstVisitAt:store.get('firstVisitAt',null),games:store.get('gameCompletions',{})});
  const now=()=>new Date();
  host.innerHTML=`<div class="mail-loading" role="status">Sorting very important stationery…</div>`;
- const list=()=>quietVariant(letters,config,now());
+ const list=()=>quietVariant(letters,config,now()).filter(l=>l.section!=='occasion'||festivalVisible(l.occasion,now())||bookmark(allKept(),l.id));
  const allKept=()=>store.get('keptLetters',[]);
 
  function postIcon(kind){
@@ -36,23 +36,23 @@ export function mountLetters(host,{visits=1,lastVisit=null,onPlay=()=>{},onKeep=
   const available=list().filter(l=>l.section==='inbox'&&unlockStatus(l.unlock,asState(),now()).open).length;
   return `<header class="mail-heading"><div class="mail-postmark"><span class="postroom-mark" aria-hidden="true">✳</span> A SMALL COLLECTION OF LETTERS <span class="postroom-edition">NO. 01 — FOR MAHA</span></div>
    <div class="mail-header-row"><div class="postroom-title-copy"><h1>Letters, <em>for you.</em></h1><p>Some things are nicer to open slowly.</p></div>
-    <span class="mail-mini-stamp" aria-hidden="true"><span>MAHA</span><svg viewBox="0 0 56 56" fill="none"><path d="M28 9c-5 8-7 12-7 17a7 7 0 0 0 14 0c0-5-2-9-7-17ZM13 24c8 2 12 4 15 8M43 24c-8 2-12 4-15 8M13 42c8-7 14-8 15-8m15 8c-8-7-14-8-15-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="28" cy="31" r="5" fill="currentColor"/></svg><small>WITH CARE</small></span>
+    <span class="postroom-pocket-scene" aria-hidden="true"><i class="pocket-sheet"></i><i class="pocket-envelope"></i><i class="pocket-wax">M</i></span><span class="mail-mini-stamp" aria-hidden="true"><span>MAHA</span><svg viewBox="0 0 56 56" fill="none"><path d="M28 9c-5 8-7 12-7 17a7 7 0 0 0 14 0c0-5-2-9-7-17ZM13 24c8 2 12 4 15 8M43 24c-8 2-12 4-15 8M13 42c8-7 14-8 15-8m15 8c-8-7-14-8-15-8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="28" cy="31" r="5" fill="currentColor"/></svg><small>WITH CARE</small></span>
    </div></header>`;
  }
  function tabs(){
   const saved=list().filter(l=>bookmark(allKept(),l.id)).length;
-  const options=[['inbox','Letters',list().filter(l=>l.section==='inbox').length,'letters'],['openWhen','Open when…',null,'when'],['keepsakes','Saved',saved,'saved']];
+  const options=[['inbox','Letters',list().filter(l=>l.section==='inbox'||l.section==='occasion').length,'letters'],['openWhen','Open when…',null,'when'],['keepsakes','Saved',saved,'saved']];
   return `<nav class="mail-tabs" aria-label="Choose a letter shelf">${options.map(([id,label,count,icon])=>`<button type="button" data-tab="${id}" ${activeTab===id?'aria-current="page"':''} aria-label="${esc(label)}${count===null?'':', '+count}">${postIcon(icon)}<span class="postroom-tab-name">${label}</span>${count===null?'':`<span class="postroom-tab-count" aria-hidden="true">${count}</span>`}</button>`).join('')}</nav>`;
  }
  function itemMarkup(l){
-  const state=asState(),status=unlockStatus(l.unlock,state,now()),read=store.get('readLetter:'+l.id,false),isKept=bookmark(allKept(),l.id),open=status.open;
+  const state=asState(),read=store.get('readLetter:'+l.id,false),isKept=bookmark(allKept(),l.id);const status=(l.section==='occasion'&&isKept)?{open:true,label:'Ready to open'}:unlockStatus(l.unlock,state,now()),open=status.open;
   const number=String(Math.max(1,list().findIndex(x=>x.id===l.id)+1)).padStart(2,'0');
   const label=open?(read?'Read':'New'):'Sealed';
   const mood=l.section==='openWhen'?moodNames[l.id.replace('when-','')]:null;
   return `<button class="mail-row postroom-letter ${open?'is-available':'is-sealed'} ${read?'is-read':''}" data-open-letter="${esc(l.id)}" type="button" aria-label="${esc(l.title)}. ${open?(read?'Already read':'Ready to open'):status.label}">
     <span class="postroom-letter-index" aria-hidden="true">NO. ${number}</span>
     ${envelopeIcon(!open)}
-    <span class="mail-row-words"><span class="mail-sender">${mood?'FOR A DAY LIKE THIS':'A NOTE FROM '+esc(config.senderName||'YOUR FRIEND')}</span>
+    <span class="mail-row-words"><span class="mail-sender">${l.section==='occasion'?'FOR A SPECIAL DAY':mood?'FOR A DAY LIKE THIS':'A NOTE FROM '+esc(config.senderName||'YOUR FRIEND')}</span>
       <strong class="mail-subject">${esc(l.title)}</strong><span class="mail-preview">${esc(l.preview||'A little note, just for you.')}</span>
       <span class="mail-status ${open?read?'status-read':'status-new':'status-locked'}">${open?(read?'Opened before':'<i class="marigold-dot"></i> Ready to open'):'<span aria-hidden="true">✳</span> '+esc(status.label)}</span>
     </span><span class="mail-row-edge" aria-hidden="true">${isKept?'SAVED':'↗'}</span>
@@ -68,7 +68,8 @@ export function mountLetters(host,{visits=1,lastVisit=null,onPlay=()=>{},onKeep=
 
  function inbox(){
   const items=list().filter(l=>l.section==='inbox');
-  return `<section class="mail-inbox-list" aria-label="Letters waiting for Maha">${awayShelf()}<div class="mail-section-caption"><div><span class="postroom-section-kicker">THE LETTER SHELF / 01</span><h2>Little notes, <em>big or small.</em></h2><p>No need for a special occasion.</p></div><span class="postroom-section-count">${items.length} letters</span></div><div class="postroom-letter-grid">${items.map(itemMarkup).join('')}</div></section>`;
+  const special=list().filter(l=>l.section==='occasion');
+  return `<section class="mail-inbox-list" aria-label="Letters waiting for Maha">${awayShelf()}<div class="mail-section-caption"><div><span class="postroom-section-kicker">THE LETTER SHELF / 01</span><h2>Little notes, <em>big or small.</em></h2><p>No need for a special occasion.</p></div><span class="postroom-section-count">${items.length} letters</span></div><div class="postroom-letter-grid">${items.map(itemMarkup).join('')}</div>${special.length?`<div class="postroom-occasion-heading"><span class="postroom-section-kicker">A LITTLE EXTRA, ON THE RIGHT DAY</span><h3>For a couple of special days.</h3><p>Just two small wishes. The everyday letters are still the main event.</p></div><div class="postroom-letter-grid postroom-occasion-grid">${special.map(itemMarkup).join('')}</div>`:''}</section>`;
  }
  function openWhen(){
   const items=list().filter(l=>l.section==='openWhen');
@@ -112,7 +113,7 @@ export function mountLetters(host,{visits=1,lastVisit=null,onPlay=()=>{},onKeep=
  }
  async function openEnvelope(id,button){
   const l=byId(list(),id);if(!l)return;
-  const status=unlockStatus(l.unlock,asState(),now());
+  const status=(l.section==='occasion'&&bookmark(allKept(),l.id))?{open:true}:unlockStatus(l.unlock,asState(),now());
   if(!status.open){
    button.classList.remove('mail-shake');void button.offsetWidth;button.classList.add('mail-shake');
    const el=button.querySelector('.mail-status');if(el)el.setAttribute('aria-live','polite');soundEffect('undo');return;

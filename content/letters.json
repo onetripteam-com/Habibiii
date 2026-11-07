@@ -302,6 +302,40 @@
         "You don't have to be brave for anyone watching. You can be nervous, quiet, annoyed, or all three in the same hour.",
         "Wishing you an easier day and good people around you. I'll be thinking of you."
       ]
+    },
+    {
+      "id": "christmas-for-maha",
+      "title": "A little Christmas wish",
+      "kind": "typed",
+      "section": "occasion",
+      "occasion": "christmas",
+      "preview": "For a cosy, happy Christmas, wherever the day finds you.",
+      "unlock": {
+        "type": "festival",
+        "name": "christmas"
+      },
+      "pages": [
+        "Merry Christmas, Maha! I hope today brings you the things that make it feel like your kind of day: familiar voices, good food, a little laughter, and enough time to enjoy all of it.",
+        "If the day involves twelve photos, three conversations about what to eat, and somebody asking you to come downstairs, I hope at least one of those comes with dessert.",
+        "Wishing you lovely moments, people who make you feel at home, and a few happy surprises. Enjoy your day properly. The rest of the world can wait."
+      ]
+    },
+    {
+      "id": "easter-for-maha",
+      "title": "For your Easter morning",
+      "kind": "typed",
+      "section": "occasion",
+      "occasion": "easter",
+      "preview": "A small Easter greeting and a wish for good things ahead.",
+      "unlock": {
+        "type": "festival",
+        "name": "easter"
+      },
+      "pages": [
+        "Happy Easter, Maha! I hope this Sunday feels peaceful and full of the good familiar things: a lovely meal, easy conversations, and some time that belongs entirely to you.",
+        "There are places you haven't seen yet, stories you haven't told, and probably a few travel plans waiting to escape the group chat. I hope the coming months bring you some wonderful ones.",
+        "Here's to hope, fresh beginnings, and all the little reasons to smile. No grand speech. Just a warm Easter wish for you."
+      ]
     }
   ]
 }

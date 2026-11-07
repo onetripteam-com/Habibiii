@@ -26,14 +26,15 @@ test('new letter desk uses clear shelves without mutating saved progress keys',(
 
 test('all twenty original letters, unlocks and complete pages remain intact',()=>{
  const letters=data('content/letters.json').letters;
- assert.equal(letters.length,20);
- assert.equal(new Set(letters.map(l=>l.id)).size,20);
+ assert.equal(letters.length,22);
+ assert.equal(new Set(letters.map(l=>l.id)).size,22);
  assert.ok(letters.every(l=>l.pages?.length>=2));
  assert.ok(letters.every(l=>l.preview?.length>=23&&!l.preview.includes('...')));
  assert.ok(letters.every(l=>l.unlock?.type));
  assert.equal(letters.filter(l=>l.section==='openWhen').length,14);
  assert.equal(letters.filter(l=>l.section==='inbox').length,5);
  assert.equal(letters.filter(l=>l.section==='quiet').length,1);
+ assert.equal(letters.filter(l=>l.section==='occasion').length,2);
  assert.match(read('js/letters.js'),/quietVariant\(letters,config,now\(\)\)/);
 });
 
