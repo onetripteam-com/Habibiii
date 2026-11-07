@@ -364,7 +364,21 @@ async function run(engine,launcher,w,h){
          'Letters must be phone-friendly with no sideways scrolling: '+JSON.stringify(geometry));
        assert.ok(geometry.height>h-125,
          'The letter shelf must fill the screen vertically, not overflow beneath it: '+JSON.stringify(geometry));
-       if(w===393)assert.ok(await page.locator('.postroom-side').isHidden(),'The desk must not crowd iPhone letters');
+       if(w===393){
+         assert.ok(await page.locator('.postroom-side').isHidden(),'The desk must not crowd iPhone letters');
+         assert.ok(await page.locator('.postroom-pocket-scene').isVisible(),'Mobile letters must have their own compact envelope art');
+         const hero=await page.locator('.mail-heading').evaluate(el=>({height:el.getBoundingClientRect().height,bg:getComputedStyle(el).backgroundColor}));
+         assert.ok(hero.height>=150&&hero.height<=220,'Mobile stationery hero must fit comfortably: '+JSON.stringify(hero));
+       }
+       if(w===1440){
+         const structure=await letterStudio.evaluate(el=>{
+           const shell=el.getBoundingClientRect(),side=el.querySelector('.postroom-side').getBoundingClientRect();
+           const library=el.querySelector('.postroom-library').getBoundingClientRect();
+           return {shell:shell.width,side:side.width,library:library.width,edge:Math.abs(side.right-library.left)};
+         });
+         assert.ok(structure.library>structure.side*1.5 && structure.edge<2,
+           'At 100% desktop zoom the reading shelf must be wider than the art, with no panel overlap: '+JSON.stringify(structure));
+       }
        await page.screenshot({path:join(OUT,key+'-letters-desk.png'),animations:'disabled'});
        await page.locator('[data-open-letter="hello-from-here"]').click();
        await page.locator('.letter-reader.postroom-reader').waitFor({state:'visible',timeout:7000});

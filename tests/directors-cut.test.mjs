@@ -27,7 +27,7 @@ test('synthesized FM voices are gesture-activated and use no external audio',()=
  const ctor=new FMAtmosphere('88.3');assert.equal(ctor.running,false);assert.equal(ctor.context,null);const s=read('js/fm-atmosphere.js');assert.match(s,/AudioContext/);assert.doesNotMatch(s,/fetch\(|\.src\s*=/);
 });
 test('letters and radio have no draft brackets and names are honest',()=>{
- const letters=obj('content/letters.json');assert.equal(letters.letters.length,20);assert.doesNotMatch(JSON.stringify(letters),/\[(?:ADD|YOUR|REPLACE|MY)\b/i);
+ const letters=obj('content/letters.json');assert.equal(letters.letters.length,22);assert.doesNotMatch(JSON.stringify(letters),/\[(?:ADD|YOUR|REPLACE|MY)\b/i);
  assert.ok(letters.letters.every(x=>Array.isArray(x.pages)&&x.pages.length>=2));
  const conf=obj('content/config.json');assert.equal(conf.senderEmail,null);assert.equal(conf.senderName,'Your friend');
  const radio=obj('content/radio.json');assert.equal(radio.stations.length,5);assert.ok(radio.stations.every(x=>x.introAudio===null&&x.ambientAudio===null));
